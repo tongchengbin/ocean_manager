@@ -1,0 +1,86 @@
+<template>
+  <el-dialog width="500px" center :visible.async="show" :title="checkHost.id?'编辑主机':'添加主机'">
+    <div>
+      <el-form label-position="right" size="mini"  label-width="100px" >
+        <el-form-item label="主机名称">
+            <el-input v-model="form.name" ></el-input>
+        </el-form-item>
+        <el-form-item label="IP">
+          <el-input v-model="form.ip" :disabled="!!checkHost.id" ></el-input>
+        </el-form-item>
+        <el-form-item label="Docker API">
+          <el-input v-model="form.addr" :disabled="!!checkHost.id" ></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="form.remark" ></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button size="mini" @click="success(0)">取 消</el-button>
+      <el-button size="mini" type="primary" @click="success(1)">确 定</el-button>
+    </span>
+  </el-dialog>
+</template>
+
+<script>
+    import request from '../../../api/public'
+    export default {
+        name: "addHost",
+      props:{
+        checkHost:{
+          type:Object,
+          default:{}
+        },
+          show:{
+            type:Boolean,
+            default:true
+          }
+      },
+      mounted() {
+      },
+      data(){
+        return {
+          form:{
+            ip:this.checkHost && this.checkHost.ip,
+            name:this.checkHost && this.checkHost.name,
+            addr:this.checkHost && this.checkHost.addr,
+            remark:this.checkHost && this.checkHost.remark,
+          }
+        }
+      },
+      methods:{
+          success(e){
+            if(e){
+              if(this.checkHost.id){
+              //  编辑
+                let data = this.form;
+                data.id = this.checkHost.id;
+                request.post('/admin/docker/editHost',data).then(res=>{
+                  this.$message({message:"修改成功",type:"success"})
+                  this.$emit('success',true)
+                }).catch(err=>{
+                  this.$message({message:err.response.data.error,type:"error"})
+                })
+              }else{
+              //  添加
+                request.post('/admin/docker/addHost',this.form).then(res=>{
+                  this.$message({message:"添加成功",type:"success"})
+                  this.$emit('success',true)
+                }).catch(err=>{
+                  this.$message({message:err.response.data.error,type:"error"})
+                })
+              }
+            }else{
+              this.$emit('success',false)
+            }
+
+          }
+      },
+
+    }
+</script>
+
+<style scoped>
+
+</style>

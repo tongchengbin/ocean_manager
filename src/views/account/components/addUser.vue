@@ -1,0 +1,77 @@
+<template>
+  <el-dialog :title="data.id?'编辑用户':'添加用户'" :visible.sync="show" size="mini" custom-class="usereidt">
+    <el-form ref="dataForm" size="mini" :model="data" label-position="left" label-width="80px" label-suffix=":" style="width: 600px; margin: auto auto;font-size: 13px;">
+      <el-form-item size="mini" label="用户名" prop="username">
+        <el-input v-model="data.username" />
+      </el-form-item>
+      <el-form-item size="mini" label="密    码" prop="password">
+        <el-input v-model="data.password" type="password" />
+      </el-form-item>
+      <el-form-item size="mini" label="确认密码" prop="confirm_password" style="font-size: 12px">
+        <el-input v-model="data.confirm_password" type="password" />
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button size="mini" @click="$emit('success')">取消</el-button>
+      <el-button size="mini" v-if="data.id" type="primary" @click="updateData">更新</el-button>
+      <el-button size="mini" v-else type="primary" @click="updateData">添加</el-button>
+    </div>
+  </el-dialog>
+</template>
+
+<script>
+import request from '@/api/public'
+export default {
+name: "addUser",
+  props:{
+    data:{
+      type:Object,
+      default(){
+        return {}
+      }
+    }
+  },
+  data(){
+  return {
+    show:true,
+  }
+  },
+  created() {
+    if(this.data === undefined){
+      this.data = {}
+    }
+
+  },
+  methods:{
+    updateData(){
+    //   添加用户  更新用户
+      if(this.data.id){
+        let data = this.data
+        request.post('/admin/user',data).then(res=>{
+          this.$emit('success')
+        }).catch(err=>{
+          this.$message({
+            message:err.response.data.msg,
+            type:"error"
+          })
+        })
+      }else{
+        let data = this.data
+        request.post('/admin/user',data).then(res=>{
+          this.$emit('success')
+        }).catch(err=>{
+          this.$message({
+            message:err.response.data.msg,
+            type:"error"
+          })
+        })
+      }
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>
