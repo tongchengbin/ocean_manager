@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="widget-content">
-        <el-table v-loading="loading" :data="listData">
+        <el-table size="mini" fit highlight-current-row stripe v-loading="loading" :data="listData">
           <el-table-column
             align="center"
             label="ID"

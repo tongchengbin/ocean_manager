@@ -10,7 +10,7 @@
     </div>
       <div class="widget-content">
         <!--用户列表-->
-        <el-table v-loading="listLoading" size="mini" :data="list"  style="width: 100%">
+        <el-table fit highlight-current-row stripe v-loading="listLoading" size="mini" :data="list"  style="width: 100%">
           <el-table-column align="center" label="ID" width="70px" prop="id">
           </el-table-column>
           <el-table-column label="用户名" width="150px" align="center">

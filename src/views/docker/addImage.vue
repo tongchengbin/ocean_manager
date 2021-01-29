@@ -4,12 +4,12 @@
       <el-tabs type="border-card">
         <el-tab-pane>
           <span slot="label"><i class="el-icon-edit"></i>添加镜像</span>
-          <el-form inline ref="build">
+          <el-form inline ref="build" size="mini">
             <el-form-item  label="名称">
               <el-input v-model="tag" placeholder="eg. myImage:myTag"></el-input>
             </el-form-item>
           </el-form>
-          <el-tabs value="dockerfile" ref="tab" type="card">
+          <el-tabs value="dockerfile" ref="tab">
             <el-tab-pane name="dockerfile">
               <span slot="label"><i class="el-icon-edit"></i> DockerFile</span>
               <div>
@@ -32,8 +32,8 @@
             </el-tab-pane>
             <el-tab-pane name="pull">
               <span slot="label"><i class="el-icon-edit"></i>Pull</span>
-              <el-form label-position="left" label-width="100px">
-                <el-form-item   label="Registry">
+              <el-form label-position="left" label-width="100px" size="mini">
+                <el-form-item  label="Registry">
                   <el-select v-model="selectHub" placeholder="请选择">
                     <el-option
                       v-for="item in options"
@@ -60,7 +60,7 @@
         </el-tab-pane>
         <el-tab-pane :disabled="!showLog">
           <span slot="label"><i class="el-icon-document"></i>日志</span>
-          <div class="output">
+          <div id="log_output" class="output" style="max-height: 300px;overflow: auto">
               <pre class="pre">
                <p class="line small" v-for="line in output">{{line}}</p>
               </pre>
@@ -141,6 +141,9 @@ export default {
       }
       request.get(`/admin/task/${task}/log`,query).then(function (res) {
         that.output=that.output.concat(res.data)
+        let div = document.getElementById("log_output")
+        // 这里还有没有渲染好就开始定位高度了 所以不是最底部
+        div.scrollTop = div.scrollHeight;
         if (res.end) {
           clearTimeout(timer) //清理定时任务
         } else {

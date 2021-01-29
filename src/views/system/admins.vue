@@ -1,14 +1,23 @@
 <template>
   <div class="container">
-    <div class="warp">
+    <div class="widget">
+      <div class="tool-bar">管理员列表</div>
       <!--搜索-->
-      <div class="filter-container">
-        <el-input v-model="listQuery.search" size="mini" style="width: 200px;" placeholder="用户名/邮箱" />
-        <el-button size="mini" type="primary" icon="el-icon-search" @click="handleFilter">Search</el-button>
-        <el-button size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <div class="search-group">
+        <el-form size="mini" inline>
+          <el-form-item>
+            <el-input v-model="listQuery.search" size="mini" style="width: 200px;" placeholder="用户名/邮箱" />
+          </el-form-item>
+          <el-form-item>
+            <el-button size="mini" type="primary" icon="el-icon-search" @click="handleFilter">Search</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+          </el-form-item>
+        </el-form>
       </div>
       <!--用户列表-->
-      <el-table v-loading="listLoading" size="mini" :data="list" border fit highlight-current-row style="width: 100%">
+      <el-table v-loading="listLoading" size="mini" :data="list" stripe  highlight-current-row fit style="width: 100%">
         <el-table-column align="center"
                          type="index"
                          width="50"

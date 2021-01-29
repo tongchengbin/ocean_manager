@@ -4,7 +4,7 @@
       <el-input v-model="listQuery.search" size="small" style="width: 200px;" placeholder="名称"/>
       <el-button size="small" type="primary" icon="el-icon-search" @click="getList">Search</el-button>
     </div>
-    <el-table :data="listData">
+    <el-table :data="listData" fit highlight-current-row stripe>
       <el-table-column label="ID" prop="id" width="70"></el-table-column>
       <el-table-column label="LOGO" width="80">
         <template slot-scope="scope">

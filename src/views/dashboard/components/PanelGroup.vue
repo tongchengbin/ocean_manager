@@ -1,50 +1,39 @@
 <template>
   <el-row class="panel-group" :gutter="40">
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class='card-panel' @click="handleSetLineChartData('newVisitis')">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">总用户数</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="state.user_cnt" :duration="3000"></count-to>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">今日活跃IP</div>
+          <div class="card-panel-text">活跃IP</div>
           <count-to class="card-panel-num" :startVal="0" :endVal="state.ip_cnt" :duration="3000"></count-to>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-register">
           <svg-icon icon-class="register" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">今日注册数</div>
+          <div class="card-panel-text">今日注册</div>
           <count-to class="card-panel-num" :startVal="0" :endVal="state.today_register" :duration="3000"></count-to>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-question">
           <svg-icon icon-class="question" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">题库数量</div>
+          <div class="card-panel-text">题库</div>
           <count-to class="card-panel-num" :startVal="0" :endVal="state.challenges_cnt" :duration="3000"></count-to>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-answer">
           <svg-icon icon-class="answer" class-name="card-panel-icon" />
@@ -52,17 +41,6 @@
         <div class="card-panel-description">
           <div class="card-panel-text">今日挑战</div>
           <count-to class="card-panel-num" :startVal="0" :endVal="state.today_create_cnt" :duration="3000"></count-to>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
-        <div class="card-panel-icon-wrapper icon-requests">
-          <svg-icon icon-class="requests" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">请求次数</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="state.req_count" :duration="3000"></count-to>
         </div>
       </div>
     </el-col>

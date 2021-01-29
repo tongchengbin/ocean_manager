@@ -9,7 +9,7 @@
         <el-button size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
       </div>
       <div class="widget-content">
-        <el-table v-loading="listLoading" size="mini" :data="list"  style="width: 100%">
+        <el-table v-loading="listLoading" size="mini" :data="list"  style="width: 100%" fit highlight-current-row stripe>
           <el-table-column align="center" label="ID" width="70px" prop="id">
           </el-table-column>
           <el-table-column label="内容" width="150px" align="center" prop="content"></el-table-column>

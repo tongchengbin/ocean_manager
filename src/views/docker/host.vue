@@ -5,11 +5,10 @@
       <div class="action-bar">
         <el-button @click="checkHost={};showAdd=true" size="mini" icon="el-icon-plus" type="primary" >添加</el-button>
       </div>
-      <el-table class="table" :data="listData" >
-        <el-table-column align="center" prop="id" label="ID" width="40"></el-table-column>
-        <el-table-column  align="center"   prop="name" label="名称" width="150"></el-table-column>
-        <el-table-column  align="center"  prop="ip" label="IP" width="120"></el-table-column>
-        <el-table-column  align="center"  prop="addr" label="Docker API" width="170"></el-table-column>
+      <el-table size="mini" class="table" :data="listData" >
+        <el-table-column  align="center"   prop="name" label="名称" width="80"></el-table-column>
+        <el-table-column  align="center"  prop="ip" label="IP" width="110"></el-table-column>
+        <el-table-column  align="center"  prop="addr" label="Docker API" width="110"></el-table-column>
         <el-table-column  align="center"  prop="active" label="是否启用" width="80">
           <template slot-scope="scope">
             <el-switch @change="changActive(scope.row)" v-model="scope.row.active"></el-switch>

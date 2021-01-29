@@ -3,45 +3,39 @@
     <add-question v-if="showAddQuestion" :data="chiData" :show="showAddQuestion" @action="handleAdd"></add-question>
     <div class="widget">
       <div class="tool-bar">答题记录</div>
+      <div class="search-group">
+        <el-form inline size="mini">
+          <el-form-item class="el-form-item" label="分类">
+            <el-select v-model="listQuery.q_type" class="select" clearable>
+              <el-option
+                v-for="item in qType"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="el-form-item" label="状态">
+            <el-select v-model="listQuery.status" class="select" clearable>
+              <el-option
+                v-for="item in statusList"
+                :key="item[0]"
+                :label="item[1]"
+                :value="item[0]">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button size="mini" style="margin: 0 5px;" type="primary" @click="getData">搜索</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
       <div class="action-bar">
-        <div class="btn-group">
-          <el-form inline size="mini">
-            <el-form-item class="el-form-item" label="分类">
-              <el-select v-model="listQuery.q_type" class="select" clearable>
-                <el-option
-                  v-for="item in qType"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="btn-group">
-          <el-form inline size="mini">
-            <el-form-item class="el-form-item" label="状态">
-              <el-select v-model="listQuery.status" class="select" clearable>
-                <el-option
-                  v-for="item in statusList"
-                  :key="item[0]"
-                  :label="item[1]"
-                  :value="item[0]">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="btn-group">
-          <el-button size="mini" style="margin: 0 5px;" type="primary" @click="getData">搜索</el-button>
-        </div>
-        <div class="btn-group">
           <el-button icon="el-icon-edit" size="mini" type="primary" @click="handleCreate">添加</el-button>
-        </div>
       </div>
       <div class="widget-content">
         <div class="page-container">
-          <el-table v-loading="loading" :data="data">
+          <el-table v-loading="loading" :data="data" stripe highlight-current-row>
             <el-table-column align="center" label="ID" prop="id" width="60"/>
             <el-table-column align="center" label="提交人" prop="username" width="80"/>
             <el-table-column align="center" label="题目" prop="question.name" width="120"/>
