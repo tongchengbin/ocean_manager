@@ -15,13 +15,15 @@
                   :value="item">
                 </el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item>
               <el-button size="mini" style="margin-left: 5px;" type="primary" @click="getList">搜索</el-button>
             </el-form-item>
           </el-form>
         </div>
-        <div class="btn-group">
-          <el-button icon="el-icon-edit" size="mini" type="primary" @click="handleCreate">添加</el-button>
-        </div>
+      </div>
+      <div class="action-bar">
+        <el-button icon="el-icon-edit" size="mini" type="primary" @click="handleCreate">添加</el-button>
       </div>
       <div class="widget-content">
         <el-table size="mini" fit highlight-current-row stripe v-loading="loading" :data="listData">

@@ -1,5 +1,6 @@
 <template>
-  <el-dialog v-if="show" :before-close="cancel" :show-close="false" :title="form.id? '编辑题目':'添加题目'" :visible.sync="show" center destroy-on-close
+  <el-dialog v-if="show" :before-close="cancel" :show-close="false" :title="form.id? '编辑题目':'添加题目'" :visible.sync="show"
+             center destroy-on-close
              width="800" @close="cancel">
     <el-form class="form" label-width="80px" size="mini">
       <el-row>
@@ -68,7 +69,7 @@
         <el-button type="primary" @click="handleFileClick">上传</el-button>
         <div style="width: 300px;">
           <div v-for="(item,index) in fileList" class="file-item">
-            <a :href="item.url" target="_blank">{{ item.name }}</a>
+            <a :href="item.file_path" target="_blank">{{ item.filename }}</a>
             <i class="el-icon-close" @click="removeFile(index)"></i>
           </div>
         </div>
@@ -137,8 +138,8 @@ export default {
         this.getDockerHost()
         this.getDockerImage()
       }
-      // this.fileList = this.data.attachment_set;
-
+      const { question_file } = this.data
+      this.fileList = question_file
     }
 
   },
@@ -166,11 +167,7 @@ export default {
       if (this.fileChange) {
         let attachment = [];
         for (let i = 0; i < this.fileList.length; i++) {
-          let item = {
-            name: this.fileList[i].name,
-            path: this.fileList[i].path ? this.fileList[i].path : this.fileList[i].response.path
-          }
-          attachment.push(item)
+          attachment.push(this.fileList[i])
         }
         this.form.attachment = attachment
       }
@@ -185,7 +182,7 @@ export default {
         })
 
       } else {
-        request.post('/admin/ctf/question', this.form).then(res => {
+        request.post('/admin/ctf/question/create', this.form).then(res => {
           this.$emit('action', true)
         }).catch(err => {
           this.$message({
@@ -217,11 +214,11 @@ export default {
       let file = inputDOM.files[0];
       let formData = new FormData();
       formData.append("file", file);  //文件上传处理
-      request.post('/api/manager/upload', formData).then(res => {
+      request.post('/admin/upload', formData).then(res => {
         this.fileChange = true
         this.fileList.push({
-          name: res.name,
-          path: res.path
+          filename: res.name,
+          file_path: res.file_path
         })
       })
     }
