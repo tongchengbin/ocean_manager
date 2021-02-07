@@ -36,11 +36,10 @@
       <div class="widget-content">
         <div class="page-container">
           <el-table v-loading="loading" :data="data" stripe highlight-current-row>
-            <el-table-column align="center" label="ID" prop="id" width="60"/>
             <el-table-column align="center" label="提交人" prop="username" width="80"/>
             <el-table-column align="center" label="题目" prop="question.name" width="120"/>
-            <el-table-column align="center" label="类别" prop="question.type" width="80"/>
-            <el-table-column align="center" label="得分" prop="score" width="80"/>
+            <el-table-column align="center" label="类别" prop="question.type" width="60"/>
+            <el-table-column align="center" label="得分" prop="score" width="50"/>
             <el-table-column align="center" label="Flag" prop="flag" width="240"/>
             <el-table-column align="center" label="状态" prop="has_solved" width="95">
               <template slot-scope="scope">

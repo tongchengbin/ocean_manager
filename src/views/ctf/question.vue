@@ -154,7 +154,7 @@ export default {
       }
     },
     switchActive(e, row) {
-      request.post(`/api/manager/ctf/question/${row.id}/active/`, {active: e}).then(res => {
+      request.post(`/admin/ctf/question/${row.id}/update`, {active: e}).then(res => {
         this.$message({
           message: "修改成功",
           type: "success",

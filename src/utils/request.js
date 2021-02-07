@@ -44,9 +44,15 @@ service.interceptors.response.use(
     switch (error.response.status) {
       case 403:
         router.push('/login')
-
+        break
+      case 500:
+        Message({
+          message: "服务器错误："+ error.response.data.error,
+          type:"error",
+          duration:5*1000
+        })
+        break
     }
-
     return Promise.reject(error)
   }
 )

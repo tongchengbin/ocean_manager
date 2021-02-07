@@ -11,6 +11,9 @@
         <el-form-item label="Docker API">
           <el-input v-model="form.addr" :disabled="!!checkHost.id" ></el-input>
         </el-form-item>
+        <el-form-item label="是否启用">
+          <el-switch v-model="form.active"></el-switch>
+        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="form.remark" ></el-input>
         </el-form-item>
@@ -42,6 +45,7 @@
       data(){
         return {
           form:{
+            active: this.checkHost && this.checkHost.active,
             ip:this.checkHost && this.checkHost.ip,
             name:this.checkHost && this.checkHost.name,
             addr:this.checkHost && this.checkHost.addr,
@@ -56,7 +60,7 @@
               //  编辑
                 let data = this.form;
                 data.id = this.checkHost.id;
-                request.post('/admin/docker/editHost',data).then(res=>{
+                request.post(`/admin/docker/host/${data.id}/update`,data).then(res=>{
                   this.$message({message:"修改成功",type:"success"})
                   this.$emit('success',true)
                 }).catch(err=>{
@@ -64,7 +68,7 @@
                 })
               }else{
               //  添加
-                request.post('/admin/docker/addHost',this.form).then(res=>{
+                request.post('/admin/docker/host',this.form).then(res=>{
                   this.$message({message:"添加成功",type:"success"})
                   this.$emit('success',true)
                 }).catch(err=>{
