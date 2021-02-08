@@ -166,6 +166,17 @@ export const asyncRoutes = [
       name: '系统管理员',
       meta: {title: '管理员列表', icon: '管理员', noCache: true}
     }]
+  },
+  {
+    path: '/ops',
+    component: Layout,
+    meta: {title: "运维",icon: 'system',noCache:true},
+    children: [{
+      path: 'logs',
+      component: () => import('../views/ops/logs'),
+      name: 'logs',
+      meta: {title: '日志', icon: 'table', noCache: true}
+    }]
   }
 
 ]
