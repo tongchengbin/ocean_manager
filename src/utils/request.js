@@ -45,9 +45,16 @@ service.interceptors.response.use(
       case 403:
         router.push('/login')
         break
+      case 400:
+          Message({
+            message: error.response.data.msg,
+            type:"error",
+            duration:5*1000
+          })
+        break
       case 500:
         Message({
-          message: "服务器错误："+ error.response.data.error,
+          message: "服务器错误："+ error.response.data.msg,
           type:"error",
           duration:5*1000
         })

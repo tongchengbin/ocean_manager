@@ -24,7 +24,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button size="mini" @click="$emit('handleEdit',false)">取消</el-button>
-      <el-button size="mini" type="primary" @click="submit">{{ form.id ?'更新':'提交'}}</el-button>
+      <el-button size="mini" type="primary" @click="submit">{{ formData.id ?'更新':'提交'}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -37,7 +37,7 @@ export default {
   props:{
     form:{
       type:Object,
-      default:{}
+      default:()=>{}
     }
   },
   data(){
@@ -51,8 +51,8 @@ export default {
   created() {
     this.show = true;
     this.getRole()
-    this.formData = this.form;
-    if(this.form.id){
+    this.formData = this.form || {};
+    if(this.formData.id){
       this.title = "编辑管理员"
     }else{
       this.title = "添加管理员"
@@ -60,13 +60,13 @@ export default {
   },
   methods:{
     getRole(){
-      request.get('/admin/roles').then(res=>{
+      request.get('/admin/role').then(res=>{
         this.roles = res.data
       })
     },
     submit() {
       if (!this.form) {
-        request.post('/admin/sys_user', this.formData).then(res => {
+        request.post('/admin/admin', this.formData).then(res => {
           this.$message({
               message: '添加成功',
               type: 'success'})
@@ -78,7 +78,7 @@ export default {
             })
         })
       } else {
-        request.post(`/admin/sys_user/${this.formData.id}`, this.formData).then(res => {
+        request.put(`/admin/admin/${this.formData.id}`, this.formData).then(res => {
           this.$message({
             message: '操作成功',
             type: 'success'

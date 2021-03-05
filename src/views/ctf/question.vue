@@ -3,8 +3,7 @@
     <add-question v-if="showAddQuestion" :data="chiData" :show="showAddQuestion" @action="handleAdd"></add-question>
     <div class="widget">
       <div class="tool-bar">题库</div>
-      <div class="action-bar">
-        <div class="btn-group">
+      <div class="search-group">
           <el-form inline size="mini">
             <el-form-item class="el-form-item" label="分类">
               <el-select v-model="listQuery.q_type" class="select" clearable>
@@ -17,13 +16,12 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button size="mini" style="margin-left: 5px;" type="primary" @click="getList">搜索</el-button>
+              <el-button size="mini"  type="primary" @click="getList">查询</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button  size="mini" type="primary" @click="handleCreate">添加</el-button>
             </el-form-item>
           </el-form>
-        </div>
-      </div>
-      <div class="action-bar">
-        <el-button icon="el-icon-edit" size="mini" type="primary" @click="handleCreate">添加</el-button>
       </div>
       <div class="widget-content">
         <el-table size="mini" fit highlight-current-row stripe v-loading="loading" :data="listData">
@@ -79,6 +77,18 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="pagination-container">
+          <el-pagination
+            :current-page="listQuery.page"
+            :page-size="listQuery.page_size"
+            :page-sizes="[10,20,30, 50]"
+            :total="total"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -97,12 +107,14 @@ export default {
     return {
       qType: [],
       listQuery: {
-        page_size: 999,
+        page:1,
+        page_size: 10,
         subject: null,
       },
       loading: false,
       chiData: {},
       showAddQuestion: false,
+      total:0,
       listData: [],
       rid: null,
       captureName: null
@@ -125,9 +137,18 @@ export default {
       request.get(`/admin/ctf/question`, this.listQuery).then(res => {
         this.listData = res.results;
         this.loading = false;
-        console.log('show', this.showAddQuestion)
-      })
+        this.total = res.total
+      }).catch(err=>{
 
+      })
+    },
+    handleSizeChange(e){
+      this.listQuery.page_size = e;
+      this.getList()
+    },
+    handleCurrentChange(e){
+      this.listQuery.page = e;
+      this.getList()
     },
     handleCreate() {
       this.chiData = {capture: this.rid}
@@ -139,7 +160,7 @@ export default {
 
     },
     deleteHandle(row) {
-      request.post(`/admin/ctf/question/${row.id}/delete`,).then(res => {
+      request.delete(`/admin/ctf/question/${row.id}`,).then(res => {
         this.$message({
           message: "删除成功",
           type: "success"

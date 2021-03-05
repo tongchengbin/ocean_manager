@@ -172,23 +172,17 @@ export default {
         this.form.attachment = attachment
       }
       if (this.form.id) {
-        request.post(`/admin/ctf/question/${this.form.id}/update`, this.form).then(res => {
+        request.put(`/admin/ctf/question/${this.form.id}`, this.form).then(res => {
           this.$emit('action', true)
         }).catch(err => {
-          this.$message({
-            message: err.response.data.msg,
-            type: "error"
-          })
+
         })
 
       } else {
-        request.post('/admin/ctf/question/create', this.form).then(res => {
+        request.post('/admin/ctf/question', this.form).then(res => {
           this.$emit('action', true)
         }).catch(err => {
-          this.$message({
-            message: err.response.data.msg,
-            type: "error"
-          })
+
         })
       }
     },

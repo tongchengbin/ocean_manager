@@ -3,28 +3,36 @@
     <!--搜索-->
     <div class="widget">
       <div class="tool-bar">公告提醒</div>
-      <div class="action-bar">
-        <el-input v-model="listQuery.search" size="mini" style="width: 200px;" placeholder="公告内容" />
-        <el-button size="mini" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-        <el-button size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <div class="search-group">
+        <el-form size="mini" inline>
+          <el-form-item>
+            <el-input v-model="listQuery.search" size="mini" style="width: 200px;" placeholder="公告内容" />
+          </el-form-item>
+          <el-form-item>
+            <el-button size="mini" type="primary"  @click="handleFilter">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button size="mini"  type="primary"  @click="handleCreate">添加</el-button>
+          </el-form-item>
+        </el-form>
       </div>
       <div class="widget-content">
         <el-table v-loading="listLoading" size="mini" :data="list"  style="width: 100%" fit highlight-current-row stripe>
           <el-table-column align="center" label="ID" width="70px" prop="id">
           </el-table-column>
-          <el-table-column label="内容" width="150px" align="center" prop="content"></el-table-column>
-          <el-table-column  label="是否显示" width="150px" align="center" prop="active">
+          <el-table-column label="内容"  align="center" prop="content"></el-table-column>
+          <el-table-column  label="是否显示" width="80" align="center" prop="active">
             <template slot-scope="scope">
               <el-switch @change=changeActive($event,scope.row) v-model="scope.row.active"></el-switch>
             </template>
           </el-table-column>
-            <el-table-column label="是否置顶" width="150px" align="center" prop="content">
+            <el-table-column label="是否置顶" width="80" align="center" prop="content">
               <template slot-scope="scope">
                 <el-switch @change=changeTop($event,scope.row) v-model="scope.row.is_top"></el-switch>
               </template>
             </el-table-column>
           <el-table-column align="center" label="发布日期" prop="date_created"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
             </template>
@@ -43,10 +51,9 @@
           />
         </div>
       </div>
-
     </div>
     <el-dialog width="500px" :title="'添加公告'" center :visible.sync="edit">
-      <el-form>
+      <el-form size="mini">
         <el-form-item label="是否公开">
           <el-switch v-model="form.active"></el-switch>
         </el-form-item>
@@ -118,7 +125,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      request.get("/admin/notice/list", this.listQuery).then(response => {
+      request.get("/admin/notice", this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         this.listLoading = false
@@ -128,7 +135,7 @@ export default {
       let form={
         isTop:e
       }
-      request.post(`/admin/notice/${row.id}`,form).then(res=>{
+      request.put(`/admin/notice/${row.id}`,form).then(res=>{
 
       })
     },
@@ -136,12 +143,12 @@ export default {
       let form={
         active:e
       }
-      request.post(`/admin/notice/${row.id}`,form).then(res=>{
+      request.put(`/admin/notice/${row.id}`,form).then(res=>{
 
       })
     },
     handleDelete(row) {
-      request.post(`/admin/notice/${row.id}/delete` ).then(res => {
+      request.delete(`/admin/notice/${row.id}` ).then(res => {
         this.getList()
       })
     },

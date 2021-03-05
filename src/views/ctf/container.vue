@@ -2,16 +2,15 @@
   <div class="container">
     <div class="widget">
       <div class="tool-bar">赛事容器</div>
-      <div class="action-bar">
+      <div class="search-group">
         <div class="btn-group">
           <el-tooltip class="item" content="强制刷新容器状态" effect="dark" placement="right">
             <el-button size="mini" type="primary">刷新</el-button>
           </el-tooltip>
-
         </div>
       </div>
       <div class="widget-content">
-        <el-table :data="data">
+        <el-table v-loading="loading" size="mini" :data="data" highlight-current-row>
           <el-table-column align="center" label="资源ID" prop="container_resource" width="70"></el-table-column>
           <el-table-column align="center" label="容器名称" prop="container_name"></el-table-column>
           <el-table-column align="center" label="绑定用户" prop="username"></el-table-column>
@@ -30,9 +29,20 @@
               </el-tooltip>
               <el-button size="mini" type="primary" @click="refresh(scope.row)">刷新</el-button>
             </template>
-
           </el-table-column>
         </el-table>
+        <div class="pagination-container">
+          <el-pagination
+            :current-page="listQuery.page"
+            :page-size="listQuery.page_size"
+            :page-sizes="[10,20,30, 50]"
+            :total="total"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -45,34 +55,48 @@ export default {
   name: "container",
   data() {
     return {
+      loading:false,
       data: [],
-      lisQuery: {}
+      total:0,
+      listQuery: {
+        page:1,
+        page_size:10,
+      }
     }
   },
   created() {
-    this.getData()
+    this.fetchData()
   },
   methods: {
-    getData() {
+    fetchData() {
+      this.loading = true;
       request.get('/admin/ctf/containers', this.listQuery).then(res => {
         this.data = res.data;
-        console.log(res.data)
+        this.total = res.total;
+        this.loading = false;
       })
+    },
+    handleSizeChange(e){
+      this.listQuery.page_size = e;
+      this.fetchData()
+    },
+    handleCurrentChange(e){
+      this.listQuery.page = e;
+      this.fetchData()
     },
     refresh(item) {
       request.post(`/admin/ctf/containers/${item.container_resource}/refresh`).then(res => {
-        this.getData()
+        this.fetchData()
+      }).catch(err=>{
+
       })
     },
     containerRemove(item) {
       request.post(`/admin/ctf/containers/${item.container_resource}/remove`).then(res => {
         this.$message({message: res.msg})
-        this.getData()
+        this.fetchData()
       }).catch(res => {
-        this.$message({
-          message: res.response.data.msg
-        })
-        this.getData()
+        this.fetchData()
       })
     }
   }

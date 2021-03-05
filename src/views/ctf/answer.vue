@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <add-question v-if="showAddQuestion" :data="chiData" :show="showAddQuestion" @action="handleAdd"></add-question>
     <div class="widget">
       <div class="tool-bar">答题记录</div>
       <div class="search-group">
@@ -26,16 +25,16 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button size="mini" style="margin: 0 5px;" type="primary" @click="getData">搜索</el-button>
+            <el-button size="mini" style="margin: 0 5px;" type="primary" @click="getData">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button  size="mini" type="primary" @click="handleCreate">添加</el-button>
           </el-form-item>
         </el-form>
       </div>
-      <div class="action-bar">
-          <el-button icon="el-icon-edit" size="mini" type="primary" @click="handleCreate">添加</el-button>
-      </div>
       <div class="widget-content">
         <div class="page-container">
-          <el-table v-loading="loading" :data="data" stripe highlight-current-row>
+          <el-table size="mini" v-loading="loading" :data="data" stripe highlight-current-row>
             <el-table-column align="center" label="提交人" prop="username" width="80"/>
             <el-table-column align="center" label="题目" prop="question.name" width="120"/>
             <el-table-column align="center" label="类别" prop="question.type" width="60"/>
@@ -137,8 +136,11 @@ export default {
 
     },
     handleCreate() {
-      this.chiData = {capture: this.rid}
-      this.showAddQuestion = true;
+      this.$message({type:"warning",message:"Todos"})
+    },
+    handleAdd(){
+      this.showAddQuestion = false;
+      this.getData()
     },
     destroyItem(data) {
       this.chiData = data;

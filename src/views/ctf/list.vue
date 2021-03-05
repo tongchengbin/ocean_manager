@@ -3,7 +3,7 @@
     <!--搜索-->
     <div class="filter-container">
       <el-input v-model="listQuery.search" placeholder="赛事名称" size="small" style="width: 200px;"/>
-      <el-button icon="el-icon-search" size="small" type="primary" @click="handleFilter">Search</el-button>
+      <el-button icon="el-icon-search" size="small" type="primary" @click="handleFilter">查询</el-button>
     </div>
     <!--用户列表-->
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row size="mini" style="width: 100%">

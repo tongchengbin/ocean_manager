@@ -89,15 +89,12 @@
       methods:{
           getList(){
           //  获取主机列表
-            let options={
-
-            }
-            let loading = Loading.service({target:'.host-container'})
-            request.get('/admin/docker/hostList',this.listQuery).then(res=>{
-              this.listData = res.data;
-              this.listTotal = res.total;
-              loading.close()
-            })
+          this.loading = true;
+          request.get('/admin/docker/hostList',this.listQuery).then(res=>{
+            this.listData = res.data;
+            this.listTotal = res.total;
+            this.loading = false;
+          })
 
           },
         handleAddHost(e){

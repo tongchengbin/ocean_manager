@@ -37,7 +37,7 @@ export const asyncRoutes = [
       auth: true,
       title: '用户管理',
       icon: '用户管理',
-      roles: ['superuser', 'admin']
+      roles: [1,2,3,4]
     },
     children: [
       {
@@ -64,7 +64,7 @@ export const asyncRoutes = [
   {
     path:'/docker',
     component: Layout,
-    meta:{'title':'容器管理',icon: 'docker_1',auth: true},
+    meta:{'title':'容器管理',icon: 'docker_1',auth: true,roles: [1,2,3,4]},
     children: [
       {
         path: 'dockerHost',
@@ -81,7 +81,6 @@ export const asyncRoutes = [
         hidden: true,
         meta: {'title': '容器主机详情', icon: 'host', auth: true},
       },
-
       {
         path: 'image',
         component: () => import('../views/docker/images'),
@@ -159,12 +158,19 @@ export const asyncRoutes = [
   {
     path: '/system',
     component: Layout,
-    meta: {title: "系统设置",icon: 'system',noCache:true},
-    children: [{
+    meta: {title: "系统设置",icon: 'system',noCache:true,roles: [1,2]},
+    children: [
+      {
+        path: 'role',
+        component: () => import('../views/system/role'),
+        name: '角色管理',
+        meta: {title: '角色管理', icon: '', noCache: true}
+      },
+      {
       path: 'admin',
       component: () => import('../views/system/admins'),
       name: '系统管理员',
-      meta: {title: '管理员列表', icon: '管理员', noCache: true}
+      meta: {title: '管理员列表', icon: '', noCache: true}
     }]
   },
   {

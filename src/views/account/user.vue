@@ -3,10 +3,10 @@
     <!--搜索-->
     <div class="widget">
     <div class="tool-bar">用户管理</div>
-    <div class="action-bar">
+    <div class="search-group">
       <el-input v-model="listQuery.search" size="mini" style="width: 200px;" placeholder="用户名" />
-      <el-button size="mini" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button size="mini" type="primary"  @click="handleFilter">查询</el-button>
+      <el-button size="mini"  type="primary"  @click="handleCreate">添加</el-button>
     </div>
       <div class="widget-content">
         <!--用户列表-->
@@ -108,7 +108,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      request.get("/admin/users", this.listQuery).then(response => {
+      request.get("/admin/user", this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         this.listLoading = false

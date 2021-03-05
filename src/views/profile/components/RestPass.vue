@@ -10,7 +10,7 @@
       <el-input v-model.trim="pass2" />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit">提交</el-button>
+      <el-button size="mini" type="primary" @click="submit">提交</el-button>
     </el-form-item>
   </el-form>
 </template>

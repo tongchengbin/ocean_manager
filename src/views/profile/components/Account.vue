@@ -1,10 +1,14 @@
 <template>
-  <el-form>
+  <el-form size="mini">
+    <el-form-item label="角色">
+      <el-input v-model.trim="user.role_name" disabled></el-input>
+    </el-form-item>
     <el-form-item label="用户名">
       <el-input v-model.trim="user.username" />
     </el-form-item>
+
     <el-form-item>
-      <el-button type="primary" @click="submit">更新</el-button>
+      <el-button size="mini" type="primary" @click="submit">更新</el-button>
     </el-form-item>
   </el-form>
 </template>

@@ -47,8 +47,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'superuser',
-        password: 'admin'
+        username: 'test',
+        password: 'test'
       },
       passwordType: 'password',
       loading: false,
@@ -82,7 +82,7 @@ export default {
       }).catch(err=>{
         this.loading = false
         Message({
-          message: err.response.data.error,
+          message: err.response.data.msg,
           type: 'error',
           duration: 5 * 1000
         })

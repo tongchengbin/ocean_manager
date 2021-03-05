@@ -9,6 +9,6 @@ export function logout() {
 }
 
 export function getUserInfo() {
-  return request.get('/admin/info')
+  return request.get('/admin/login')
 }
 

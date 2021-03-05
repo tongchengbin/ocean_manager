@@ -47,7 +47,7 @@ name: "addUser",
     //   添加用户  更新用户
       if(this.data.id){
         let data = this.data
-        request.post('/admin/user',data).then(res=>{
+        request.put(`/admin/user/${data.id}`,data).then(res=>{
           this.$emit('success')
         }).catch(err=>{
           this.$message({
