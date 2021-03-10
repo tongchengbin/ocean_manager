@@ -127,6 +127,7 @@ export default {
       request.post(`/admin/docker/host/${this.pk}/image/build?build_type=${this.$refs.tab.currentName}&tag=${this.tag}`,data).then(res=>{
         this.$message({message:"任务已提交",type:"success"})
         this.showLog=true;
+        this.output = [];
         this.loopResponse(res.data.task)
       }).catch(err=>{
         this.$message({message:err.response.data.error,type:"error"})
