@@ -14,10 +14,14 @@
           <tr>
             <td>主机信息</td>
             <td class="small text-muted">
-              <span>CPU {{data.info.NCPU}}  &nbsp;&nbsp;&nbsp;</span>
-              <span style="margin-left: 1em">Mem {{ (data.info.MemTotal/1000/1000/1000).toFixed(0)}}GB</span>
-              <span style="margin-left: 1em">&nbsp;{{data.info.OperatingSystem}}&nbsp;-&nbsp;Standalone{{data.info.ServerVersion}}</span>
+              <span>CPU {{data.info.cpu}}  &nbsp;&nbsp;&nbsp;</span>
+              <span style="margin-left: 1em">Mem {{ data.info.memory}}GB</span>
+              <span style="margin-left: 1em">&nbsp;{{data.info.system}}&nbsp;-&nbsp;Standalone{{data.info.version}}</span>
             </td>
+          </tr>
+          <tr>
+            <td>IP</td>
+            <td class="small text-muted">{{data.ip}}</td>
           </tr>
           <tr>
             <td>连接地址</td>
@@ -38,23 +42,12 @@
       <div class="docker">
         <el-row>
           <el-col :md="12" :xs="24">
-            <div class="box">
-              <div
-                style="height: 65px;width: 65px;background-color: #2361ae!important;vertical-align: middle;text-align: center;border-radius: 32px">
-                <i class="iconfont icon-stack" style="color: #f0f0f0;font-size: 35px;line-height: 65px"></i></div>
-              <div class="state">
-                <div class="state-item">0</div>
-                <div class="comment">Stacks</div>
-              </div>
-            </div>
-          </el-col>
-          <el-col :md="12" :xs="24">
             <div class="box" @click="$router.push({path:'/docker/container/',query:{id:pk}})">
               <div
                 style="height: 65px;width: 65px;background-color: #2361ae!important;vertical-align: middle;text-align: center;border-radius: 32px">
                 <i class="iconfont icon-volumes" style="color: #f0f0f0;font-size: 35px;line-height: 65px"></i></div>
               <div class="state">
-                <div class="state-item">{{ data.info.Containers }}</div>
+                <div class="state-item">{{ data.info.containers }}</div>
                 <div class="comment">Container</div>
               </div>
             </div>
@@ -65,7 +58,7 @@
                 style="height: 65px;width: 65px;background-color: #2361ae!important;vertical-align: middle;text-align: center;border-radius: 32px">
                 <i class="iconfont icon-jingxiang" style="color: #f0f0f0;font-size: 35px;line-height: 65px"></i></div>
               <div class="state">
-                <div class="state-item">{{data.info.Images}}</div>
+                <div class="state-item">{{data.info.images }}</div>
                 <div class="comment">Image</div>
               </div>
             </div>
@@ -84,7 +77,11 @@
     data() {
       return {
         data: {
-          info:{}
+          info:{
+            memory:0,
+            containers:null,
+            cpu:null,
+          }
         },
         pk: null,
         listQuery: {
@@ -99,19 +96,16 @@
 
     created() {
       this.pk = this.$route.query.id;
-      this.getDetail()
+      this.fetchData()
 
     },
     methods: {
-      getDetail() {
+      fetchData() {
         if (!this.pk) {
           this.$router.push('docker')
           return
         }
-        let params = {
-          id: this.pk
-        }
-        request.get(`/admin/docker/hostDetail`, params).then(res => {
+        request.get(`/admin/docker/host/${this.pk}`).then(res => {
           this.data = res.data
         })
       },
@@ -131,11 +125,9 @@
   }
 
   .widget {
-    font-family: Montserrat;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
     box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
     background: #fff;
-    border: 1px solid transparent;
     border-radius: 2px;
     border-color: #e9e9e9;
   }

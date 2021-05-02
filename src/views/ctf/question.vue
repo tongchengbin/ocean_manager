@@ -138,7 +138,7 @@ export default {
         this.listData = res.results;
         this.loading = false;
         this.total = res.total
-      }).catch(err=>{
+      }).catch(_=>{
 
       })
     },
@@ -160,7 +160,7 @@ export default {
 
     },
     deleteHandle(row) {
-      request.delete(`/admin/ctf/question/${row.id}`,).then(res => {
+      request.delete(`/admin/ctf/question/${row.id}`,).then(_ => {
         this.$message({
           message: "删除成功",
           type: "success"
@@ -175,7 +175,7 @@ export default {
       }
     },
     switchActive(e, row) {
-      request.post(`/admin/ctf/question/${row.id}/update`, {active: e}).then(res => {
+      request.put(`/admin/ctf/question/${row.id}`, {active: e}).then(_ => {
         this.$message({
           message: "修改成功",
           type: "success",

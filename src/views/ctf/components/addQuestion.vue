@@ -2,15 +2,15 @@
   <el-dialog v-if="show" :before-close="cancel" :show-close="false" :title="form.id? '编辑题目':'添加题目'" :visible.sync="show"
              center destroy-on-close
              width="800" @close="cancel">
-    <el-form class="form" label-width="80px" size="mini">
+    <el-form mode="form" ref="form" class="form" label-width="80px" size="mini">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="名称">
+          <el-form-item label="名称" required>
             <el-input v-model="form.name"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="类别">
+          <el-form-item label="类别" required>
             <el-select v-model="form.type">
               <el-option
                 v-for="item in options"
@@ -40,13 +40,13 @@
         <el-select v-model="form.image" clearable filterable>
           <el-option
             v-for="item in imageOption"
-            :key="item.RepoTags[0]"
-            :label="item.RepoTags[0]"
-            :value="item.Id">
+            :key="item.repo"
+            :label="item.repo"
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-else class="block-input" label="Flag">
+      <el-form-item v-else class="block-input" label="Flag" required>
         <el-row>
           <el-col :span="20">
             <el-input v-model="form.flag"></el-input>
@@ -59,7 +59,7 @@
       </el-form-item>
       <el-row>
         <el-col :span="8">
-          <el-form-item label="积分">
+          <el-form-item label="积分" required>
             <el-input v-model="form.integral" type="number"></el-input>
           </el-form-item>
         </el-col>
@@ -138,7 +138,7 @@ export default {
         this.getDockerHost()
         this.getDockerImage()
       }
-      const { question_file } = this.data
+      const {question_file} = this.data
       this.fileList = question_file
     }
 
@@ -156,7 +156,7 @@ export default {
 
     },
     getDockerHost() {
-      request.get('/admin/docker/hostList', {'page_size': 999}).then(res => {
+      request.get('/admin/docker/host', {'page_size': 999}).then(res => {
         this.hostOption = res.data;
       })
     },
@@ -171,17 +171,30 @@ export default {
         }
         this.form.attachment = attachment
       }
+      // validate
+      if(!this.form.name){
+        this.$message({message:"请输入题目名称",type:"error"})
+        return
+      }
+      if(!this.form.type){
+        this.$message({message:"请选择题目分类",type:"error"})
+        return
+      }
+      if(!this.form.integral){
+        this.$message({message:"请输入题目分数",type:"error"})
+        return
+      }
       if (this.form.id) {
-        request.put(`/admin/ctf/question/${this.form.id}`, this.form).then(res => {
+        request.put(`/admin/ctf/question/${this.form.id}`, this.form).then(_ => {
           this.$emit('action', true)
-        }).catch(err => {
+        }).catch(_ => {
 
         })
 
       } else {
-        request.post('/admin/ctf/question', this.form).then(res => {
+        request.post('/admin/ctf/question', this.form).then(_ => {
           this.$emit('action', true)
-        }).catch(err => {
+        }).catch(_ => {
 
         })
       }
@@ -203,7 +216,7 @@ export default {
       this.fileChange = true;
       this.fileList.splice(index, 1)
     },
-    handleFile(e) {
+    handleFile() {
       let inputDOM = this.$refs.inputer;
       let file = inputDOM.files[0];
       let formData = new FormData();

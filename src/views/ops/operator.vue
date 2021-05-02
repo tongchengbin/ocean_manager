@@ -1,25 +1,35 @@
 <template>
   <div class="container">
     <div class="widget">
-      <div class="tool-bar">角色管理</div>
+      <div class="tool-bar">审计日志</div>
       <!--搜索-->
       <div class="search-group">
         <el-form size="mini" inline>
           <el-form-item>
-            <el-button size="mini" type="primary" @click="fetchData">查询</el-button>
+            <el-input size="mini" v-model="listQuery.search" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="结果">
+            <el-select v-model="listQuery.code" class="select" clearable>
+              <el-option value="1" label="成功"></el-option>
+              <el-option value="0" label="失败"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button size="mini" type="primary" @click="handleCreate">添加</el-button>
+            <el-button size="mini" type="primary" @click="fetchData">查询</el-button>
           </el-form-item>
         </el-form>
       </div>
       <el-table size="mini" :data="list" v-loading="loading" highlight-current-row>
         <el-table-column label="角色ID" prop="id"></el-table-column>
-        <el-table-column label="角色名" prop="name"></el-table-column>
-        <el-table-column prop="Action" width="150">
+        <el-table-column label="用户名" prop="username"></el-table-column>
+        <el-table-column label="角色" prop="role"></el-table-column>
+        <el-table-column label="操作内容" prop="content"></el-table-column>
+        <el-table-column label="时间" prop="create_time"></el-table-column>
+        <el-table-column label="ip" prop="ip"></el-table-column>
+        <el-table-column label="状态" prop="code">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="itemEdit(scope.row)">编辑</el-button>
-            <el-button type="danger" size="mini" @click="itemDelete(scope.row)">删除</el-button>
+            <span v-if="scope.row.code === true">成功<i style="color: #67C23A" class="el-icon-success"></i></span>
+            <span v-else>失败<i style="color: #F56C6C" class="el-icon-error"></i></span>
           </template>
         </el-table-column>
       </el-table>
@@ -49,6 +59,8 @@ export default {
   data(){
     return {
       listQuery:{
+        search:null,
+        code:null,
         page:1,
         page_size:10,
       },
@@ -65,7 +77,7 @@ export default {
   methods:{
     fetchData() {
       this.loading = true;
-      request.get('/admin/role').then(res=>{
+      request.get('/admin/operator',this.listQuery).then(res=>{
         this.loading = false
         const {data} = res;
         this.list = data

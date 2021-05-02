@@ -51,10 +51,6 @@ export default {
           })
           this.$emit('handleEdit',true)
         }).catch(err =>{
-          this.$message({
-            message: err.response.data.msg,
-            type: 'error'
-          })
         })
       } else {
         request.post('/admin/role', this.formData).then(res => {
@@ -63,10 +59,6 @@ export default {
             type: 'success'})
           this.$emit('handleEdit',true)
         }).catch(res => {
-          this.$message({
-            message: res.response.data.msg,
-            type: 'error'
-          })
         })
       }
     },

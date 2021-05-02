@@ -55,7 +55,7 @@ export default {
         this.$message.success("密码修改成功")
         this.oldPass = this.pass = this.pass2 = ''
       }).catch(err=>{
-        this.$message.error(err.response.data.msg)
+
       })
     }
   }

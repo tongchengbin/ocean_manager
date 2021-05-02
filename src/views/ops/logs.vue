@@ -47,7 +47,6 @@ name: "logs",
       request.get('/admin/logs',{params:this.listQuery}).then(res=>{
         this.list = res.data
       }).catch(err=>{
-        this.$message({type:"error",message:err.response.data.msg})
       })
 
     }

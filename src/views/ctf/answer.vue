@@ -27,9 +27,6 @@
           <el-form-item>
             <el-button size="mini" style="margin: 0 5px;" type="primary" @click="getData">查询</el-button>
           </el-form-item>
-          <el-form-item>
-            <el-button  size="mini" type="primary" @click="handleCreate">添加</el-button>
-          </el-form-item>
         </el-form>
       </div>
       <div class="widget-content">
@@ -135,16 +132,13 @@ export default {
       })
 
     },
-    handleCreate() {
-      this.$message({type:"warning",message:"Todos"})
-    },
     handleAdd(){
       this.showAddQuestion = false;
       this.getData()
     },
     destroyItem(data) {
       this.chiData = data;
-      request.post(`/api/manager/ctf/solved/${row.id}/to_void/`).then(res => {
+      request.post(`/api/manager/ctf/solved/${row.id}/to_void/`).then(_ => {
         this.$message({
           message: "已作废",
           type: "success"
@@ -154,7 +148,7 @@ export default {
 
     },
     switchActive(e, row) {
-      request.post(`/api/manager/ctf/question/${row.id}/active/`, {active: e}).then(res => {
+      request.post(`/api/manager/ctf/question/${row.id}/active/`, {active: e}).then(_ => {
         this.$message({
           message: "修改成功",
           type: "success",

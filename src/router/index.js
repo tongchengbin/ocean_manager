@@ -64,7 +64,7 @@ export const asyncRoutes = [
   {
     path:'/docker',
     component: Layout,
-    meta:{'title':'容器管理',icon: 'docker_1',auth: true,roles: [1,2,3,4]},
+    meta:{'title':'容器管理',icon: 'docker_1',auth: true},
     children: [
       {
         path: 'dockerHost',
@@ -87,7 +87,7 @@ export const asyncRoutes = [
         name: 'dockerImages',
         auth: true,
         hidden: true,
-        meta: {'title': '镜像管理', icon: 'icon' },
+        meta: {'title': 'Image', icon: 'icon' },
       },
       {
         path: 'container',
@@ -177,7 +177,14 @@ export const asyncRoutes = [
     path: '/ops',
     component: Layout,
     meta: {title: "运维",icon: 'system',noCache:true},
-    children: [{
+    children: [
+      {
+        path: 'operator',
+        component: () => import('../views/ops/operator'),
+        name: 'operator',
+        meta: {title: '审计日志', icon: 'table', noCache: true}
+      },
+      {
       path: 'logs',
       component: () => import('../views/ops/logs'),
       name: 'logs',

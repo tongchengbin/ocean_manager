@@ -5,12 +5,12 @@
       <div class="action-bar">
         <el-button @click="checkHost={};showAdd=true" size="mini" icon="el-icon-plus" type="primary" >添加</el-button>
       </div>
-      <div class="host-container" v-loading="loading">
+      <div class="host-container">
         <div class="box-warp" v-for="item in listData">
           <el-card  >
             <div class="box-header">
               <div style="text-align: left"><div class="server-list__item-header-left">
-                <img src="https://imgcache.qq.com/open_proj/proj_qcloud_v2/tc-console/tea-static-lighthouse/src/styles/slice/CentOS.svg" class="tea-align-middle tea-mr-1n" style="height: 32px;">
+                <img alt="" src="https://imgcache.qq.com/open_proj/proj_qcloud_v2/tc-console/tea-static-lighthouse/src/styles/slice/CentOS.svg" class="tea-align-middle tea-mr-1n" style="height: 32px;">
                 <span>{{item.name}}</span>
               </div></div>
               <div style="text-align: right;flex: auto;">
@@ -66,7 +66,6 @@
 <script>
   import request from '../../api/public'
     import AddHost from "./components/addHost";
-  import { Loading } from 'element-ui';
     export default {
         name: "host",
       components: {AddHost},
@@ -90,7 +89,7 @@
           getList(){
           //  获取主机列表
           this.loading = true;
-          request.get('/admin/docker/hostList',this.listQuery).then(res=>{
+          request.get('/admin/docker/host',this.listQuery).then(res=>{
             this.listData = res.data;
             this.listTotal = res.total;
             this.loading = false;
@@ -111,7 +110,7 @@
         },
         handleDelete(row){
         //    删除主机
-          request.post(`/admin/docker/host/${row.id}/delete`).then(res=>{
+          request.delete(`/admin/docker/host/${row.id}`).then(_=>{
             this.$message({message:"删除成功",type:"success"})
             this.getList()
           })
@@ -125,9 +124,6 @@
 </script>
 
 <style scoped>
-  .table{
-    padding: 15px;
-  }
   .sys-info span{
     font-size: 80%;
   }

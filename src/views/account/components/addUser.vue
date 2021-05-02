@@ -1,13 +1,13 @@
 <template>
-  <el-dialog :title="data.id?'编辑用户':'添加用户'" :visible.sync="show" size="mini" custom-class="usereidt">
-    <el-form ref="dataForm" size="mini" :model="data" label-position="left" label-width="80px" label-suffix=":" style="width: 600px; margin: auto auto;font-size: 13px;">
-      <el-form-item size="mini" label="用户名" prop="username">
+  <el-dialog @close="" :title="data.id?'编辑用户':'添加用户'" :visible.sync="show" size="mini" custom-class="usereidt">
+    <el-form ref="dataForm" size="mini" :model="data" label-position="left" label-width="100px" label-suffix=":" style="width: 600px; margin: auto auto;font-size: 13px;">
+      <el-form-item size="mini" label="用户名" prop="username" required>
         <el-input v-model="data.username" />
       </el-form-item>
-      <el-form-item size="mini" label="密    码" prop="password">
+      <el-form-item size="mini" label="密    码" prop="password" required>
         <el-input v-model="data.password" type="password" />
       </el-form-item>
-      <el-form-item size="mini" label="确认密码" prop="confirm_password" style="font-size: 12px">
+      <el-form-item size="mini" label="确认密码" prop="confirm_password" required>
         <el-input v-model="data.confirm_password" type="password" />
       </el-form-item>
     </el-form>
@@ -57,6 +57,22 @@ name: "addUser",
         })
       }else{
         let data = this.data
+        if(!data.username){
+          this.$message({message:"请输入用户名",type:"error"})
+          return
+        }
+        if(!data.password){
+          this.$message({message:"请输入密码",type:"error"})
+          return
+        }
+        if(!data.confirm_password){
+          this.$message({message:"请输入确认密码",type:"error"})
+          return
+        }
+        if(data.password !==data.confirm_password){
+          this.$message({message:"两次输入密码不一致",type:"error"})
+          return
+        }
         request.post('/admin/user',data).then(res=>{
           this.$emit('success')
         }).catch(err=>{

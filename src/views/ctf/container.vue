@@ -11,7 +11,6 @@
       </div>
       <div class="widget-content">
         <el-table v-loading="loading" size="mini" :data="data" highlight-current-row>
-          <el-table-column align="center" label="资源ID" prop="container_resource" width="70"></el-table-column>
           <el-table-column align="center" label="容器名称" prop="container_name"></el-table-column>
           <el-table-column align="center" label="绑定用户" prop="username"></el-table-column>
           <el-table-column align="center" label="题目名称" prop="question.name"></el-table-column>

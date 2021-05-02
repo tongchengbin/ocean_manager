@@ -19,7 +19,14 @@ export default {
   name: 'Dashboard',
   data() {
     return {
-      data:{},
+      data:{
+        ip_cnt:0,
+        req_count:0,
+        today_create_cnt:0,
+        today_register:0,
+        user_cnt:0,
+        challenges_cnt:0
+      },
       lineChartData: {}
     }
   },

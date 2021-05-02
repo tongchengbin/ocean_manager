@@ -89,7 +89,6 @@
         let host = this.pk
         request.post('/admin/docker/imagesDel',{host:host,id:id}).then(res=>{
         }).catch(err=>{
-          this.$message({message:err.response.data.error,type:"error"})
         })
       },
       containerAction(action){
@@ -101,7 +100,6 @@
             this.$message({message:`操作成功 ${item.Name}`,type:"success"})
 
           }).catch(err=>{
-            this.$message({message:item.Name+err.response.data.error,type:"error"})
             this.getList()
           })
         }
@@ -113,7 +111,7 @@
           request.post('/admin/docker/containerStop',{"host":this.pk,"id":item.Id}).then(res=>{
             this.$message({message:`操作成功 关闭:${item.Name}`,type:"success"})
           }).catch(err=>{
-            this.$message({message:err.response.data.error,type:"error"})
+
           })
         }
         this.getList()
@@ -124,7 +122,7 @@
           request.post('/admin/docker/containerStart',{"host":this.pk,"id":item.Id}).then(res=>{
             this.$message({message:`操作成功 启动:${item.Name}`,type:"success"})
           }).catch(err=>{
-            this.$message({message:err.response.data.error,type:"error"})
+
           })
         }
         this.getList()

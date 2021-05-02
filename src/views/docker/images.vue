@@ -3,34 +3,32 @@
     <div class="widget">
       <div class="tool-bar">镜像管理</div>
       <div class="action-bar">
-        <el-button @click="$router.push({path:'./add',query:{id:pk}})" size="mini" type="primary" icon="el-icon-plus">添加镜像</el-button>
+        <el-button @click="$router.push({path:'./add',query:{id:pk}})" size="mini" type="primary" icon="el-icon-plus">
+          添加镜像
+        </el-button>
+        <el-button @click="getList()" size="mini" type="primary">刷新</el-button>
       </div>
-      <el-table  :data="listData" class="table">
-        <el-table-column width="500" class="long" label="ID" prop="Id">
+      <el-table :data="listData" class="table">
+        <el-table-column label="short ID" prop="id" width="150"></el-table-column>
+        <el-table-column label="repo" prop="repo"></el-table-column>
+        <el-table-column label="tags" prop="tags">
           <template slot-scope="scope">
-            <div @click="$router.push({path:'./detail',query:{id:pk,image:scope.row.Id}})" :title="scope.row.Id" class="txt-hid small">{{scope.row.Id}}</div>
+            <el-tag style="margin: 0 5px;" closable @close="remove(scope.row,tag)" :key="tag"
+                    v-for="tag in scope.row.tags" type="dark" class="tag-item">
+              {{ tag }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="tags" prop="Tags">
+        <el-table-column label="size">
           <template slot-scope="scope">
-            <span v-if="scope.row.RepoTags && scope.row.RepoTags.length>0 " class="tags small">{{scope.row.RepoTags.join('/')}}</span>
+            <span class="small">{{ (scope.row.size / 1000 / 1000).toFixed(1) }}M</span>
           </template>
         </el-table-column>
-        <el-table-column label="Size">
+        <el-table-column label="created" prop="created"></el-table-column>
+        <el-table-column label="Action" width="100">
           <template slot-scope="scope">
-            <span  class="small">{{(scope.row.Size/1000/1000).toFixed(1)}}M</span>
+            <el-button :disabled="scope.row.tags.length>1" @click="remove(scope.row)" size="mini" type="danger" icon="el-icon-delete"></el-button>
           </template>
-        </el-table-column>
-        <el-table-column label="Create">
-          <template slot-scope="scope">
-            <span  class="small">{{(scope.row.Created).split('.')[0].replace('T',' ') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="Action">
-          <template slot-scope="scope">
-            <el-button @click="remove(scope.row.Id)" size="mini" type="danger" icon="el-icon-delete"></el-button>
-          </template>
-
         </el-table-column>
       </el-table>
     </div>
@@ -38,64 +36,63 @@
 </template>
 
 <script>
-  import request from '../../api/public'
-    export default {
-        name: "images",
-        data(){
-          return {
-            pk:null,
-            listTotal:0,
-            listData:[]
-          }
-        },
-      created() {
-          this.pk = this.$route.query.id;
-          this.getList()
+import request from '@/utils/request'
 
-      },
-      methods:{
-          getList(){
-            request.get(`/admin/docker/host/${this.pk}/images`).then(res=>{
-              this.listData = res.data.images;
-            })
-        },
-        remove(id){
-            let host = this.pk
-            request.post('/admin/docker/imagesDel',{host:host,id:id}).then(res=>{
-              this.$message({message:"删除成功",type:"success"})
-              this.getList()
-            }).catch(err=>{
-              this.$message({message:err.response.data.error,type:"error"})
-            })
-        }
-      }
+export default {
+  name: "images",
+  data() {
+    return {
+      pk: null,
+      listTotal: 0,
+      listData: []
     }
+  },
+  created() {
+    this.pk = this.$route.query.id;
+    this.getList()
+
+  },
+  methods: {
+    getList() {
+      request.get(`/admin/docker/host/${this.pk}/images`).then(res => {
+        this.listData = res.data.images;
+      })
+    },
+    remove(row,tag) {
+      let host = this.pk
+      let tid;
+      if(tag){
+        tid = `${row.repo}:${tag}`
+      }else{
+        tid = row.id
+      }
+      request.delete('/admin/docker/images', {data:{host: host, id: tid}}).then(_ => {
+        this.$message({message: "删除成功", type: "success"})
+        this.getList()
+      }).catch(_ => {
+
+      })
+    }
+  }
+}
 </script>
 
-<style scoped>
-  .small{
-    font-size: 80%;
-  }
-  .txt-hid{
-    color: #337ab7;
-    cursor: pointer;
-    font-weight: 600;
-    width: 300px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-.tags {
-  background-color: #337ab7;
-  display: inline;
-  padding: .2em .6em .3em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  color: #fff;
-  text-align: center;
+<style scoped lang="scss">
+.small {
+  font-size: 80%;
+}
+
+.txt-hid {
+  color: #337ab7;
+  cursor: pointer;
+  font-weight: 600;
+  width: 300px;
+  overflow: hidden;
   white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: .25em;
+  text-overflow: ellipsis;
+}
+
+.tag-item {
+  margin: 2px!important;
 }
 </style>
