@@ -117,7 +117,7 @@ name: "imageDetail",
   },
   methods:{
   getDetail(){
-    request.get(`/admin/docker/host/${this.pk}/image/${this.image}`).then(res=>{
+    request.get(`/api/admin/docker/host/${this.pk}/image/${this.image}`).then(res=>{
       this.data = res.results
     }).catch(err=>{
 
@@ -125,14 +125,14 @@ name: "imageDetail",
     },
     delTag(tag){
     //   删除标签  如果镜像下又标签 直接无法直接删除镜像
-      request.post(`/admin/docker/host/${this.pk}/images/del_tag`,{"tag":tag}).then(res=>{
+      request.post(`/api/admin/docker/host/${this.pk}/images/del_tag`,{"tag":tag}).then(res=>{
         this.getDetail()
       }).catch(err=>{
 
       })
     },
     getHistory(){
-      request.get(`/admin/docker/host/${this.pk}/image_history/${this.image}`).then(res=>{
+      request.get(`/api/admin/docker/host/${this.pk}/image_history/${this.image}`).then(res=>{
 
         this.history = res.results
       }).catch(err=>{

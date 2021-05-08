@@ -122,14 +122,14 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      request.get("/admin/admin", this.listQuery).then(response => {
+      request.get("/api/admin/admin", this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         this.listLoading = false
       })
     },
     handleDelete(row) {
-      request.delete(`/admin/admin/${row.id}` ).then(res => {
+      request.delete(`/api/admin/admin/${row.id}` ).then(res => {
         this.getList()
       })
     },

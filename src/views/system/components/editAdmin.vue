@@ -60,13 +60,13 @@ export default {
   },
   methods:{
     getRole(){
-      request.get('/admin/role').then(res=>{
+      request.get('/api/admin/role').then(res=>{
         this.roles = res.data
       })
     },
     submit() {
       if (!this.form) {
-        request.post('/admin/admin', this.formData).then(res => {
+        request.post('/api/admin/admin', this.formData).then(res => {
           this.$message({
               message: '添加成功',
               type: 'success'})
@@ -75,7 +75,7 @@ export default {
 
         })
       } else {
-        request.put(`/admin/admin/${this.formData.id}`, this.formData).then(res => {
+        request.put(`/api/admin/admin/${this.formData.id}`, this.formData).then(res => {
           this.$message({
             message: '操作成功',
             type: 'success'

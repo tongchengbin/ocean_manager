@@ -44,7 +44,7 @@ name: "logs",
   },
   methods:{
     getList(){
-      request.get('/admin/logs',{params:this.listQuery}).then(res=>{
+      request.get('/api/admin/logs',{params:this.listQuery}).then(res=>{
         this.list = res.data
       }).catch(err=>{
       })

@@ -80,14 +80,14 @@
     },
     methods:{
       getList(){
-        request.get('/admin/docker/containers',{id:this.pk}).then(res=>{
+        request.get('/api/admin/docker/containers',{id:this.pk}).then(res=>{
           this.listData = res.data.containers;
           // this.listTotal = res.total;
         })
       },
       remove(id){
         let host = this.pk
-        request.post('/admin/docker/imagesDel',{host:host,id:id}).then(res=>{
+        request.post('/api/admin/docker/imagesDel',{host:host,id:id}).then(res=>{
         }).catch(err=>{
         })
       },
@@ -95,7 +95,7 @@
         for(let i=0;i<this.checkItems.length;i++){
           let item= this.checkItems[i]
           let data = {host:this.pk,id:item.Id,action:action}
-          request.post('/admin/docker/containerAction',data).then(res=>{
+          request.post('/api/admin/docker/containerAction',data).then(res=>{
             this.getList()
             this.$message({message:`操作成功 ${item.Name}`,type:"success"})
 
@@ -108,7 +108,7 @@
       stop(){
         for(let i=0;i<this.checkItems.length;i++){
           let item= this.checkItems[i]
-          request.post('/admin/docker/containerStop',{"host":this.pk,"id":item.Id}).then(res=>{
+          request.post('/api/admin/docker/containerStop',{"host":this.pk,"id":item.Id}).then(res=>{
             this.$message({message:`操作成功 关闭:${item.Name}`,type:"success"})
           }).catch(err=>{
 
@@ -119,7 +119,7 @@
       start(){
         for(let i=0;i<this.checkItems.length;i++){
           let item= this.checkItems[i]
-          request.post('/admin/docker/containerStart',{"host":this.pk,"id":item.Id}).then(res=>{
+          request.post('/api/admin/docker/containerStart',{"host":this.pk,"id":item.Id}).then(res=>{
             this.$message({message:`操作成功 启动:${item.Name}`,type:"success"})
           }).catch(err=>{
 

@@ -108,7 +108,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      request.get("/admin/user", this.listQuery).then(response => {
+      request.get("/api/admin/user", this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         this.listLoading = false
@@ -119,7 +119,8 @@ export default {
       this.dialogUser = false
     },
     userDelete(row) {
-      request.delete(`/api/admin/users/${row.id}/` ).then(res => {
+      request.delete(`/api/admin/user/${row.id}` ).then(res => {
+        this.$message({message:"删除成功",type:"success"})
         this.getList()
       })
     },
@@ -135,6 +136,7 @@ export default {
       this.getList()
     },
     handleCreate() {
+      this.userForm = {}
       this.dialogUser = true
     },
     handleUpdate(row) {

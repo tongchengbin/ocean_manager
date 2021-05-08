@@ -125,7 +125,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      request.get("/admin/notice", this.listQuery).then(response => {
+      request.get("/api/admin/notice", this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         this.listLoading = false
@@ -135,7 +135,7 @@ export default {
       let form={
         isTop:e
       }
-      request.put(`/admin/notice/${row.id}`,form).then(res=>{
+      request.put(`/api/admin/notice/${row.id}`,form).then(res=>{
 
       })
     },
@@ -143,12 +143,12 @@ export default {
       let form={
         active:e
       }
-      request.put(`/admin/notice/${row.id}`,form).then(res=>{
+      request.put(`/api/admin/notice/${row.id}`,form).then(res=>{
 
       })
     },
     handleDelete(row) {
-      request.delete(`/admin/notice/${row.id}` ).then(res => {
+      request.delete(`/api/admin/notice/${row.id}` ).then(res => {
         this.getList()
       })
     },
@@ -167,7 +167,7 @@ export default {
       this.edit = true
     },
     actionForm() {
-      request.post('/admin/notice',this.form).then(res=>{
+      request.post('/api/admin/notice',this.form).then(res=>{
         this.edit = false
         this.getList()
       })

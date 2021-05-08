@@ -1,5 +1,5 @@
 <template>
-  <el-dialog @close="" :title="data.id?'编辑用户':'添加用户'" :visible.sync="show" size="mini" custom-class="usereidt">
+  <el-dialog @close="$emit('success')" :title="data.id?'编辑用户':'添加用户'" :visible.sync="show" size="mini" custom-class="usereidt">
     <el-form ref="dataForm" size="mini" :model="data" label-position="left" label-width="100px" label-suffix=":" style="width: 600px; margin: auto auto;font-size: 13px;">
       <el-form-item size="mini" label="用户名" prop="username" required>
         <el-input v-model="data.username" />
@@ -47,13 +47,9 @@ name: "addUser",
     //   添加用户  更新用户
       if(this.data.id){
         let data = this.data
-        request.put(`/admin/user/${data.id}`,data).then(res=>{
+        request.put(`/api/admin/user/${data.id}`,data).then(res=>{
           this.$emit('success')
         }).catch(err=>{
-          this.$message({
-            message:err.response.data.msg,
-            type:"error"
-          })
         })
       }else{
         let data = this.data
@@ -73,13 +69,9 @@ name: "addUser",
           this.$message({message:"两次输入密码不一致",type:"error"})
           return
         }
-        request.post('/admin/user',data).then(res=>{
+        request.post('/api/admin/user',data).then(res=>{
           this.$emit('success')
         }).catch(err=>{
-          this.$message({
-            message:err.response.data.msg,
-            type:"error"
-          })
         })
       }
 

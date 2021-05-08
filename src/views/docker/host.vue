@@ -89,7 +89,7 @@
           getList(){
           //  获取主机列表
           this.loading = true;
-          request.get('/admin/docker/host',this.listQuery).then(res=>{
+          request.get('/api/admin/docker/host',this.listQuery).then(res=>{
             this.listData = res.data;
             this.listTotal = res.total;
             this.loading = false;
@@ -110,7 +110,7 @@
         },
         handleDelete(row){
         //    删除主机
-          request.delete(`/admin/docker/host/${row.id}`).then(_=>{
+          request.delete(`/api/admin/docker/host/${row.id}`).then(_=>{
             this.$message({message:"删除成功",type:"success"})
             this.getList()
           })

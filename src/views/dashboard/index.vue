@@ -32,7 +32,7 @@ export default {
   },
   methods:{
     getData(){
-      request.get('/admin/index/state').then(res=>{
+      request.get('/api/admin/index/state').then(res=>{
         this.data = res.data
         this.lineChartData = res.data.req_data;
       })

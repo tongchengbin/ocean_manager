@@ -44,7 +44,7 @@ export default {
   methods:{
     submit() {
       if (this.form && this.form.id) {
-        request.put(`/admin/role`, this.formData).then(res => {
+        request.put(`/api/admin/role`, this.formData).then(res => {
           this.$message({
             message: '操作成功',
             type: 'success'
@@ -53,7 +53,7 @@ export default {
         }).catch(err =>{
         })
       } else {
-        request.post('/admin/role', this.formData).then(res => {
+        request.post('/api/admin/role', this.formData).then(res => {
           this.$message({
             message: '添加成功',
             type: 'success'})

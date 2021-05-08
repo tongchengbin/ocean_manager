@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     getList() {
-      request.get(`/admin/docker/host/${this.pk}/images`).then(res => {
+      request.get(`/api/admin/docker/host/${this.pk}/images`).then(res => {
         this.listData = res.data.images;
       })
     },
@@ -66,7 +66,7 @@ export default {
       }else{
         tid = row.id
       }
-      request.delete('/admin/docker/images', {data:{host: host, id: tid}}).then(_ => {
+      request.delete('/api/admin/docker/images', {data:{host: host, id: tid}}).then(_ => {
         this.$message({message: "删除成功", type: "success"})
         this.getList()
       }).catch(_ => {

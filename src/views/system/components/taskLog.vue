@@ -23,7 +23,7 @@
           }
       },
       created() {
-          request.get(`/admin/task/${this.task}/log`).then(res=>{
+          request.get(`/api/admin/task/${this.task}/log`).then(res=>{
             this.log = res.results
           })
 

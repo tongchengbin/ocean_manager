@@ -69,7 +69,7 @@ export default {
   methods: {
     fetchData() {
       this.loading = true;
-      request.get('/admin/ctf/containers', this.listQuery).then(res => {
+      request.get('/api/admin/ctf/containers', this.listQuery).then(res => {
         this.data = res.data;
         this.total = res.total;
         this.loading = false;
@@ -84,14 +84,14 @@ export default {
       this.fetchData()
     },
     refresh(item) {
-      request.post(`/admin/ctf/containers/${item.container_resource}/refresh`).then(res => {
+      request.post(`/api/admin/ctf/containers/${item.container_resource}/refresh`).then(res => {
         this.fetchData()
       }).catch(err=>{
 
       })
     },
     containerRemove(item) {
-      request.post(`/admin/ctf/containers/${item.container_resource}/remove`).then(res => {
+      request.post(`/api/admin/ctf/containers/${item.container_resource}/remove`).then(res => {
         this.$message({message: res.msg})
         this.fetchData()
       }).catch(res => {

@@ -44,13 +44,6 @@
             </el-table-column>
             <el-table-column align="center" label="提交IP" prop="ip"></el-table-column>
             <el-table-column align="center" label="提交时间" prop="date_created"></el-table-column>
-            <el-table-column
-              label="Action">
-              <template slot-scope="scope">
-                <el-button v-if="scope.row.has_solved" size="small" type="danger" @click="destroyItem(scope.row)">作废
-                </el-button>
-              </template>
-            </el-table-column>
           </el-table>
         </div>
         <div class="pagination-container">
@@ -107,10 +100,10 @@ export default {
   },
   methods: {
     getOptions() {
-      request.get('/admin/ctf/answers/status_list').then(res=>{
+      request.get('/api/admin/ctf/answers/status_list').then(res=>{
         this.statusList = res.data
       })
-      request.get('/admin/ctf/question/type').then(res => {
+      request.get('/api/admin/ctf/question/type').then(res => {
         // 题目类别
         this.qType = res.results;
       })
@@ -125,7 +118,7 @@ export default {
     },
     getData() {
       this.loading = true
-      request.get(`/admin/ctf/answers`, this.listQuery).then(res => {
+      request.get(`/api/admin/ctf/answers`, this.listQuery).then(res => {
         this.data = res.data;
         this.total = res.total;
         this.loading = false;

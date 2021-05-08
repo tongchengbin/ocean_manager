@@ -42,7 +42,7 @@ service.interceptors.response.use(
     //   duration: 5 * 1000
     // })
     switch (error.response.status) {
-      case 403:
+      case 401:
         router.push('/login')
         break
       case 400:
@@ -51,6 +51,13 @@ service.interceptors.response.use(
             type:"error",
             duration:5*1000
           })
+        break
+      case 403:
+        Message({
+          message: error.response.data.msg,
+          type:"error",
+          duration:5*1000
+        })
         break
       case 500:
         Message({

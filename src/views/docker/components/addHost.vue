@@ -60,14 +60,14 @@
               //  编辑
                 let data = this.form;
                 data.id = this.checkHost.id;
-                request.put(`/admin/docker/host/${data.id}`,data).then(_=>{
+                request.put(`/api/admin/docker/host/${data.id}`,data).then(_=>{
                   this.$message({message:"修改成功",type:"success"})
                   this.$emit('success',true)
                 }).catch(err=>{
                 })
               }else{
               //  添加
-                request.post('/admin/docker/host',this.form).then(_=>{
+                request.post('/api/admin/docker/host',this.form).then(_=>{
                   this.$message({message:"添加成功",type:"success"})
                   this.$emit('success',true)
                 }).catch(err=>{

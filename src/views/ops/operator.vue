@@ -77,7 +77,7 @@ export default {
   methods:{
     fetchData() {
       this.loading = true;
-      request.get('/admin/operator',this.listQuery).then(res=>{
+      request.get('/api/admin/operator',this.listQuery).then(res=>{
         this.loading = false
         const {data} = res;
         this.list = data
@@ -105,7 +105,7 @@ export default {
       this.editForm = row;
     },
     itemDelete(row){
-      request.delete(`/admin/role/${row.id}`).then(res=>{
+      request.delete(`/api/admin/role/${row.id}`).then(res=>{
         this.fetchData()
       })
     }

@@ -145,18 +145,18 @@ export default {
   },
   methods: {
     getOptions() {
-      request.get('/admin/ctf/question/type').then(res => {
+      request.get('/api/admin/ctf/question/type').then(res => {
         this.options = res.results;
       })
     },
     getDockerImage() {
-      request.get(`/admin/docker/host/${this.form.host}/images`).then(res => {
+      request.get(`/api/admin/docker/host/${this.form.host}/images`).then(res => {
         this.imageOption = res.data.images;
       })
 
     },
     getDockerHost() {
-      request.get('/admin/docker/host', {'page_size': 999}).then(res => {
+      request.get('/api/admin/docker/host', {'page_size': 999}).then(res => {
         this.hostOption = res.data;
       })
     },
@@ -185,14 +185,14 @@ export default {
         return
       }
       if (this.form.id) {
-        request.put(`/admin/ctf/question/${this.form.id}`, this.form).then(_ => {
+        request.put(`/api/admin/ctf/question/${this.form.id}`, this.form).then(_ => {
           this.$emit('action', true)
         }).catch(_ => {
 
         })
 
       } else {
-        request.post('/admin/ctf/question', this.form).then(_ => {
+        request.post('/api/admin/ctf/question', this.form).then(_ => {
           this.$emit('action', true)
         }).catch(_ => {
 

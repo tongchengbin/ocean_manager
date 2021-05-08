@@ -50,7 +50,7 @@ import TaskLog from "./components/taskLog";
     },
     methods:{
       getData(){
-        request.get('/admin/task').then(res=>{
+        request.get('/api/admin/task').then(res=>{
           this.data = res.results
         })
       },

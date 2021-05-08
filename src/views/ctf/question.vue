@@ -16,6 +16,9 @@
               </el-select>
             </el-form-item>
             <el-form-item>
+              <el-input v-model="listQuery.search" placeholder="搜索"></el-input>
+            </el-form-item>
+            <el-form-item>
               <el-button size="mini"  type="primary" @click="getList">查询</el-button>
             </el-form-item>
             <el-form-item>
@@ -110,6 +113,7 @@ export default {
         page:1,
         page_size: 10,
         subject: null,
+        search:null
       },
       loading: false,
       chiData: {},
@@ -128,13 +132,13 @@ export default {
   },
   methods: {
     getOptions() {
-      request.get('/admin/ctf/question/type').then(res => {
+      request.get('/api/admin/ctf/question/type').then(res => {
         this.qType = res.results;
       })
     },
     getList() {
       this.loading = true
-      request.get(`/admin/ctf/question`, this.listQuery).then(res => {
+      request.get(`/api/admin/ctf/question`, this.listQuery).then(res => {
         this.listData = res.results;
         this.loading = false;
         this.total = res.total
@@ -160,7 +164,7 @@ export default {
 
     },
     deleteHandle(row) {
-      request.delete(`/admin/ctf/question/${row.id}`,).then(_ => {
+      request.delete(`/api/admin/ctf/question/${row.id}`,).then(_ => {
         this.$message({
           message: "删除成功",
           type: "success"
@@ -175,14 +179,12 @@ export default {
       }
     },
     switchActive(e, row) {
-      request.put(`/admin/ctf/question/${row.id}`, {active: e}).then(_ => {
+      request.put(`/api/admin/ctf/question/${row.id}`, {active: e}).then(_ => {
         this.$message({
           message: "修改成功",
           type: "success",
           duration: 2000
         })
-
-
       })
     },
   }

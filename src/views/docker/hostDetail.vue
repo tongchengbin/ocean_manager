@@ -105,7 +105,7 @@
           this.$router.push('docker')
           return
         }
-        request.get(`/admin/docker/host/${this.pk}`).then(res => {
+        request.get(`/api/admin/docker/host/${this.pk}`).then(res => {
           this.data = res.data
         })
       },

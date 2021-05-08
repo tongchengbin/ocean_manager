@@ -51,7 +51,7 @@ export default {
         old_pass:this.oldPass,
         pass:this.pass,
       }
-      request.post('/admin/rest_pass',data).then(res=>{
+      request.post('/api/admin/rest_pass',data).then(res=>{
         this.$message.success("密码修改成功")
         this.oldPass = this.pass = this.pass2 = ''
       }).catch(err=>{

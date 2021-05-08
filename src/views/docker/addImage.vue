@@ -120,7 +120,7 @@ export default {
             tag: this.tag
           }
         }
-        request.post(`/admin/docker/host/${this.pk}/image?build_type=${this.$refs.tab.currentName}&tag=${this.buildForm.tag}`, data).then(res => {
+        request.post(`/api/admin/docker/host/${this.pk}/image?build_type=${this.$refs.tab.currentName}&tag=${this.buildForm.tag}`, data).then(res => {
           this.$message({message: "任务已提交", type: "success"})
           this.showLog = true;
           this.output = [];
@@ -136,7 +136,7 @@ export default {
       let query = {
         index: this.output.length
       }
-      request.get(`/admin/task/${task}/log`, query).then(function (res) {
+      request.get(`/api/admin/task/${task}/log`, query).then(function (res) {
         that.output = that.output.concat(res.data)
         let div = document.getElementById("log_output")
         // 这里还有没有渲染好就开始定位高度了 所以不是最底部
