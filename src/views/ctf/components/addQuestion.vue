@@ -1,27 +1,21 @@
 <template>
-  <el-dialog v-if="show" :before-close="cancel" :show-close="false" :title="form.id? '编辑题目':'添加题目'" :visible.sync="show"
-             center destroy-on-close
-             width="800" @close="cancel">
+  <el-dialog v-if="show" :before-close="cancel" :show-close="true" :title="form.id? '编辑题目':'添加题目'" :visible.sync="show"
+             center destroy-on-close :close-on-click-modal="false"
+             @close="cancel" width="40%">
     <el-form mode="form" ref="form" class="form" label-width="80px" size="mini">
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="名称" required>
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="类别" required>
-            <el-select v-model="form.type">
-              <el-option
-                v-for="item in options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
+        <el-form-item label="名称" required>
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="类别" required>
+          <el-select v-model="form.type">
+            <el-option
+              v-for="item in options"
+              :key="item"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
       <el-form-item class="block-input" label="是否激活">
         <el-switch v-model="form.active"></el-switch>
       </el-form-item>
