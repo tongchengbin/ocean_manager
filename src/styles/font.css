@@ -1,0 +1,6 @@
+// 引入字体
+
+@font-face {
+  font-family: '';
+  src: url("./webfonts/NotoSansSC-Black.otf");
+}
