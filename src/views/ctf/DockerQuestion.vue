@@ -131,9 +131,6 @@ export default {
         }
       })
     },
-    apply(){
-      this.fetchData()
-    },
     handleSizeChange(e){
       this.listQuery.page_size = e;
       this.fetchData()

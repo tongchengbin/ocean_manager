@@ -74,6 +74,13 @@ export const asyncRoutes = [
         meta: {'title': '虚拟化主机', icon: 'docker_1', auth: true},
       },
       {
+        path: 'compose',
+        component: () => import('../views/docker/compose_db'),
+        name: 'now',
+        auth: true,
+        meta: {'title': 'ComposeDB', icon: 'docker_1', auth: true},
+      },
+      {
         path: 'dockerHostDetail',
         component: () => import('../views/docker/hostDetail'),
         name: 'dockerHostDetail',
@@ -204,7 +211,7 @@ export const asyncRoutes = [
         path: 'sysInfo',
         component: () => import('../views/ops/sysInfo'),
         name: 'sysInfo',
-        meta: {title: '系统指标', icon: 'table', noCache: true}
+        meta: {title: '系统设置', icon: 'table', noCache: true}
       },
       {
         path: 'operator',

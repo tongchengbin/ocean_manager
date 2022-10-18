@@ -6,12 +6,12 @@
       <el-col span="6">
         <div style="padding: 20px">
           <el-form simi="mini" inline>
-            <el-form-item label="容器时长">
-              <el-input-number></el-input-number>
+            <el-form-item label="容器时长(秒)">
+              <el-input-number v-model="ctf_container_seconds"></el-input-number>
             </el-form-item>
           </el-form>
           <div style="text-align: left;margin-top: 20px">
-            <el-button type="primary" size="middle" style="padding: 8px 12px">保存</el-button>
+            <el-button @click="setConfig" type="primary" size="middle" style="padding: 8px 12px">保存</el-button>
           </div>
         </div>
       </el-col>
@@ -21,8 +21,38 @@
 </template>
 
 <script>
+import request from "@/utils/request";
+
 export default {
-name: "ctf"
+name: "ctf",
+  data(){
+    return {
+      ctf_container_seconds:180
+    }
+  },
+  created() {
+    this.getConfig()
+  },
+  methods:{
+    getConfig(){
+      request.get('/api/system/config').then(res=>{
+        this.ctf_container_seconds = res.data.ctf_container_seconds || 180
+      })
+    },
+    setConfig(){
+      let data ={
+        ctf_container_seconds:this.ctf_container_seconds
+      }
+      request.post('/api/system/config',data).then(res=>{
+          this.$message({
+            type:"success",
+            message:"保存成功"
+          })
+        this.getConfig()
+      })
+    }
+
+  }
 }
 </script>
 

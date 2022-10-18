@@ -27,7 +27,6 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
-/*      <div style="color: #fff;margin-bottom: 10px">测试账号：test ：test</div>*/
         <el-button
           type="primary"
           style="width:100%;margin-bottom:30px;"

@@ -11,19 +11,18 @@
             <el-input v-model="listQuery.question" placeholder="题目名称"></el-input>
           </el-form-item>
           <el-form-item size="mini">
-            <el-button type="primary" @click="fetchData">查询</el-button>
+            <el-button type="primary" @click="getList()">查询</el-button>
           </el-form-item>
         </el-form>
       </div>
       <div class="widget-content">
         <el-table v-loading="loading" size="mini" :data="data" highlight-current-row>
-          <el-table-column align="center" label="容器名称" prop="container_name"></el-table-column>
-          <el-table-column align="center" label="镜像" prop="image"></el-table-column>
+          <el-table-column align="center" label="名称" prop="name"></el-table-column>
           <el-table-column align="center" label="用户" prop="username" width="80"></el-table-column>
           <el-table-column align="center" label="题目" prop="question.name" width="100"></el-table-column>
-          <el-table-column align="center" label="访问地址" prop="addr">
-            <template slot-scope="scope">
-              <span>{{ scope.row.addr }}:{{ scope.row.container_port }}</span>
+          <el-table-column align="center" label="端口信息" prop="container_port">
+            <template v-slot="scope">
+              {{ scope.row.container_port }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="Flag" prop="flag"></el-table-column>
@@ -32,7 +31,7 @@
           <el-table-column align="center" label="操作" width="150">
             <template slot-scope="scope">
               <el-tooltip class="item" content="删除容器" effect="dark" placement="top">
-                <el-button size="mini" type="danger" @click="containerRemove(scope.row)">删除</el-button>
+                <el-button size="mini" type="danger" @click="containerRemove(scope.row)">销毁</el-button>
               </el-tooltip>
               <el-button size="mini" type="primary" @click="refresh(scope.row)">刷新</el-button>
             </template>
@@ -62,48 +61,48 @@ export default {
   name: "container",
   data() {
     return {
-      loading:false,
+      loading: false,
       data: [],
-      total:0,
+      total: 0,
       listQuery: {
-        page:1,
-        page_size:10,
+        page: 1,
+        page_size: 10,
       }
     }
   },
   created() {
-    this.fetchData()
+    this.getList()
   },
   methods: {
-    fetchData() {
+    getList() {
       this.loading = true;
-      request.get('/api/admin/ctf/containers', this.listQuery).then(res => {
+      request.get('/api/admin/ctf/resource', this.listQuery).then(res => {
         this.data = res.data;
         this.total = res.total;
         this.loading = false;
       })
     },
-    handleSizeChange(e){
+    handleSizeChange(e) {
       this.listQuery.page_size = e;
-      this.fetchData()
+      this.getList()
     },
-    handleCurrentChange(e){
+    handleCurrentChange(e) {
       this.listQuery.page = e;
-      this.fetchData()
+      this.getList()
     },
     refresh(item) {
-      request.post(`/api/admin/ctf/containers/${item.container_resource}/refresh`).then(res => {
-        this.fetchData()
-      }).catch(err=>{
+      request.post(`/api/admin/ctf/resource/${item.id}/refresh`).then(res => {
+        this.getList()
+      }).catch(err => {
 
       })
     },
     containerRemove(item) {
-      request.post(`/api/admin/ctf/containers/${item.container_resource}/remove`).then(res => {
+      request.post(`/api/admin/ctf/resource/${item.id}/remove`).then(res => {
         this.$message({message: res.msg})
-        this.fetchData()
+        this.getList()
       }).catch(res => {
-        this.fetchData()
+        this.getList()
       })
     }
   }

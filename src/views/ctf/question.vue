@@ -68,6 +68,11 @@
             width="80"/>
           <el-table-column
             align="center"
+            label="环境"
+            prop="compose_name"
+            width="180"/>
+          <el-table-column
+            align="center"
             label="描述"
             prop="desc"
             show-overflow-tooltip

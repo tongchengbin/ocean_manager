@@ -22,21 +22,13 @@
       <el-form-item class="block-input" label="动态Flag">
         <el-switch v-model="form.active_flag" @change="changeActiveFlag"></el-switch>
       </el-form-item>
-      <el-form-item v-if="form.active_flag" class="block-input" label="主机" prop="image_id">
-        <el-select v-model="form.host_id" clearable @change="handleChangeHost">
+      <el-form-item required v-if="form.active_flag" class="block-input" label="环境" prop="compose_id">
+        <el-select v-model="form.compose_id" clearable>
           <el-option
-            v-for="item in hostOption"
+            v-for="item in composeList"
             :key="item.id"
             :label="item.name"
             :value="item.id">
-          </el-option>
-        </el-select>
-        <el-select v-model="form.image_id" clearable filterable>
-          <el-option
-            v-for="item in imageOption"
-            :key="item"
-            :label="item"
-            :value="item">
           </el-option>
         </el-select>
       </el-form-item>
@@ -93,6 +85,7 @@ export default {
   },
   data() {
     return {
+      composeList:[],
       hostOption: [],
       imageOption: [],
       capture: null,
@@ -101,8 +94,7 @@ export default {
       attachment:[], // 临时附件对象
       form: {
         attachment: [],
-        host_id: null,
-        image_id: null,
+        compose_id: null,
         name: null,
         flag: null,
         desc: null,
@@ -133,7 +125,7 @@ export default {
     }
   },
   created() {
-    this.getOptions()
+    this.getComposeList()
     if (this.data.id) {
       this.form.id = this.data.id;
       this.form.name = this.data.name;
@@ -143,11 +135,9 @@ export default {
       this.form.type = this.data.type;
       this.form.active = this.data.active;
       this.form.score = this.data.score;
-      this.form.host_id = this.data.host_id;
-      this.form.image_id = this.data.image_id;
+      this.form.compose_id = this.data.compose_id;
       if (this.form.active) {
         this.getDockerHost()
-        this.getDockerImage()
       }
       if(this.data.attachment.length>0){
         this.attachment = this.form.attachment
@@ -156,22 +146,10 @@ export default {
 
   },
   methods: {
-    getOptions() {
-      request.get('/api/admin/ctf/question/type').then(res => {
-        this.options = res.results;
+    getComposeList(){
+      request.get('/api/admin/docker/compose_db').then(res=>{
+        this.composeList = res.data
       })
-    },
-    getDockerImage() {
-      let params = {
-        host: this.form.host_id,
-        page_size: 999,
-        status: 'success'
-      }
-      let host = this.form.host_id
-      request.get(`/api/admin/docker/host/${host}/image_list`).then(res => {
-        this.imageOption = res.data;
-      })
-
     },
     getDockerHost() {
       request.get('/api/admin/docker/host', {'page_size': 999}).then(res => {
@@ -209,9 +187,6 @@ export default {
     },
     handleFileClick() {
       document.getElementById('inputFile').click()
-    },
-    handleChangeHost() {
-      this.getDockerImage()
     },
     changeActiveFlag(e) {
       if (e) {
