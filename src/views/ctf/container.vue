@@ -99,7 +99,7 @@ export default {
     },
     containerRemove(item) {
       request.post(`/api/admin/ctf/resource/${item.id}/remove`).then(res => {
-        this.$message({message: res.msg})
+        this.$message({message: "销毁成功",type:"success"})
         this.getList()
       }).catch(res => {
         this.getList()

@@ -81,6 +81,13 @@ export const asyncRoutes = [
         meta: {'title': 'ComposeDB', icon: 'docker_1', auth: true},
       },
       {
+        path: 'docker_resource',
+        component: () => import('../views/docker/resource'),
+        name: 'now',
+        auth: true,
+        meta: {'title': '资源中心', icon: 'docker_1', auth: true},
+      },
+      {
         path: 'dockerHostDetail',
         component: () => import('../views/docker/hostDetail'),
         name: 'dockerHostDetail',

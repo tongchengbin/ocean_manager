@@ -56,7 +56,7 @@
             align="center"
             label="是否动态"
             width="80">
-            <template slot-scope="scope">
+            <template v-slot="scope">
               <el-tag v-if="scope.row.active_flag" effect="dark">是</el-tag>
               <el-tag v-else effect="dark" type="warning">否</el-tag>
             </template>
@@ -69,7 +69,7 @@
           <el-table-column
             align="center"
             label="环境"
-            prop="compose_name"
+            prop="resource_name"
             width="180"/>
           <el-table-column
             align="center"

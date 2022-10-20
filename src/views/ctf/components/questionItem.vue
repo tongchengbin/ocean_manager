@@ -22,10 +22,10 @@
       <el-form-item class="block-input" label="动态Flag">
         <el-switch v-model="form.active_flag" @change="changeActiveFlag"></el-switch>
       </el-form-item>
-      <el-form-item required v-if="form.active_flag" class="block-input" label="环境" prop="compose_id">
-        <el-select v-model="form.compose_id" clearable>
+      <el-form-item required v-if="form.active_flag" class="block-input" label="环境" prop="resource_id">
+        <el-select v-model="form.resource_id" clearable>
           <el-option
-            v-for="item in composeList"
+            v-for="item in resource_list"
             :key="item.id"
             :label="item.name"
             :value="item.id">
@@ -85,7 +85,7 @@ export default {
   },
   data() {
     return {
-      composeList:[],
+      resource_list:[],
       hostOption: [],
       imageOption: [],
       capture: null,
@@ -94,7 +94,7 @@ export default {
       attachment:[], // 临时附件对象
       form: {
         attachment: [],
-        compose_id: null,
+        resource_id: null,
         name: null,
         flag: null,
         desc: null,
@@ -125,7 +125,8 @@ export default {
     }
   },
   created() {
-    this.getComposeList()
+    this.getOptions()
+    this.getResourceList()
     if (this.data.id) {
       this.form.id = this.data.id;
       this.form.name = this.data.name;
@@ -135,7 +136,7 @@ export default {
       this.form.type = this.data.type;
       this.form.active = this.data.active;
       this.form.score = this.data.score;
-      this.form.compose_id = this.data.compose_id;
+      this.form.resource_id = this.data.resource_id;
       if (this.form.active) {
         this.getDockerHost()
       }
@@ -146,9 +147,14 @@ export default {
 
   },
   methods: {
-    getComposeList(){
-      request.get('/api/admin/docker/compose_db').then(res=>{
-        this.composeList = res.data
+    getOptions() {
+      request.get('/api/admin/ctf/question/type').then(res => {
+        this.options = res.data;
+      })
+    },
+    getResourceList(){
+      request.get('/api/admin/docker/resource',{"page_size":99999,"status":1}).then(res=>{
+        this.resource_list = res.data
       })
     },
     getDockerHost() {
@@ -170,6 +176,7 @@ export default {
           if (this.form.id) {
             request.put(`/api/admin/ctf/question/${this.form.id}`, this.form).then(_ => {
               this.$emit('action', true)
+              this.$message({message:"提交成功",type:"success"})
             }).catch(_ => {
 
             })
