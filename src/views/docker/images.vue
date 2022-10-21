@@ -54,8 +54,8 @@ export default {
   },
   methods: {
     getList() {
-      request.get(`/api/admin/docker/host/${this.pk}/images`).then(res => {
-        this.listData = res.data.images;
+      request.get(`/api/admin/docker/images`).then(res => {
+        this.listData = res.data;
       })
     },
     remove(row,tag) {

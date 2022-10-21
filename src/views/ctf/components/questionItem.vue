@@ -45,7 +45,7 @@
       </el-form-item>
       <el-row>
         <el-col :span="8">
-          <el-form-item label="积分">
+          <el-form-item label="积分" required>
             <el-input v-model="form.score" type="number"></el-input>
           </el-form-item>
         </el-col>

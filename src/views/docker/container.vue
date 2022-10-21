@@ -84,7 +84,7 @@
       getList(){
         this.loading=true
         request.get('/api/admin/docker/containers',{id:this.pk}).then(res=>{
-          this.listData = res.data.containers;
+          this.listData = res.data;
           this.loading = false
         })
       },

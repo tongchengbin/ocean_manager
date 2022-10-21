@@ -72,7 +72,7 @@
         <el-button size="mini" type="primary" @click="handleSubmit">提交</el-button>
       </div>
     </el-dialog>
-    <docker_resource_sync @close="syncDialog=false" :open="syncDialog"></docker_resource_sync>
+    <docker_resource_sync @close="handleSyncClose" :open="syncDialog"></docker_resource_sync>
   </div>
 
 </template>
@@ -163,6 +163,10 @@ export default {
       this.listQuery.page = e;
       this.fetchData()
     },
+    handleSyncClose(){
+      this.syncDialog=false
+      this.getList()
+    }
   }
 }
 </script>

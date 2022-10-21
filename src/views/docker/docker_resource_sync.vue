@@ -12,7 +12,7 @@
 
   </el-form>
   <div slot="footer" >
-    <el-button size="mini" @click="$emit('handleEdit',false)">取消</el-button>
+    <el-button size="mini" @click="$emit('close',false)">取消</el-button>
     <el-button size="mini" type="primary" @click="submit">{{ form.id ?'更新':'提交'}}</el-button>
   </div>
 </el-dialog>
