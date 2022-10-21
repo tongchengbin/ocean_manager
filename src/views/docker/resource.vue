@@ -6,6 +6,7 @@
         <el-input v-model="listQuery.search" size="mini" style="width: 200px;" placeholder="名称"/>
         <el-button size="mini" type="primary" @click="getList()">查询</el-button>
         <el-button size="mini" type="primary" @click="handleCreate">添加</el-button>
+        <el-button size="mini" type="primary" @click="handleSyncDockerhub">同步Docker仓库资源</el-button>
       </div>
       <div class="widget-content">
         <!--用户列表-->
@@ -24,7 +25,7 @@
           </el-table-column>
           <el-table-column align="center" label="操作" width="200">
             <template v-slot="scope">
-              <el-button type="primary" size="mini" @click="handleBuild(scope.row.id)">编译</el-button>
+              <el-button :loading="loading_build" type="primary" size="mini" @click="handleBuild(scope.row.id)">编译</el-button>
               <el-button type="danger" size="mini" @click="handleDelete(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -71,17 +72,23 @@
         <el-button size="mini" type="primary" @click="handleSubmit">提交</el-button>
       </div>
     </el-dialog>
+    <docker_resource_sync @close="syncDialog=false" :open="syncDialog"></docker_resource_sync>
   </div>
 
 </template>
 
 <script>
 import request from "@/utils/request";
-
+import docker_resource_sync from './docker_resource_sync'
 export default {
   name: "compose_db",
+  components:{
+    docker_resource_sync
+  },
   data() {
     return {
+      loading_build:false,
+      syncDialog:false,
       docker_type_list:[
         {
           label: "远程镜像",
@@ -122,13 +129,20 @@ export default {
     handleCreate() {
       this.centerDialogVisible = true
     },
+    handleSyncDockerhub(){
+      // 同步远程仓库资源或者私有仓库资源
+      this.syncDialog=true
+    },
     handleBuild(id) {
+      this.loading_build = true
       request.post(`/api/admin/docker/resource/${id}/build`).then(res => {
+        this.loading_build=false
+        this.$message({message:"编译完成",type:"success"})
         this.getList()
       })
     },
     handleDelete(id) {
-      request.delete(`/api/admin/docker/compose_db/${id}`).then(res => {
+      request.delete(`/api/admin/docker/resource/${id}`).then(res => {
         this.$message({message: "删除成功", type: "success"})
         this.getList()
       })

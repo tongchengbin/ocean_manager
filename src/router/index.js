@@ -68,17 +68,10 @@ export const asyncRoutes = [
     children: [
       {
         path: 'dockerHost',
-        component: () => import('../views/docker/host'),
+        component: () => import('../views/docker/hostDetail'),
         name: 'now',
         auth: true,
         meta: {'title': '虚拟化主机', icon: 'docker_1', auth: true},
-      },
-      {
-        path: 'compose',
-        component: () => import('../views/docker/compose_db'),
-        name: 'now',
-        auth: true,
-        meta: {'title': 'ComposeDB', icon: 'docker_1', auth: true},
       },
       {
         path: 'docker_resource',
@@ -86,6 +79,13 @@ export const asyncRoutes = [
         name: 'now',
         auth: true,
         meta: {'title': '资源中心', icon: 'docker_1', auth: true},
+      },
+      {
+        path: 'compose',
+        component: () => import('../views/docker/compose_db'),
+        name: 'now',
+        auth: true,
+        meta: {'title': 'ComposeDB', icon: 'docker_1', auth: true},
       },
       {
         path: 'dockerHostDetail',

@@ -9,7 +9,7 @@
           <tbody>
           <tr>
             <td>名称</td>
-            <td>{{data.name}}</td>
+            <td>{{data.info.name}}</td>
           </tr>
           <tr>
             <td>主机信息</td>
@@ -26,10 +26,6 @@
           <tr>
             <td>连接地址</td>
             <td class="small text-muted">{{data.docker_api}}</td>
-          </tr>
-          <tr>
-            <td>备注</td>
-            <td class="small text-muted">{{data.remark}}</td>
           </tr>
           </tbody>
         </table>
@@ -101,11 +97,7 @@
     },
     methods: {
       fetchData() {
-        if (!this.pk) {
-          this.$router.push('docker')
-          return
-        }
-        request.get(`/api/admin/docker/host/${this.pk}`).then(res => {
+        request.get(`/api/admin/docker/info`).then(res => {
           this.data = res.data
         })
       },

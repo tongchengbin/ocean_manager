@@ -3,7 +3,7 @@
     <div class="widget" style="padding-bottom:10px">
       <div class="tool-bar"><span><strong>主机管理</strong></span></div>
       <div style="padding: 8px 20px">
-        <el-button @click="handleEditHost()" type="primary" size="middle" style="padding: 6px 14px">添加</el-button>
+<!--        <el-button @click="handleEditHost()" type="primary" size="middle" style="padding: 6px 14px">添加</el-button>-->
         <el-button @click="getList()" type="primary" size="middle" style="padding: 6px 14px">刷新</el-button>
       </div>
       <div class="host-container">
