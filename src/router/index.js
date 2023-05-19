@@ -131,6 +131,20 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: '/vuln',
+    component: Layout,
+    meta: {'title': '漏洞复现', icon: '赛事 ', auth: true},
+    children: [
+      {
+        path: 'resources',
+        component: () => import('../views/vuln/resources'),
+        name: 'question',
+        auth: true,
+        meta: {'title': '漏洞资源', icon: 'component', auth: true},
+      },
+    ]
+  },
+  {
     path: '/ctf',
     component: Layout,
     meta: {'title': 'CTF赛事', icon: '赛事 ', auth: true},
