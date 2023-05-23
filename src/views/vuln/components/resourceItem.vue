@@ -17,7 +17,7 @@
       <el-form-item label="描述">
 <!--        <el-input v-model="form.description"></el-input>-->
         <div id="my-markdown" class="markdown-body">
-          <vue-markdown :source="form.desc"></vue-markdown>
+          <mavon-editor v-model="form.description"/>
         </div>
       </el-form-item>
     </el-form>
@@ -31,11 +31,13 @@
 
 <script>
 import request from "@/api/public";
-import VueMarkdown from 'vue-markdown';
+import  {mavonEditor}  from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
 
 export default {
   components:{
-    VueMarkdown
+    mavonEditor
   },
   name: "addQuestion",
   props: {
@@ -63,14 +65,10 @@ export default {
       attachment:[], // 临时附件对象
       form: {
         attachment: [],
-        resource_id: null,
+        docker_type: null,
+        image: null,
         name: null,
-        flag: null,
-        desc: null,
-        score: null,
-        type: null,
-        active: true,
-        active_flag: false,
+        description: null,
       },
       rules: {
         name: [
@@ -96,24 +94,6 @@ export default {
   created() {
     this.getOptions()
     this.getResourceList()
-    if (this.data.id) {
-      this.form.id = this.data.id;
-      this.form.name = this.data.name;
-      this.form.flag = this.data.flag;
-      this.form.desc = this.data.desc;
-      this.form.active_flag = this.data.active_flag;
-      this.form.type = this.data.type;
-      this.form.active = this.data.active;
-      this.form.score = this.data.score;
-      this.form.resource_id = this.data.resource_id;
-      if (this.form.active) {
-        this.getDockerHost()
-      }
-      if(this.data.attachment.length>0){
-        this.attachment = this.form.attachment
-      }
-    }
-
   },
   methods: {
     getOptions() {
@@ -135,59 +115,15 @@ export default {
       this.$emit('action', false)
     },
     submit() {
-      // 处理附件
-      this.form.attachment =[]
-      for(let i=0;i<this.attachment.length;i++){
-        this.form.attachment.push(this.attachment[i].uuid)
+      if(this.form.id){
+
+      }else{
+        request.post(`/api/admin/vuln`,this.form).then(res=>{
+          this.$emit('action', true)
+          this.$message({message:"提交成功",type:"success"})
+        })
       }
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          if (this.form.id) {
-            request.put(`/api/admin/ctf/question/${this.form.id}`, this.form).then(_ => {
-              this.$emit('action', true)
-              this.$message({message:"提交成功",type:"success"})
-            }).catch(_ => {
-
-            })
-
-          } else {
-            request.post('/api/admin/ctf/question', this.form).then(_ => {
-              this.$emit('action', true)
-            }).catch(_ => {
-            })
-          }
-        }else{
-          console.log("表单验证失败")
-        }
-      })
     },
-    handleFileClick() {
-      document.getElementById('inputFile').click()
-    },
-    changeActiveFlag(e) {
-      if (e) {
-        this.getDockerHost()
-      }
-
-    },
-    removeFile(index) {
-      this.fileChange = true;
-      this.attachment.splice(index, 1)
-    },
-    handleFile() {
-      let inputDOM = this.$refs.inputer;
-      let file = inputDOM.files[0];
-      let formData = new FormData();
-      formData.append("file", file);  //文件上传处理
-      request.post('/api/admin/ctf/upload', formData).then(res => {
-        this.fileChange = true
-        let { uuid,filename } = res
-        this.attachment.push({
-          uuid:uuid,
-          filename: filename
-        });
-      })
-    }
   },
 
 }
@@ -249,11 +185,3 @@ export default {
 }
 </style>
 
-<style>
-@import 'github-markdown-css/github-markdown.css';
-.markdown-body {
-  box-sizing: border-box;
-  margin: 0 auto;
-  padding: 0 40px;
-}
-</style>

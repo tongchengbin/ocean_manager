@@ -138,9 +138,24 @@ export const asyncRoutes = [
       {
         path: 'resources',
         component: () => import('../views/vuln/resources'),
-        name: 'question',
+        name: 'vuln.resource',
         auth: true,
         meta: {'title': '漏洞资源', icon: 'component', auth: true},
+      },
+      {
+        path: 'runner',
+        component: () => import('../views/vuln/runner'),
+        name: 'vuln.runner',
+        auth: true,
+        meta: {'title': '运行时', icon: 'component', auth: true},
+      },
+      {
+        path: 'edit_resources',
+        component: () => import('../views/vuln/editResources'),
+        name: 'vuln.edit_resource',
+        auth: true,
+        hidden: true,
+        meta: {'title': '编辑资源', icon: 'component', auth: true},
       },
     ]
   },

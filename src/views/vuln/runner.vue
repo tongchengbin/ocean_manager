@@ -6,7 +6,7 @@
       <div class="search-group">
         <el-form inline size="mini">
           <el-form-item>
-            <el-input v-model="listQuery.search" placeholder="名称、app、CVE"></el-input>
+            <el-input v-model="listQuery.search" placeholder="题目名称"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button size="mini" type="primary" @click="getList">查询</el-button>
@@ -20,36 +20,37 @@
         <el-table size="mini" fit highlight-current-row stripe v-loading="loading" :data="listData">
           <el-table-column
             align="center"
+            label="用户"
+            prop="username"
+            width="220"/>
+          <el-table-column
+            align="center"
             label="标题"
-            prop="name"
+            prop="resource.name"
             width="220"/>
           <el-table-column
             align="center"
             label="组件"
-            prop="app"
+            prop="resource.app"
             width="220"/>
           <el-table-column
             align="center"
             label="镜像"
-            prop="image"
+            prop="resource.image"
             width="200"/>
           <el-table-column
             align="center"
-            label="状态"
-            prop="status_name"
-            width="180"/>
+            label="容器ID"
+            prop="container_id"
+            width="200"/>
           <el-table-column
             align="center"
-            label="CVE"
-            prop="cve"
-            width="220">
-            <template #default="scope">
-              <el-tag style="margin: 0 2px;" v-for="i in scope.row.cve" :key="i">{{i}}</el-tag>
-            </template>
-          </el-table-column>
+            label="端口信息"
+            prop="port_info"
+            width="200"/>
           <el-table-column
             align="center"
-            label="添加日期"
+            label="启动时间"
             prop="date_created"
             show-overflow-tooltip
           />
@@ -58,9 +59,8 @@
             label="操作" width="240">
             <template #default="scope">
               <el-button v-if="scope.row.status===0" size="mini" type="primary" @click="buildHandle(scope.row)">编译</el-button>
-              <el-button v-else size="mini" type="primary" @click="runHandle(scope.row)">启动</el-button>
               <el-button size="mini" type="primary" @click="editHandle(scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="deleteHandle(scope.row)">删除</el-button>
+              <el-button size="mini" type="danger" @click="deleteHandle(scope.row)">销毁</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -122,7 +122,7 @@ export default {
     },
     getList() {
       this.loading = true
-      request.get(`/api/admin/vuln`, this.listQuery).then(res => {
+      request.get(`/api/admin/vuln/runner`, this.listQuery).then(res => {
         this.listData = res.data;
         this.loading = false;
         this.total = res.total
@@ -150,18 +150,8 @@ export default {
     editHandle(data) {
       this.$router.replace({name:"vuln.edit_resource",query: { id: data.id }})
     },
-    runHandle(row){
-      request.post(`/api/admin/vuln/${row.id}/run`,).then(_ => {
-        this.$message({
-          message: "启动成功",
-          type: "success"
-        })
-        this.getList()
-      })
-    },
-
     deleteHandle(row) {
-      request.delete(`/api/admin/ctf/question/${row.id}`,).then(_ => {
+      request.delete(`/api/admin/vuln/runner/${row.id}`,).then(_ => {
         this.$message({
           message: "删除成功",
           type: "success"
