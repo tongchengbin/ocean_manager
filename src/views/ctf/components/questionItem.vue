@@ -235,7 +235,7 @@ export default {
       let file = inputDOM.files[0];
       let formData = new FormData();
       formData.append("file", file);  //文件上传处理
-      request.post('/api/admin/ctf/upload', formData).then(res => {
+      http.post('/api/admin/ctf/upload', formData).then(res => {
         this.fileChange = true
         let { uuid,filename } = res
         this.attachment.push({

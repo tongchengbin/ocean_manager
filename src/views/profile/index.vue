@@ -21,7 +21,7 @@
           </el-card>
         </el-col>
         <el-col :span="18" :xs="24">
-          <el-card >
+          <el-card>
             <el-tabs v-model="activeTab">
               <el-tab-pane label="账户信息" name="account">
                 <account :user="user" />
@@ -39,41 +39,40 @@
 </template>
 
 <script>
-import Activity from './components/Activity.vue'
-import Timeline from './components/Timeline.vue'
-import Account from './components/Account.vue'
+import Timeline from "./components/Timeline.vue";
+import Account from "./components/Account.vue";
 import RestPass from "@/views/profile/components/RestPass.vue";
 import UserCard from "@/views/profile/components/UserCard.vue";
-import {http} from "@/utils/http";
+import { http } from "@/utils/http";
 
 export default {
-  name: 'Profile',
-  components: {RestPass, UserCard, Activity, Timeline, Account },
+  name: "Profile",
+  components: { RestPass, UserCard, Timeline, Account },
   data() {
     return {
-      user:{
-        username:'',
-        role_name:'',
+      user: {
+        username: "",
+        role_name: ""
       },
-      activeTab: 'sec'
-    }
+      activeTab: "sec"
+    };
   },
   created() {
-    this.getUser()
+    this.getUser();
   },
   methods: {
     getUser() {
-      http.get("/api/admin/userinfo").then(res=>{
-        this.user = res.data
-        console.log(this.user)
-      })
+      http.get("/api/admin/userinfo").then(res => {
+        this.user = res.data;
+        console.log(this.user);
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.box-center{
+.box-center {
   text-align: center;
 }
 </style>
