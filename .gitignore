@@ -19,3 +19,4 @@ tests/**/coverage/
 *.njsproj
 *.sln
 tsconfig.tsbuildinfo
+pnpm-lock.yaml

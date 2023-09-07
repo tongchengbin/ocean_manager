@@ -55,7 +55,8 @@
     "vue": "^3.3.4",
     "vue-router": "^4.2.2",
     "vue-types": "^5.1.0",
-    "vue3-count-to": "^1.1.2"
+    "vue3-count-to": "^1.1.2",
+    "win-node-env": "^0.6.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.6",
