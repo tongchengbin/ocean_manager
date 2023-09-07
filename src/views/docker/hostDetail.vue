@@ -1,0 +1,199 @@
+<template>
+  <div class="page-container">
+    <div class="widget">
+      <div class="tool-bar">
+        <span>Endpoint Info</span>
+      </div>
+      <div>
+        <table class="endpoint-info">
+          <tbody>
+          <tr>
+            <td>名称</td>
+            <td>{{data.name}}</td>
+          </tr>
+          <tr>
+            <td>主机信息</td>
+            <td class="small text-muted">
+              <span>CPU {{data.info.cpu}}  &nbsp;&nbsp;&nbsp;</span>
+              <span style="margin-left: 1em">Mem {{ data.info.memory}}GB</span>
+              <span style="margin-left: 1em">&nbsp;{{data.info.system}}&nbsp;-&nbsp;Standalone{{data.info.version}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td>IP</td>
+            <td class="small text-muted">{{data.ip}}</td>
+          </tr>
+          <tr>
+            <td>连接地址</td>
+            <td class="small text-muted">{{data.docker_api}}</td>
+          </tr>
+          <tr>
+            <td>备注</td>
+            <td class="small text-muted">{{data.remark}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="margin-top: 30px;" class="widget">
+      <div class="tool-bar">
+        <span>Docker Info</span>
+      </div>
+      <div class="docker">
+        <el-row>
+
+          <el-col :md="12" :xs="24">
+            <div class="box" @click="$router.push({name:'docker.container',query:{id:pk}})">
+              <div
+                style="height: 65px;width: 65px;background-color: #2361ae!important;vertical-align: middle;text-align: center;border-radius: 32px">
+                <i class="iconfont icon-volumes" style="color: #f0f0f0;font-size: 35px;line-height: 65px"></i></div>
+              <div class="state">
+                <div class="state-item">{{ data.info.containers }}</div>
+                <div class="comment">Container</div>
+              </div>
+            </div>
+          </el-col>
+          <el-col :md="12" :xs="24">
+            <div class="box" @click="$router.push({name:'docker.image',query:{id:pk}})">
+              <div
+                style="height: 65px;width: 65px;background-color: #2361ae!important;vertical-align: middle;text-align: center;border-radius: 32px">
+                <i class="iconfont icon-jingxiang" style="color: #f0f0f0;font-size: 35px;line-height: 65px"></i></div>
+              <div class="state">
+                <div class="state-item">{{data.info.images }}</div>
+                <div class="comment">Image</div>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import {http} from "@/utils/http";
+
+  export default {
+    name: "hostDetail",
+    data() {
+      return {
+        data: {
+          info:{
+            memory:0,
+            containers:null,
+            cpu:null,
+          }
+        },
+        pk: null,
+        listQuery: {
+          page: 1,
+          page_size: 10,
+        },
+        total: 0,
+        endpoints: []
+      }
+    },
+
+
+    created() {
+      this.fetchData()
+
+    },
+    methods: {
+      fetchData() {
+        http.get("/api/admin/docker/info").then(res => {
+          this.data = res.data
+        })
+      },
+      handleSizeChange() {
+        this.getEndPoints()
+      },
+      handleCurrentChange() {
+        this.getEndPoints()
+      }
+    }
+  }
+</script>
+
+<style scoped>
+  .endpoint-info {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+
+  .block-line .text-muted {
+    color: #777;
+  }
+
+
+  .widget table tbody * {
+    font-size: 13px !important;
+  }
+
+  .endpoint-info {
+    border-collapse: collapse !important
+  }
+
+  .endpoint-info td, .endpoint-info th {
+    background-color: #fff !important
+  }
+
+  .endpoint-info > tbody > tr > td, .table > tbody > tr > th, .endpoint-info > tfoot > tr > td, .endpoint-info > tfoot > tr > th, .endpoint-info > thead > tr > td, .endpoint-info > thead > tr > th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd
+  }
+
+  .endpoint-info > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd
+  }
+
+  .endpoint-info > caption + thead > tr:first-child > td, .endpoint-info > caption + thead > tr:first-child > th, .endpoint-info > colgroup + thead > tr:first-child > td, .endpoint-info > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+    border-top: 0
+  }
+
+  .endpoint-info > tbody + tbody {
+    border-top: 2px solid #ddd
+  }
+
+  .docker {
+    background-color: #f6f6f6;
+  }
+
+  .docker .box {
+    background-color: #fff;
+    margin: 6px 12px;
+    border: 1px solid #f6f6f6;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+  }
+
+  .box .state {
+    margin-left: 10px;
+  }
+
+  .state-item {
+    font-size: 28px;
+    color: #337ab7;
+  }
+
+  .comment {
+    color: #337ab7;
+  }
+
+  .comment:hover {
+    color: #23527c;
+  }
+
+  .box {
+    cursor: pointer;
+  }
+</style>
