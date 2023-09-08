@@ -66,7 +66,6 @@ export default {
   },
   methods: {
     setOptions(charData) {
-      console.log("char data",charData)
       let xData = charData.x_data
       let options = {
         xAxis: {
@@ -78,8 +77,8 @@ export default {
         },
         grid: {
           left: 10,
-          right: 10,
-          bottom: 20,
+          right: 20,
+          bottom: 30,
           top: 30,
           containLabel: true
         },
@@ -115,12 +114,12 @@ export default {
           },
           smooth: true,
           type: 'line',
+          coordinateSystem: "cartesian2d",
           data: charData.lines[l].data,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         })
       }
-      console.log(options)
       this.chart.setOption(options)
     },
     initChart() {
