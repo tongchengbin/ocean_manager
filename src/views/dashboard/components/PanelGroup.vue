@@ -71,8 +71,6 @@ export default {
     }
   },
   created() {
-    console.log(11, this.data)
-
   },
   components: {
     CountTo,

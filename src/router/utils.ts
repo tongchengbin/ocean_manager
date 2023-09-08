@@ -5,7 +5,7 @@ import {
   createWebHistory,
   createWebHashHistory
 } from "vue-router";
-import { router } from "./index";
+import { asyncRouterMap, router } from "./index";
 import { isProxy, toRaw } from "vue";
 import { useTimeoutFn } from "@vueuse/core";
 import {
@@ -19,7 +19,7 @@ import {
 import { getConfig } from "@/config";
 import { menuType } from "@/layout/types";
 import { buildHierarchyTree } from "@/utils/tree";
-import { sessionKey, type DataInfo } from "@/utils/auth";
+import { sessionKey, type DataInfo, setDataInfo } from "@/utils/auth";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 const IFrame = () => import("@/layout/frameView.vue");
@@ -74,19 +74,14 @@ function filterChildrenTree(data: RouteComponent[]) {
 
 /** 判断两个数组彼此是否存在相同值 */
 function isOneOfArray(a: Array<string>, b: Array<string>) {
-  return Array.isArray(a) && Array.isArray(b)
-    ? intersection(a, b).length > 0
-      ? true
-      : false
-    : true;
+  return Array.isArray(a) && Array.isArray(b)? intersection(a, b).length > 0 ? true : false : true;
 }
 
 /** 从sessionStorage里取出当前登陆用户的角色roles，过滤无权限的菜单 */
-function filterNoPermissionTree(data: RouteComponent[]) {
+function filterNoPermissionTree(data: RouteComponent[]){
   const currentRoles =
     storageSession().getItem<DataInfo<number>>(sessionKey)?.roles ?? [];
-  const newTree = cloneDeep(data).filter((v: any) =>
-    isOneOfArray(v.meta?.roles, currentRoles)
+  const newTree = cloneDeep(data).filter((v: any) =>isOneOfArray(v.meta?.roles, currentRoles)
   );
   newTree.forEach(
     (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
@@ -150,7 +145,8 @@ function addPathMatch() {
 }
 
 /** 处理动态路由（后端返回的路由） */
-function handleAsyncRoutes(routeList) {
+function handleAsyncRoutes(routeList:any[],roles:string[]) {
+  // 添加路由
   if (routeList.length === 0) {
     usePermissionStoreHook().handleWholeMenus(routeList);
   } else {
@@ -176,7 +172,8 @@ function handleAsyncRoutes(routeList) {
         }
       }
     );
-    usePermissionStoreHook().handleWholeMenus(routeList);
+    // 生成菜单
+    usePermissionStoreHook().handleWholeMenus(routeList)
   }
   addPathMatch();
 }
@@ -184,8 +181,9 @@ function handleAsyncRoutes(routeList) {
 /** 初始化路由（`new Promise` 写法防止在异步请求中造成无限循环）*/
 function initRouter() {
   return new Promise(resolve => {
-    getAsyncRoutes().then(({ data }) => {
-      handleAsyncRoutes([]);
+    getAsyncRoutes().then(( data ) => {
+      setDataInfo(data)
+      handleAsyncRoutes([],[data.role_name]);
       resolve(router);
     });
   });

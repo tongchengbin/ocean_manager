@@ -59,7 +59,6 @@ export default {
     getList() {
       http.get("/api/admin/docker/images").then(res => {
         this.list = res.data;
-        console.log(111,res)
       })
     },
     remove(row,tag) {

@@ -164,14 +164,16 @@ export default {
     },
     updateData() {
       //   添加用户  更新用户
-      if (this.data.id) {
-        let data = this.data
+      if (this.currentItem.id) {
+        let data = this.currentItem
         http.put(`/api/admin/user/${data.id}`, data).then(res => {
-          this.$emit('success')
+          this.getList()
         }).catch(err => {
+        }).finally(() => {
+          this.currentItemVisible = false
         })
       } else {
-        let data = this.data
+        let data = this.currentItem
         if (!data.username) {
           this.$message({message: "请输入用户名", type: "error"})
           return
@@ -189,9 +191,11 @@ export default {
           return
         }
         http.post('/api/admin/user', data).then(res => {
-          this.$emit('success')
+          this.getList()
         }).catch(err => {
-        })
+        }).finally(() => {
+          this.currentItemVisible = false
+        } )
       }
 
     }

@@ -6,5 +6,5 @@ type Result = {
 };
 
 export const getAsyncRoutes = () => {
-  return http.get("/api/admin/userinfo");
+  return http.get<any,any>("/api/admin/userinfo");
 };

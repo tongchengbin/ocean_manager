@@ -58,7 +58,7 @@
           />
         </div>
       </div>
-      <el-dialog center  v-model="isEdit" :title="editForm.id?'编辑':'新增'" @close="$emit('handleEdit',false)" width="700">
+      <el-dialog center  v-model="isEdit" :title="editForm.id?'编辑':'新增'+'管理员'" @close="$emit('handleEdit',false)" width="700">
         <el-form ref="dataForm"  :model="editForm" label-position="left" label-width="80px" label-suffix=":" style="width: 500px; margin: auto auto;font-size: 13px;">
           <el-form-item  label="用户名" prop="username" required>
             <el-input v-model="editForm.username" />
@@ -92,6 +92,7 @@
 <script>
 import {http} from "@/utils/http";
 import EditAdmin from "@/views/system/components/editAdmin.vue";
+import { ElMessage } from "element-plus";
 
 export default {
   name: 'Account',
@@ -120,8 +121,6 @@ export default {
         page_size: 10
       },
       roles:[],
-      dialogStatus: 'update',
-      dialogFormVisible: false,
       RolesData: [],
       formData: {
         email: null,
@@ -151,6 +150,7 @@ export default {
     },
     handleDelete(row) {
       http.delete(`/api/admin/admin/${row.id}` ).then(res => {
+        ElMessage.success('删除成功')
         this.getList()
       })
     },
@@ -168,7 +168,7 @@ export default {
     handleCreate(form) {
       this.getRole()
       this.isEdit = true;
-      this.editForm = form;
+      this.editForm = {};
     },
     handleEdit(e){
       this.isEdit = false
@@ -177,30 +177,35 @@ export default {
       }
     },
     handleUpdate(row) {
-      this.dialogStatus = 'edit'
       this.formData = row
-      this.dialogFormVisible = true
+      this.isEdit = true
     },
     submit() {
-      if (!this.editForm) {
+      if (!this.editForm.id) {
         http.post('/api/admin/admin', this.editForm).then(res => {
-          this.$message({
-            message: '添加成功',
-            type: 'success'})
-          this.$emit('handleEdit',true)
+          ElMessage.success('添加成功')
+          this.getList()
         }).catch(res => {
 
-        })
+        }).finally(
+            ()=>{
+              this.isEdit= false
+            }
+        )
       } else {
         http.put(`/api/admin/admin/${this.editForm.id}`, this.editForm).then(res => {
           this.$message({
             message: '操作成功',
             type: 'success'
           })
-          this.$emit('handleEdit',true)
+          this.getList()
         }).catch(err =>{
 
-        })
+        }).finally(
+            ()=>{
+              this.isEdit= false
+            }
+        )
       }
     },
 

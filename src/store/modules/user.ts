@@ -30,15 +30,13 @@ export const useUserStore = defineStore({
     /** 登入 */
     async loginByUsername(data) {
       return new Promise<UserResult>((resolve, reject) => {
-        getLogin(data)
-          .then(data => {
+        getLogin(data).then(data => {
             if (data) {
               setToken(data.data);
               resolve(data);
             }
           })
           .catch(error => {
-            console.log("err",error)
             reject(error);
           });
       });

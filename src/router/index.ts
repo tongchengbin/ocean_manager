@@ -104,7 +104,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
     meta: {
       icon: "uiw:dashboard",
       title: "首页",
-      rank: 0
+      rank: 0,
     },
     children: [
       {
@@ -113,7 +113,8 @@ export const asyncRouterMap: RouteConfigsTable[] = [
         component: () => import("@/views/dashboard/index.vue"),
         meta: {
           title: "首页",
-          showLink: true
+          showLink: true,
+          roles: ["超级管理员","运维管理员","审计员","访客"],
         }
       }
     ]
@@ -135,6 +136,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
         component: () => import("@/views/account/user.vue"),
         meta: {
           title: "用户列表",
+          roles: ["超级管理员","运维管理员","审计员","访客"],
         }
       }
     ]
@@ -208,19 +210,19 @@ export const asyncRouterMap: RouteConfigsTable[] = [
         path: '/docker/container',
         component: () => import('@/views/docker/container.vue'),
         name: 'docker.container',
-        meta: {'title': '实例容器', icon: 'container', showLink:false},
+        meta: {'title': '实例容器', icon: 'container', showLink:false,          roles: ["超级管理员","运维管理员"],},
       },
       {
         path: '/docker/imageDetail',
         component: () => import('@/views/docker/imageDetail.vue'),
         name: 'dockerImagesDetail',
-        meta: {'title': '镜像详情', icon: 'icon' ,showLink:false},
+        meta: {'title': '镜像详情', icon: 'icon' ,showLink:false,roles: ["超级管理员","运维管理员"],},
       },
       {
         path: '/docker/imageAdd',
         component: () => import('@/views/docker/addImage.vue'),
         name: 'docker.image.add',
-        meta: {'title': '添加镜像', icon: 'icon' ,showLink:false},
+        meta: {'title': '添加镜像', icon: 'icon' ,showLink:false,roles: ["超级管理员","运维管理员"],},
       },
 
     ],
@@ -234,7 +236,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
         path: '/ops/sys',
         component: () => import('@/views/ops/sysinfo.vue'),
         name: 'ops.sys',
-        meta: {title: '系统设置', icon:'tdesign:system-setting' }
+        meta: {title: '系统设置', icon:'tdesign:system-setting' ,roles: ["超级管理员","运维管理员"],}
       },
       {
         path: '/ops/operator',
@@ -260,16 +262,10 @@ export const asyncRouterMap: RouteConfigsTable[] = [
     meta: {title: "系统设置",icon: 'dashicons:admin-generic'},
     children: [
       {
-        path: '/system/role',
-        component: () => import('@/views/system/role.vue'),
-        name: '角色管理',
-        meta: {title: '角色管理', icon: ''}
-      },
-      {
         path: '/system/admin',
         component: () => import('@/views/system/admins.vue'),
         name: '系统管理员',
-        meta: {title: '管理员列表', icon: ''}
+        meta: {title: '管理员列表', icon: '',roles: ["超级管理员"],}
       }]
   },
   {

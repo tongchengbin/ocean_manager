@@ -13,6 +13,9 @@ export interface DataInfo<T> {
   username?: string;
   /** 当前登陆用户的角色 */
   roles?: Array<string>;
+
+  // 当前角色
+  role_name?: string
 }
 
 export const sessionKey = "user-info";
@@ -40,7 +43,6 @@ export function setToken(data: DataInfo<Date>) {
       roles
     });
   }
-
   if (data.username && data.roles) {
     const { username, roles } = data;
     setSessionKey(username, roles);
@@ -52,6 +54,21 @@ export function setToken(data: DataInfo<Date>) {
     setSessionKey(username, roles);
   }
 }
+
+// 设置用户信息
+export function setDataInfo(data: DataInfo<Date>) {
+  function setSessionKey(username: string, roles: Array<string>) {
+    useUserStoreHook().SET_USERNAME(username);
+    useUserStoreHook().SET_ROLES(roles);
+    storageSession().setItem(sessionKey, {
+      username,
+      roles
+    });
+  }
+  setSessionKey(data.username,[data.role_name]);
+}
+
+
 
 /** 删除`token`以及key值为`user-info`的session信息 */
 export function removeToken() {

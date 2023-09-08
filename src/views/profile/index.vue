@@ -64,7 +64,6 @@ export default {
     getUser() {
       http.get("/api/admin/userinfo").then(res => {
         this.user = res.data;
-        console.log(this.user);
       });
     }
   }
