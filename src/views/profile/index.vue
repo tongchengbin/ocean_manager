@@ -63,7 +63,8 @@ export default {
   methods: {
     getUser() {
       http.get("/api/admin/userinfo").then(res => {
-        this.user = res.data;
+        console.log("data",res)
+        this.user = res;
       });
     }
   }

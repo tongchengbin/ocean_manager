@@ -45,14 +45,14 @@ export default {
   },
   methods: {
     getConfig(){
-      http.get('/api/system/config').then(res=>{
+      http.get('/api/admin/config').then(res=>{
         this.form.ip = res.data.ip
         this.form.docker_api = res.data.docker_api
         this.form.port_range = res.data.port_range
       })
     },
     setConfig() {
-      http.post("/api/system/config",this.form).then(res=>{
+      http.post("/api/admin/config",this.form).then(res=>{
         this.$message({message:"保存成功",type:"success"})
         this.getConfig()
       })

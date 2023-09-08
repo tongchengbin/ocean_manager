@@ -35,7 +35,7 @@ name: "ctf",
   },
   methods:{
     getConfig(){
-      http.get('/api/system/config').then(res=>{
+      http.get('/api/admin/config').then(res=>{
         this.ctf_container_seconds = res.data.ctf_container_seconds || 180
       })
     },
@@ -43,7 +43,7 @@ name: "ctf",
       let data ={
         ctf_container_seconds:this.ctf_container_seconds
       }
-      http.post('/api/system/config',data).then(res=>{
+      http.post('/api/admin/config',data).then(res=>{
           this.$message({
             type:"success",
             message:"保存成功"
