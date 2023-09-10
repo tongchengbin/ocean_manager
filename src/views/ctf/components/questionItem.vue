@@ -128,7 +128,6 @@ export default {
     data:{
       handler(newVal){
         if(newVal){
-          console.log(">>")
           this.form.id = this.data.id;
           this.form.name = this.data.name;
           this.form.flag = this.data.flag;

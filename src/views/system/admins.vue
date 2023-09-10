@@ -97,16 +97,6 @@ import { ElMessage } from "element-plus";
 export default {
   name: 'Account',
   components: {EditAdmin},
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
       isEdit:false,

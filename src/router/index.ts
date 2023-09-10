@@ -293,6 +293,17 @@ export const asyncRouterMap: RouteConfigsTable[] = [
       },
     ]
   },
+  {
+    path: '/notice',
+    component: Layout,
+    meta: {title: "公告提醒",icon: 'zondicons:announcement'},
+    children: [{
+      path: '/notice/index',
+      component: () => import('@/views/notice/index.vue'),
+      name: 'notice.index',
+      meta: {title: '公告提醒', icon: 'zondicons:announcement'}
+    }]
+  },
 ]
 
 for(let i = 0; i < asyncRouterMap.length; i++) {
@@ -314,7 +325,6 @@ export const remainingPaths = Object.keys(remainingRouter).map(v => {
   return remainingRouter[v].path;
 });
 
-console.log(constantRoutes.concat(...(remainingRouter as any)))
 /** 创建路由实例 */
 export const router: Router = createRouter({
   history: getHistoryMode(import.meta.env.VITE_ROUTER_HISTORY),

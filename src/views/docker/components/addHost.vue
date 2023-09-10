@@ -1,7 +1,7 @@
 <template>
   <el-dialog width="500px" center :visible.async="show" :title="checkHost.id?'编辑主机':'添加主机'">
     <div>
-      <el-form label-position="right" size="mini"  label-width="100px" >
+      <el-form label-position="right"  label-width="100px" >
         <el-form-item label="主机名称">
             <el-input v-model="form.name" ></el-input>
         </el-form-item>
@@ -20,8 +20,8 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button size="mini" @click="success(0)">取 消</el-button>
-      <el-button size="mini" type="primary" @click="success(1)">确 定</el-button>
+      <el-button  @click="success(0)">取 消</el-button>
+      <el-button  type="primary" @click="success(1)">确 定</el-button>
     </span>
   </el-dialog>
 </template>

@@ -18,7 +18,7 @@
                 <span>{{item.name}}</span>
               </div></div>
               <div style="text-align: right;flex: auto;">
-                <el-button style="padding: 4px;" @click="handleToDetail(item)" size="mini" icon="el-icon-more" type="primary" circle></el-button>
+                <el-button style="padding: 4px;" @click="handleToDetail(item)"  icon="el-icon-more" type="primary" circle></el-button>
               </div>
             </div>
             <div class="box-body" >

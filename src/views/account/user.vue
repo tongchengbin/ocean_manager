@@ -74,7 +74,7 @@
         </div>
       </div>
     </div>
-    <el-dialog :title="currentItem.id?'编辑用户':'添加用户'" v-model="currentItemVisible" size="mini"
+    <el-dialog :title="currentItem.id?'编辑用户':'添加用户'" v-model="currentItemVisible"
                :close-on-click-modal="false" center width="600px">
       <el-form ref="dataForm" :model="currentItem" label-width="100px"  label-position="right">
         <el-form-item label="用户名" prop="username">
@@ -100,6 +100,7 @@ import {http} from "@/utils/http";
 import addUser from "@/views/account/components/addUser.vue";
 import {useRenderIcon} from "@/components/ReIcon/src/hooks";
 import Search from "@iconify-icons/ep/search";
+import { ElMessage } from "element-plus";
 
 export default {
   name: 'Account',
@@ -167,6 +168,7 @@ export default {
       if (this.currentItem.id) {
         let data = this.currentItem
         http.put(`/api/admin/user/${data.id}`, data).then(res => {
+          ElMessage.success("更新成功")
           this.getList()
         }).catch(err => {
         }).finally(() => {
@@ -191,6 +193,7 @@ export default {
           return
         }
         http.post('/api/admin/user', data).then(res => {
+          ElMessage.success("新增成功")
           this.getList()
         }).catch(err => {
         }).finally(() => {
@@ -213,12 +216,6 @@ export default {
   }
 }
 
-.page-r {
-  margin: 16px 0;
-  display: flex;
-  justify-content: flex-end; /* 将内容靠右对齐 */
-  align-items: center; /* 垂直居中对齐，如果需要的话 */
-  /* 添加其他样式以适应你的页面布局 */
-}
+
 
 </style>
