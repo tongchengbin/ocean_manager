@@ -188,12 +188,12 @@ export const asyncRouterMap: RouteConfigsTable[] = [
       icon: 'teenyicons:docker-outline'
     },
     children: [
-      {
-        path: '/docker/host',
-        name: 'now',
-        component: () => import('@/views/docker/host.vue'),
-        meta: {'title': '容器管理', icon: 'docker_1'},
-      },
+      // {
+      //   path: '/docker/host',
+      //   name: 'now',
+      //   component: () => import('@/views/docker/host.vue'),
+      //   meta: {'title': '容器管理', icon: 'docker_1'},
+      // },
       {
         path: '/docker/dockerHostDetail',
         component: () => import('@/views/docker/hostDetail.vue'),
@@ -223,6 +223,12 @@ export const asyncRouterMap: RouteConfigsTable[] = [
         component: () => import('@/views/docker/addImage.vue'),
         name: 'docker.image.add',
         meta: {'title': '添加镜像', icon: 'icon' ,showLink:false,roles: ["超级管理员","运维管理员"],},
+      },
+      {
+        path: '/docker/resource',
+        component: () => import('@/views/docker/resource.vue'),
+        name: 'docker.resource',
+        meta: {'title': '资源中心', icon: 'docker_1'},
       },
 
     ],

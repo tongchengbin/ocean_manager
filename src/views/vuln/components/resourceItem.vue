@@ -106,11 +106,6 @@ export default {
         this.resource_list = res.data
       })
     },
-    getDockerHost() {
-      http.get('/api/admin/docker/host', {'page_size': 999}).then(res => {
-        this.hostOption = res.data;
-      })
-    },
     cancel() {
       this.$emit('action', false)
     },

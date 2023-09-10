@@ -137,9 +137,6 @@ export default {
           this.form.active = this.data.active;
           this.form.score = this.data.score;
           this.form.resource_id = this.data.resource_id;
-          if (this.form.active) {
-            this.getDockerHost()
-          }
           if(this.data.attachment && this.data.attachment.length>0){
             this.attachment = this.form.attachment
           }
@@ -161,9 +158,6 @@ export default {
       this.form.active = this.data.active;
       this.form.score = this.data.score;
       this.form.resource_id = this.data.resource_id;
-      if (this.form.active) {
-        this.getDockerHost()
-      }
       if(this.data.attachment.length>0){
         this.attachment = this.form.attachment
       }
@@ -177,13 +171,8 @@ export default {
       })
     },
     getResourceList(){
-      http.get('/api/admin/docker/resource',{"page_size":99999,"status":1}).then(res=>{
+      http.get('/api/admin/docker/resource',{"page_size":99999,"status":1,"type":"CTF"}).then(res=>{
         this.resource_list = res.data
-      })
-    },
-    getDockerHost() {
-      http.get('/api/admin/docker/host', {'page_size': 999}).then(res => {
-        this.hostOption = res.data;
       })
     },
     cancel() {
@@ -220,10 +209,6 @@ export default {
       document.getElementById('inputFile').click()
     },
     changeActiveFlag(e) {
-      if (e) {
-        this.getDockerHost()
-      }
-
     },
     removeFile(index) {
       this.fileChange = true;
