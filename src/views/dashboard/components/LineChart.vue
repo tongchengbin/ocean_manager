@@ -4,7 +4,7 @@
 
 <script>
 import * as echarts from 'echarts';
-
+import { markRaw } from 'vue'
 export default {
   props: {
     className: {
@@ -114,16 +114,16 @@ export default {
           },
           smooth: true,
           type: 'line',
-          coordinateSystem: "cartesian2d",
           data: charData.lines[l].data,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         })
       }
+      console.log(options)
       this.chart.setOption(options)
     },
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = markRaw(echarts.init(this.$el, 'macarons'))
       if(this.data.x_data){
         this.setOptions(this.data)
       }

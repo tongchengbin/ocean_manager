@@ -38,6 +38,7 @@ export default {
       })
     },
     handleSetLineChartData(type) {
+      console.log(type)
     }
   },
   components: {
