@@ -28,7 +28,7 @@
           <el-table-column align="center" label="Flag" prop="flag"></el-table-column>
           <el-table-column align="center" label="创建日期" prop="date_created" width="160"></el-table-column>
           <el-table-column align="center" label="有效时间" prop="destroy_time" width="160"></el-table-column>
-          <el-table-column align="center" label="操作" width="150">
+          <el-table-column align="center" label="操作" width="160">
             <template #default="scope">
               <el-tooltip class="item" content="删除容器" effect="dark" placement="top">
                 <el-button  type="danger" @click="containerRemove(scope.row)">销毁</el-button>
