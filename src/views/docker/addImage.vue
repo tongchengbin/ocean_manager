@@ -46,9 +46,7 @@
         <el-tab-pane :disabled="!showLog">
           <template #label><el-icon><Files /></el-icon>日志</template>
           <div id="log_output" class="output" style="max-height: 300px;overflow: auto">
-              <pre class="pre">
-               <code class="line small" v-for="line in output">{{ line }}</code>
-              </pre>
+               <p class="line small" v-for="line in output">{{ line }}</p>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -126,7 +124,7 @@ export default {
         http.post(`/api/admin/docker/image?build_type=${this.$refs.tab.currentName}&tag=${this.buildForm.tag}`, data).then(res => {
           this.$message({message: "任务已提交", type: "success"})
           this.showLog = true;
-          this.output = [];
+          this.output = ["Internal Server Error for url: http+docker://localhost/v1.44/build?t=test%3A%21&q=False&nocache=False&rm=True&forcerm=False&pull=False"];
           this.loopResponse(res.data.task)
         }).catch(_ => {
 
