@@ -30,7 +30,6 @@
               <el-input v-model="form.image"></el-input>
             </el-form-item>
             <el-form-item label="描述">
-              <!--        <el-input v-model="form.description"></el-input>-->
               <div id="my-markdown" class="markdown-body">
                 <mavon-editor v-model="form.description"/>
               </div>
@@ -47,13 +46,14 @@
 </template>
 
 <script>
+
+import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import  {mavonEditor}  from 'mavon-editor'
 import { http } from "@/utils/http";
 export default {
   name: "resources",
   components: {
-    mavonEditor,
+    'mavonEditor': mavonEditor.mavonEditor
   },
   data() {
     return {
@@ -94,8 +94,6 @@ export default {
         this.form.image = "1"
         this.form.docker_type = data.docker_type
       })
-
-
     },
     goBack(){
       this.$router.back()
