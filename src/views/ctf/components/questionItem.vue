@@ -217,9 +217,10 @@ export default {
     handleFile() {
       let inputDOM = this.$refs.inputer;
       let file = inputDOM.files[0];
+      console.log("FILE",file)
       let formData = new FormData();
       formData.append("file", file);  //文件上传处理
-      http.post('/api/admin/ctf/upload', formData).then(res => {
+      http.post('/api/admin/ctf/upload', formData,{headers:{"Content-Type":"multipart/form-data"}}).then(res => {
         this.fileChange = true
         let { uuid,filename } = res
         this.attachment.push({
