@@ -155,10 +155,10 @@ export default {
     handleFilter() {
       this.getList()
     },
-    handleCreate(form) {
+    handleCreate(row) {
       this.getRole()
       this.isEdit = true;
-      this.editForm = {};
+      this.editForm = row || {};
     },
     handleEdit(e){
       this.isEdit = false

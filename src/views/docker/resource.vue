@@ -33,7 +33,7 @@
           <el-table-column align="center" label="操作" width="200">
             <template v-slot="scope">
               <el-button link type="primary"  @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button v-if="scope.row.status===0" link :loading="loading_build" type="primary"  @click="handleBuild(scope.row.id)">编译</el-button>
+              <el-button  link :loading="loading_build" type="primary"  @click="handleBuild(scope.row.id)">{{scope.row.status===0?'编译':"重新编译"}}</el-button>
               <el-button link type="danger"  @click="handleDelete(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -153,7 +153,7 @@ export default {
       this.loading_build = true
       http.post(`/api/admin/docker/resource/${id}/build`).then(res => {
         this.loading_build=false
-        this.$message({message:"编译完成",type:"success"})
+        this.$message({message:"任务提交成功",type:"success"})
         this.getList()
       })
     },

@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref} from "vue";
 import { noticesData } from "./data";
 import NoticeList from "./noticeList.vue";
 import Bell from "@iconify-icons/ep/bell";
+import {http} from "@/utils/http";
 
 const noticesNum = ref(0);
 const notices = ref(noticesData);
 const activeKey = ref(noticesData[0].key);
-
+// 从远程加载数据
+const getList =()=>{
+    // TODO
+}
+getList()
 notices.value.map(v => (noticesNum.value += v.list.length));
 </script>
 

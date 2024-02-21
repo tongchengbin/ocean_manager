@@ -10,11 +10,7 @@
           </el-form-item>
           <el-form-item>
             <el-button  type="primary" @click="getList">查询</el-button>
-          </el-form-item>
-          <el-form-item>
             <el-button  type="primary" @click="handleCreate">添加</el-button>
-          </el-form-item>
-          <el-form-item>
             <el-button  type="primary" @click="handleUpload">导入</el-button>
           </el-form-item>
         </el-form>
