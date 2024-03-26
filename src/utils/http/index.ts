@@ -119,6 +119,9 @@ class PureHttp {
         if(error.response && error.response.status === 401){
           useUserStoreHook().logOut()
         }
+        if(error.response && error.response.status ==500){
+          ElMessage.error("服务器异常")
+        }
         return Promise.reject($error);
       }
     );

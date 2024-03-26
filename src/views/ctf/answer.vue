@@ -41,14 +41,15 @@
             <el-table-column align="center" label="题目" prop="question.name" width="220"/>
             <el-table-column align="center" label="类别" prop="question.type" width="100"/>
             <el-table-column align="center" label="得分" prop="score" width="100"/>
-            <el-table-column align="center" label="Flag" prop="flag" />
+            <el-table-column align="center" label="Flag" prop="flag" class-name="fnt-12"></el-table-column>
             <el-table-column align="center" label="状态" prop="has_solved" width="100">
               <template #default="scope">
                 <el-tag  effect="dark" :type="statusType[scope.row.status]" >{{scope.row.status_name}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="提交IP" prop="ip" width="150"></el-table-column>
-            <el-table-column align="center" label="提交时间" prop="date_created" width="150"></el-table-column>
+            <el-table-column align="center" label="提交IP" prop="ip" width="150" class-name="fnt-12"></el-table-column>
+            <el-table-column align="center" label="提交时间" prop="date_created" width="150" class-name="fnt-12">
+            </el-table-column>
           </el-table>
         <div class="page-r">
           <el-pagination
@@ -147,6 +148,9 @@ export default {
 </script>
 
 <style lang="scss">
+.fnt-12{
+  font-size: 12px;
+}
 .search-form {
   :deep(.el-form-item) {
     margin-bottom: 12px;
