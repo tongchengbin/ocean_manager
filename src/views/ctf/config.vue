@@ -7,7 +7,7 @@
         <div style="padding: 20px">
           <el-form inline>
             <el-form-item label="容器时长(秒)">
-              <el-input-number v-model="ctf_container_seconds"></el-input-number>
+              <el-input-number v-model="ctf_timeout"></el-input-number>
             </el-form-item>
           </el-form>
           <div style="text-align: left;margin-top: 20px">
