@@ -7,7 +7,7 @@
         <div style="padding: 20px">
           <el-form inline>
             <el-form-item label="容器时长(秒)">
-              <el-input-number v-model="ctf_container_seconds"></el-input-number>
+              <el-input-number v-model="ctf_timeout"></el-input-number>
             </el-form-item>
           </el-form>
           <div style="text-align: left;margin-top: 20px">
@@ -27,7 +27,7 @@ export default {
 name: "ctf",
   data(){
     return {
-      ctf_container_seconds:180
+      ctf_timeout:180
     }
   },
   created() {
@@ -36,12 +36,12 @@ name: "ctf",
   methods:{
     getConfig(){
       http.get('/api/admin/config').then(res=>{
-        this.ctf_container_seconds = res.data.ctf_container_seconds || 180
+        this.ctf_timeout = res.data.ctf_timeout || 180
       })
     },
     setConfig(){
       let data ={
-        ctf_container_seconds:this.ctf_container_seconds
+        ctf_timeout:this.ctf_timeout
       }
       http.post('/api/admin/config',data).then(res=>{
           this.$message({
