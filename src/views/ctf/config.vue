@@ -27,7 +27,7 @@ export default {
 name: "ctf",
   data(){
     return {
-      ctf_container_seconds:180
+      ctf_timeout:180
     }
   },
   created() {
@@ -36,12 +36,12 @@ name: "ctf",
   methods:{
     getConfig(){
       http.get('/api/admin/config').then(res=>{
-        this.ctf_container_seconds = res.data.ctf_container_seconds || 180
+        this.ctf_timeout = res.data.ctf_timeout || 180
       })
     },
     setConfig(){
       let data ={
-        ctf_container_seconds:this.ctf_container_seconds
+        ctf_timeout:this.ctf_timeout
       }
       http.post('/api/admin/config',data).then(res=>{
           this.$message({
