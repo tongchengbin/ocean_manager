@@ -3,10 +3,12 @@
     <div class="widget">
       <div class="tool-bar">镜像管理</div>
       <div class="action-bar">
-        <el-button @click="$router.push({name:'docker.image.add',query:{id:pk}})"  type="primary" >
-          <el-icon><Plus /></el-icon>&nbsp;添加镜像
+        <el-button @click="$router.push({name:'docker.image.add',query:{id:pk}})" type="primary">
+          <el-icon>
+            <Plus/>
+          </el-icon>&nbsp;添加镜像
         </el-button>
-        <el-button @click="getList()"  type="primary">查询</el-button>
+        <el-button @click="getList()" type="primary">查询</el-button>
       </div>
       <el-table :data="list" class="table" max-height="600">
         <el-table-column label="short ID" prop="id" width="150"></el-table-column>
@@ -14,7 +16,7 @@
         <el-table-column label="tags" prop="tags">
           <template #default="scope">
             <el-tag style="margin: 0 5px;" closable @close="remove(scope.row,tag)" :key="tag"
-                    v-for="tag in scope.row.tags"  class="tag-item">
+                    v-for="tag in scope.row.tags" class="tag-item">
               {{ tag }}
             </el-tag>
           </template>
@@ -27,7 +29,8 @@
         <el-table-column label="created" prop="created"></el-table-column>
         <el-table-column label="Action" width="100">
           <template #default="scope">
-            <el-button :disabled="scope.row.tags.length>1" @click="remove(scope.row)"  type="danger" link>删除</el-button>
+            <el-button :disabled="scope.row.tags.length>1" @click="remove(scope.row)" type="danger" link>删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -37,12 +40,12 @@
 
 <script>
 import {http} from "@/utils/http";
-import { Plus, Edit,  } from '@element-plus/icons-vue'
+import {Plus, Edit,} from '@element-plus/icons-vue'
 
 export default {
   name: "images",
-  components:{
-    Edit,Plus
+  components: {
+    Edit, Plus
   },
   data() {
     return {
@@ -61,15 +64,15 @@ export default {
         this.list = res.data;
       })
     },
-    remove(row,tag) {
+    remove(row, tag) {
       let host = this.pk
       let tid;
-      if(tag){
+      if (tag) {
         tid = `${row.repo}:${tag}`
-      }else{
+      } else {
         tid = row.id
       }
-      http.delete('/api/admin/docker/images', {data:{host: host, id: tid}}).then(_ => {
+      http.post('/api/admin/docker/delete_images', {host: host, id: tid}).then(_ => {
         this.$message({message: "删除成功", type: "success"})
         this.getList()
       }).catch(_ => {
@@ -96,6 +99,6 @@ export default {
 }
 
 .tag-item {
-  margin: 2px!important;
+  margin: 2px !important;
 }
 </style>

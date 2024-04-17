@@ -180,6 +180,37 @@ export const asyncRouterMap: RouteConfigsTable[] = [
 
   },
   {
+    path: '/vulnerability',
+    component: Layout,
+    meta: {'title': '漏洞复现', icon: 'simple-icons:pocketcasts'},
+    children: [
+      {
+        path: '/vuln/resources',
+        component: () => import('@/views/vulnerability/resources.vue'),
+        name: 'vulnerability.resource',
+        meta: {'title': '漏洞资源', icon: 'component'},
+      },
+      {
+        path: '/vulnerability/runner',
+        component: () => import('@/views/vulnerability/runner.vue'),
+        name: 'vulnerability.runner',
+        meta: {'title': '运行时', icon: 'component'},
+      },
+      {
+        path: '/vulnerability/edit_resources',
+        component: () => import('@/views/vulnerability/editResources.vue'),
+        name: 'vulnerability.edit_resource',
+        meta: {'title': '编辑资源', icon: 'component', showLink: false},
+      },
+      {
+        path: '/vulnerability/config',
+        component: () => import('@/views/vulnerability/config.vue'),
+        name: 'vulnerability.config',
+        meta: {'title': '参数配置', icon: 'container'},
+      },
+    ]
+  },
+  {
     path:'/docker',
     name: 'docker',
     component: Layout,
@@ -274,31 +305,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
         meta: {title: '管理员列表', icon: '',roles: ["超级管理员"],}
       }]
   },
-  {
-    path: '/vuln',
-    component: Layout,
-    meta: {'title': '漏洞复现', icon: 'simple-icons:pocketcasts'},
-    children: [
-      {
-        path: '/vuln/resources',
-        component: () => import('@/views/vuln/resources.vue'),
-        name: 'vuln.resource',
-        meta: {'title': '漏洞资源', icon: 'component'},
-      },
-      {
-        path: '/vuln/runner',
-        component: () => import('@/views/vuln/runner.vue'),
-        name: 'vuln.runner',
-        meta: {'title': '运行时', icon: 'component'},
-      },
-      {
-        path: '/vuln/edit_resources',
-        component: () => import('@/views/vuln/editResources.vue'),
-        name: 'vuln.edit_resource',
-        meta: {'title': '编辑资源', icon: 'component', showLink: false},
-      },
-    ]
-  },
+
   {
     path: '/notice',
     component: Layout,

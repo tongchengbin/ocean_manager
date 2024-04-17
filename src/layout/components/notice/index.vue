@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref} from "vue";
-import { noticesData } from "./data";
+import {noticesData, TabItem} from "./data";
 import NoticeList from "./noticeList.vue";
 import Bell from "@iconify-icons/ep/bell";
 import {http} from "@/utils/http";
@@ -10,10 +10,15 @@ const notices = ref(noticesData);
 const activeKey = ref(noticesData[0].key);
 // 从远程加载数据
 const getList =()=>{
-    // TODO
+  http.get('/api/admin/message').then(res=>{
+    notices.value = res.data as TabItem[]
+    activeKey.value =`${res.data[0].key}`
+    notices.value.map(v => (noticesNum.value += v.list.length));
+    console.log(noticesNum)
+  })
 }
 getList()
-notices.value.map(v => (noticesNum.value += v.list.length));
+
 </script>
 
 <template>

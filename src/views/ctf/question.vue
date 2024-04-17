@@ -5,10 +5,10 @@
       <el-form-item class="el-form-item" label="分类">
         <el-select v-model="listQuery.subject" class="select" clearable>
           <el-option
-              v-for="item in qType"
-              :key="item"
-              :label="item"
-              :value="item">
+            v-for="item in qType"
+            :key="item"
+            :label="item"
+            :value="item">
           </el-option>
         </el-select>
       </el-form-item>
@@ -16,7 +16,8 @@
         <el-input v-model="listQuery.search" placeholder="题目名称"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button  type="primary" @click="getList">查询</el-button>
+        <el-button type="primary" @click="getList">查询</el-button>
+        <el-button type="primary" @click="handleSyncRemoteCtfRepo">同步仓库资源</el-button>
       </el-form-item>
     </el-form>
     <div class="w-[99/100] mt-2 px-2 pb-2 bg-bg_color">
@@ -27,75 +28,75 @@
         </div>
       </div>
       <div>
-        <el-table fit highlight-current-row stripe v-loading="loading" :data="listData" >
+        <el-table fit highlight-current-row stripe v-loading="loading" :data="listData">
           <el-table-column
-              align="center"
-              label="ID"
-              prop="id"
-              width="80"/>
+            align="center"
+            label="ID"
+            prop="id"
+            width="80"/>
           <el-table-column
-              align="center"
-              label="标题"
-              prop="name"
-              width="220"/>
+            align="center"
+            label="标题"
+            prop="name"
+            width="220"/>
           <el-table-column
-              align="center"
-              label="类别"
-              prop="type"
-              width="180"/>
+            align="center"
+            label="类别"
+            prop="type"
+            width="180"/>
           <el-table-column
-              align="center"
-              label="是否启用"
-              prop="name"
-              width="80">
+            align="center"
+            label="是否启用"
+            prop="name"
+            width="80">
             <template #default="scope">
               <el-switch v-model="scope.row.active" @change="switchActive($event,scope.row)"></el-switch>
             </template>
           </el-table-column>
           <el-table-column
-              align="center"
-              label="是否动态"
-              width="80">
+            align="center"
+            label="是否动态"
+            width="80">
             <template v-slot="scope">
               <el-tag v-if="scope.row.active_flag" effect="dark">是</el-tag>
               <el-tag v-else effect="dark" type="warning">否</el-tag>
             </template>
           </el-table-column>
           <el-table-column
-              align="center"
-              label="积分"
-              prop="score"
-              width="80"/>
+            align="center"
+            label="积分"
+            prop="score"
+            width="80"/>
           <el-table-column
-              align="center"
-              label="环境"
-              prop="resource_name"
-              width="180"/>
+            align="center"
+            label="环境"
+            prop="resource_name"
+            width="180"/>
           <el-table-column
-              align="center"
-              label="描述"
-              prop="desc"
-              show-overflow-tooltip
+            align="center"
+            label="描述"
+            prop="desc"
+            show-overflow-tooltip
           />
           <el-table-column
-              align="center"
-              label="操作" width="160">
+            align="center"
+            label="操作" width="160">
             <template #default="scope">
               <el-button link type="primary" @click="editHandle(scope.row)">编辑</el-button>
-              <el-button  link type="danger" @click="deleteHandle(scope.row)">删除</el-button>
+              <el-button link type="danger" @click="deleteHandle(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
         <div class="page-r">
           <el-pagination
-              :current-page="listQuery.page"
-              :page-size="listQuery.page_size"
-              :page-sizes="[10,20,30, 50]"
-              :total="total"
-              background
-              layout="total, sizes, prev, pager, next, jumper"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
+            :current-page="listQuery.page"
+            :page-size="listQuery.page_size"
+            :page-sizes="[10,20,30, 50]"
+            :total="total"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
           />
         </div>
       </div>
@@ -116,15 +117,15 @@ export default {
     return {
       qType: [],
       listQuery: {
-        page:1,
+        page: 1,
         page_size: 10,
         subject: null,
-        search:null
+        search: null
       },
       loading: false,
       chiData: {},
       showAddQuestion: false,
-      total:0,
+      total: 0,
       listData: [],
       rid: null,
       captureName: null
@@ -142,21 +143,26 @@ export default {
         this.qType = res.data;
       })
     },
+    handleSyncRemoteCtfRepo() {
+      http.post(`/api/admin/ctf/sync_repo`).then(res => {
+        this.$message({message: "任务提交成功", type: "success"})
+      })
+    },
     getList() {
       this.loading = true
       http.get(`/api/admin/ctf/question`, this.listQuery).then(res => {
         this.listData = res.results;
         this.loading = false;
         this.total = res.total
-      }).catch(_=>{
+      }).catch(_ => {
 
       })
     },
-    handleSizeChange(e){
+    handleSizeChange(e) {
       this.listQuery.page_size = e;
       this.getList()
     },
-    handleCurrentChange(e){
+    handleCurrentChange(e) {
       this.listQuery.page = e;
       this.getList()
     },

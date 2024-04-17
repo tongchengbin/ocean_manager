@@ -5,19 +5,18 @@
       <div class="search-group">
         <el-form inline>
           <el-form-item>
-            <el-input v-model="listQuery.search"  style="width: 200px;" placeholder="名称"/>
+            <el-input v-model="listQuery.search" style="width: 200px;" placeholder="名称"/>
           </el-form-item>
           <el-form-item>
-            <el-button  type="primary" @click="getList()">查询</el-button>
-            <el-button  type="primary" @click="handleCreate">添加</el-button>
-            <el-button  type="primary" @click="handleSyncDockerhub">同步Docker仓库资源</el-button>
+            <el-button type="primary" @click="getList()">查询</el-button>
+            <el-button type="primary" @click="handleCreate">添加</el-button>
           </el-form-item>
         </el-form>
 
       </div>
       <div class="widget-content">
         <!--用户列表-->
-        <el-table fit highlight-current-row stripe v-loading="listLoading"  :data="list" style="width: 100%">
+        <el-table fit highlight-current-row stripe v-loading="listLoading" :data="list" style="width: 100%">
           <el-table-column label="名称" prop="name" align="center"></el-table-column>
           <el-table-column label="镜像" prop="image" width="250px" align="center"></el-table-column>
           <el-table-column label="资源类型" prop="resource_type" width="150px" align="center"></el-table-column>
@@ -32,22 +31,24 @@
           </el-table-column>
           <el-table-column align="center" label="操作" width="200">
             <template v-slot="scope">
-              <el-button link type="primary"  @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button  link :loading="loading_build" type="primary"  @click="handleBuild(scope.row.id)">{{scope.row.status===0?'编译':"重新编译"}}</el-button>
-              <el-button link type="danger"  @click="handleDelete(scope.row.id)">删除</el-button>
+              <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+              <el-button link :loading="loading_build" type="primary" @click="handleBuild(scope.row.id)">
+                {{ scope.row.status === 0 ? '编译' : "重新编译" }}
+              </el-button>
+              <el-button link type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
         <div class="page-r">
           <el-pagination
-              background
-              :current-page="listQuery.page"
-              :page-sizes="[10,20,30, 50]"
-              :page-size="listQuery.page_size"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="total"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
+            background
+            :current-page="listQuery.page"
+            :page-sizes="[10,20,30, 50]"
+            :page-size="listQuery.page_size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
           />
         </div>
         <!--编辑框-->
@@ -59,12 +60,12 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="资源类型" required>
-          <el-select  v-model="form.resource_type">
+          <el-select v-model="form.resource_type">
             <el-option v-for="op in resource_type_list" :label="op.label" :key="op.id" :value="op.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="加载类型" required>
-          <el-select  v-model="form.docker_type">
+          <el-select v-model="form.docker_type">
             <el-option v-for="op in docker_type_list" :label="op.label" :key="op.id" :value="op.id"></el-option>
           </el-select>
         </el-form-item>
@@ -76,8 +77,8 @@
         </el-form-item>
       </el-form>
       <template #footer class="dialog-footer">
-        <el-button  @click="centerDialogVisible = false">取 消</el-button>
-        <el-button  type="primary" @click="handleSubmit">提交</el-button>
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleSubmit">提交</el-button>
       </template>
     </el-dialog>
     <docker_resource_sync @close="handleSyncClose" :open="syncDialog"></docker_resource_sync>
@@ -88,19 +89,24 @@
 <script>
 import {http} from "@/utils/http";
 import docker_resource_sync from './docker_resource_sync.vue'
+
 export default {
   name: "compose_db",
-  components:{
+  components: {
     docker_resource_sync
   },
   data() {
     return {
-      loading_build:false,
-      syncDialog:false,
-      docker_type_list:[
+      loading_build: false,
+      syncDialog: false,
+      docker_type_list: [
         {
           label: "远程镜像",
           id: 1
+        },
+        {
+          label: "本地镜像",
+          id: 2
         }
       ],
       resource_type_list: [
@@ -141,19 +147,15 @@ export default {
     handleCreate() {
       this.centerDialogVisible = true
     },
-    handleEdit(row){
+    handleEdit(row) {
       this.form = row
       this.centerDialogVisible = true
-    },
-    handleSyncDockerhub(){
-      // 同步远程仓库资源或者私有仓库资源
-      this.syncDialog=true
     },
     handleBuild(id) {
       this.loading_build = true
       http.post(`/api/admin/docker/resource/${id}/build`).then(res => {
-        this.loading_build=false
-        this.$message({message:"任务提交成功",type:"success"})
+        this.loading_build = false
+        this.$message({message: "任务提交成功", type: "success"})
         this.getList()
       })
     },
@@ -164,14 +166,14 @@ export default {
       })
     },
     handleSubmit() {
-      if(this.form.id){
+      if (this.form.id) {
         http.put(`/api/admin/docker/resource/${this.form.id}`, this.form).then(res => {
           this.$message({message: "修改成功", type: "success"})
           this.form = {}
           this.centerDialogVisible = false
           this.getList()
         })
-      }else{
+      } else {
         http.post(`/api/admin/docker/resource`, this.form).then(res => {
           this.$message({message: "添加成功", type: "success"})
           this.form = {}
@@ -189,8 +191,8 @@ export default {
       this.listQuery.page = e;
       this.fetchData()
     },
-    handleSyncClose(){
-      this.syncDialog=false
+    handleSyncClose() {
+      this.syncDialog = false
       this.getList()
     }
   }
