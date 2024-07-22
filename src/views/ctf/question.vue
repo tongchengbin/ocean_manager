@@ -3,7 +3,7 @@
     <questionItem :data="chiData" :show="showAddQuestion" @action="handleAdd"></questionItem>
     <el-form class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]" :inline="true">
       <el-form-item class="el-form-item" label="分类">
-        <el-select v-model="listQuery.subject" class="select" clearable>
+        <el-select v-model="listQuery.subject" class="select" clearable filterable>
           <el-option
             v-for="item in qType"
             :key="item"
@@ -191,7 +191,7 @@ export default {
       }
     },
     switchActive(e, row) {
-      http.put(`/api/admin/ctf/question/${row.id}`, {active: e}).then(_ => {
+      http.post(`/api/admin/ctf/question/${row.id}/set_active`, {active: e}).then(_ => {
         this.$message({
           message: "修改成功",
           type: "success",

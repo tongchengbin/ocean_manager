@@ -60,12 +60,12 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="资源类型" required>
-          <el-select v-model="form.resource_type">
+          <el-select v-model="form.resource_type" filterable>
             <el-option v-for="op in resource_type_list" :label="op.label" :key="op.id" :value="op.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="加载类型" required>
-          <el-select v-model="form.docker_type">
+          <el-select v-model="form.docker_type" filterable>
             <el-option v-for="op in docker_type_list" :label="op.label" :key="op.id" :value="op.id"></el-option>
           </el-select>
         </el-form-item>
