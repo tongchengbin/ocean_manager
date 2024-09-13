@@ -21,7 +21,8 @@
           <el-table-column label="镜像" prop="image" width="250px" align="center"></el-table-column>
           <el-table-column label="资源类型" prop="resource_type" width="150px" align="center"></el-table-column>
           <el-table-column label="加载类型" prop="docker_type_name" width="150px" align="center"></el-table-column>
-          <el-table-column label="描述" prop="description" width="150px" align="center"></el-table-column>
+          <el-table-column label="开放端口" prop="ports" width="150px" align="center"></el-table-column>
+          <el-table-column label="描述" prop="description" width="150px" show-overflow-tooltip align="center"></el-table-column>
           <el-table-column width="180px" align="center" label="状态">
             <template v-slot="scope">
               <el-tag v-if="scope.row.status===0">初始化</el-tag>
@@ -135,13 +136,10 @@ export default {
   },
   methods: {
     getList() {
-      http.get('/api/admin/docker/resource').then(res => {
+      http.get('/api/admin/docker/resource', this.listQuery).then(res => {
         let {data, total} = res
-        console.log(data, total)
         this.list = data
         this.total = total
-
-
       })
     },
     handleCreate() {
@@ -185,11 +183,11 @@ export default {
     },
     handleSizeChange(e) {
       this.listQuery.page_size = e;
-      this.fetchData()
+      this.getList()
     },
     handleCurrentChange(e) {
       this.listQuery.page = e;
-      this.fetchData()
+      this.getList()
     },
     handleSyncClose() {
       this.syncDialog = false
