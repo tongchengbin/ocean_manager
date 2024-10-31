@@ -20,6 +20,7 @@ export function useRenderIcon(icon: any, attrs?: iconType): Component {
       0,
       name.indexOf(" ") == -1 ? name.length : name.indexOf(" ")
     );
+    console.log("icon name",iconName)
     const iconType = name.slice(name.indexOf(" ") + 1, name.length);
     return defineComponent({
       name: "FontIcon",

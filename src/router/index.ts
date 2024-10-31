@@ -147,7 +147,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
     component:Layout,
     redirect:"/ctf/question",
     meta:{
-      icon: "ph:flag",
+      icon: "IF-icon-tag",
       title:"CTF",
       rank:0
     },
@@ -169,6 +169,12 @@ export const asyncRouterMap: RouteConfigsTable[] = [
         component: () => import('@/views/ctf/container.vue'),
         name: 'container',
         meta: {'title': '赛事容器', icon: 'container',},
+      },
+      {
+        path: '/ctf/resource',
+        component: () => import('@/views/ctf/resources.vue'),
+        name: 'ctf.resource',
+        meta: {'title': '环境资源', icon: 'resource',},
       },
       {
         path: '/ctf/config',

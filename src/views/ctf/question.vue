@@ -3,7 +3,7 @@
     <questionItem :data="chiData" :show="showAddQuestion" @action="handleAdd"></questionItem>
     <el-form class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]" :inline="true">
       <el-form-item class="el-form-item" label="分类">
-        <el-select v-model="listQuery.subject" class="select" clearable filterable>
+        <el-select v-model="listQuery.subject" class="select" clearable filterable placeholder="请选择分类">
           <el-option
             v-for="item in qType"
             :key="item"
@@ -17,7 +17,6 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>
-        <el-button type="primary" @click="handleSyncRemoteCtfRepo">同步仓库资源</el-button>
       </el-form-item>
     </el-form>
     <div class="w-[99/100] mt-2 px-2 pb-2 bg-bg_color">
