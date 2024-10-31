@@ -176,7 +176,7 @@ class PureHttp {
     /** 单独抽离的delete工具函数 */
     public delete<T, P>(
         url: string,
-        params?: Object,
+        params?: AxiosRequestConfig<T>,
         config?: PureHttpRequestConfig
     ): Promise<P> {
         return this.request<P>("delete", url, params, config);

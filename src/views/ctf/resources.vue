@@ -80,7 +80,7 @@ export default {
 
     const getList = async () => {
       loading.value = true;
-      const res = await http.get("/api/admin/docker/resource", { params: listQuery });
+      const res = await http.get("/api/admin/docker/resource", listQuery);
       listData.value = res.data;
       total.value = res.total;
       loading.value = false;
