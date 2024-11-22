@@ -279,13 +279,13 @@ export const asyncRouterMap: RouteConfigsTable[] = [
         path: '/ops/sys',
         component: () => import('@/views/ops/sysinfo.vue'),
         name: 'ops.sys',
-        meta: {title: '系统设置', icon:'tdesign:system-setting' ,roles: ["超级管理员","运维管理员"],}
+        meta: {title: '系统设置',roles: ["超级管理员","运维管理员"],}
       },
       {
         path: '/ops/operator',
         component: () => import('@/views/ops/operator.vue'),
         name: 'ops.operator',
-        meta: {title: '审计日志', icon:'tdesign:system-setting' }
+        meta: {title: '审计日志' }
       }]
   },
   {
