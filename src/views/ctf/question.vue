@@ -2,7 +2,7 @@
   <div class="main">
     <questionItem :data="chiData" :show="showAddQuestion" @action="handleAdd"></questionItem>
     <el-form class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]" :inline="true">
-      <el-form-item class="el-form-item" label="分类">
+      <el-form-item class="el-form-item" label="分类" style="width: 200px">
         <el-select v-model="listQuery.subject" class="select" clearable filterable placeholder="请选择分类">
           <el-option
             v-for="item in qType"

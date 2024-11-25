@@ -1,8 +1,8 @@
 <template>
   <div class="main">
     <el-form class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]" :inline="true">
-      <el-form-item class="el-form-item" label="分类">
-        <el-select v-model="listQuery.q_type" class="select" clearable filterable>
+      <el-form-item class="el-form-item" label="分类" style="width: 200px">
+        <el-select v-model="listQuery.q_type" class="select" clearable filterable style="width: 100%">
           <el-option
               v-for="item in qType"
               :key="item"
@@ -11,7 +11,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item class="el-form-item" label="状态">
+      <el-form-item class="el-form-item" label="状态" style="width: 200px">
         <el-select v-model="listQuery.status" class="select" clearable filterable>
           <el-option
               v-for="item in statusList"

@@ -132,7 +132,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
     children: [
       {
         path: "/account/list",
-        name: "account.list",
+        name: "account_list",
         component: () => import("@/views/account/user.vue"),
         meta: {
           title: "用户列表",
@@ -173,7 +173,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
       {
         path: '/ctf/resource',
         component: () => import('@/views/ctf/resources.vue'),
-        name: 'ctf.resource',
+        name: 'ctf_resource',
         meta: {'title': '环境资源', icon: 'resource',},
       },
       {
@@ -193,25 +193,25 @@ export const asyncRouterMap: RouteConfigsTable[] = [
       {
         path: '/vuln/resources',
         component: () => import('@/views/vulnerability/resources.vue'),
-        name: 'vulnerability.resource',
+        name: 'vulnerability_resource',
         meta: {'title': '漏洞资源', icon: 'component'},
       },
       {
         path: '/vulnerability/runner',
         component: () => import('@/views/vulnerability/runner.vue'),
-        name: 'vulnerability.runner',
+        name: 'vulnerability_runner',
         meta: {'title': '运行时', icon: 'component'},
       },
       {
         path: '/vulnerability/edit_resources',
         component: () => import('@/views/vulnerability/editResources.vue'),
-        name: 'vulnerability.edit_resource',
+        name: 'vulnerability_edit_resource',
         meta: {'title': '编辑资源', icon: 'component', showLink: false},
       },
       {
         path: '/vulnerability/config',
         component: () => import('@/views/vulnerability/config.vue'),
-        name: 'vulnerability.config',
+        name: 'vulnerability_config',
         meta: {'title': '参数配置', icon: 'container'},
       },
     ]
@@ -240,7 +240,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
       {
         path: '/docker/image',
         component: () => import('@/views/docker/images.vue'),
-        name: 'docker.image',
+        name: 'docker_image',
         meta: {'title': '镜像列表', icon: 'icon' ,showLink:false},
       },
       {
@@ -258,13 +258,13 @@ export const asyncRouterMap: RouteConfigsTable[] = [
       {
         path: '/docker/imageAdd',
         component: () => import('@/views/docker/addImage.vue'),
-        name: 'docker.image.add',
+        name: 'docker_image_add',
         meta: {'title': '添加镜像', icon: 'icon' ,showLink:false,roles: ["超级管理员","运维管理员"],},
       },
       {
         path: '/docker/resource',
         component: () => import('@/views/docker/resource.vue'),
-        name: 'docker.resource',
+        name: 'docker_resource',
         meta: {'title': '资源中心', icon: 'docker_1'},
       },
 
@@ -278,7 +278,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
       {
         path: '/ops/sys',
         component: () => import('@/views/ops/sysinfo.vue'),
-        name: 'ops.sys',
+        name: 'ops_sys',
         meta: {title: '系统设置',roles: ["超级管理员","运维管理员"],}
       },
       {
@@ -319,7 +319,7 @@ export const asyncRouterMap: RouteConfigsTable[] = [
     children: [{
       path: '/notice/index',
       component: () => import('@/views/notice/index.vue'),
-      name: 'notice.index',
+      name: 'notice_index',
       meta: {title: '公告提醒', icon: 'zondicons:announcement'}
     }]
   },
