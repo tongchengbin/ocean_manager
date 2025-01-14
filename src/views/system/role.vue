@@ -1,86 +1,105 @@
 <template>
-  <div class="page-container">
-    <div class="widget">
-      <div class="tool-bar">角色管理</div>
-      <!--搜索-->
-      <div class="search-group">
-        <el-form  inline>
-          <el-form-item>
-            <el-button  type="primary" @click="fetchData">查询</el-button>
-            <el-button  type="primary" @click="handleCreate">添加</el-button>
-          </el-form-item>
-        </el-form>
+  <div class="main">
+    <el-form class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]" :inline="true">
+      <el-form-item>
+        <el-button type="primary" @click="fetchData">查询</el-button>
+        <el-button type="success" @click="handleCreate">添加</el-button>
+      </el-form-item>
+    </el-form>
+
+    <div class="w-[99/100] mt-2 px-2 pb-2 bg-bg_color">
+      <div class="flex justify-between w-full h-[60px] p-4">
+        <p class="font-bold truncate">角色管理</p>
       </div>
-      <div class="">     <el-table  :data="list" v-loading="loading" highlight-current-row>
-        <el-table-column label="角色ID" prop="id"></el-table-column>
-        <el-table-column label="角色名" prop="name"></el-table-column>
-        <el-table-column prop="Action" width="150">
-          <template #default="scope">
-            <el-button type="primary"  @click="itemEdit(scope.row)" link>编辑</el-button>
-            <el-button type="danger"  @click="itemDelete(scope.row)" link>删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div>
+        <el-table :data="list" v-loading="loading" highlight-current-row stripe>
+          <el-table-column label="角色ID" prop="id" align="center" class-name="fnt-12"/>
+          <el-table-column label="角色名" prop="name" align="center" class-name="fnt-12"/>
+          <el-table-column label="操作" width="200" align="center">
+            <template #default="scope">
+              <el-button link type="primary" @click="itemEdit(scope.row)">编辑</el-button>
+              <el-button link type="danger" @click="itemDelete(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
         <div class="page-r">
           <el-pagination
             :current-page="listQuery.page"
             :page-size="listQuery.page_size"
-            :page-sizes="[10,20,30, 50]"
+            :page-sizes="[10,20,30,50]"
             :total="total"
             background
             layout="total, sizes, prev, pager, next, jumper"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
           />
-        </div></div>
+        </div>
+      </div>
     </div>
 
-    <el-dialog center  v-model="currentEdit" :title="currentRow.id?'编辑角色':'新增角色'" width="500px">
-      <el-form ref="dataForm"  :model="currentRow" label-position="left" label-width="80px" label-suffix=":" style="margin: auto auto;font-size: 13px;">
-        <el-form-item  label="角色名" prop="name">
-          <el-input v-model="currentRow.name" />
+    <el-dialog 
+      v-model="currentEdit" 
+      :title="currentRow.id ? '编辑角色' : '新增角色'" 
+      width="500px"
+    >
+      <el-form 
+        ref="dataForm" 
+        :model="currentRow" 
+        label-width="100px"
+        :rules="rules"
+      >
+        <el-form-item label="角色名称" prop="name" required>
+          <el-input v-model="currentRow.name" placeholder="请输入角色名称"/>
         </el-form-item>
       </el-form>
-      <template #footer class="dialog-footer">
-        <el-button  @click=cancel>取消</el-button>
-        <el-button  type="primary" @click="submit">{{ currentRow.id ?'更新':'提交'}}</el-button>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
+        </span>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {http} from "@/utils/http";
-import { ElMessage } from "element-plus";
+import { http } from "@/utils/http";
+import { ElMessage, ElMessageBox } from "element-plus";
+
 export default {
   name: "role",
-  data(){
+  data() {
     return {
-      listQuery:{
-        page:1,
-        page_size:10,
+      listQuery: {
+        page: 1,
+        page_size: 10,
       },
-      loading:false,
-      list:[],
-      total:0,
-      editForm:{},
-      currentRow:{
-        name:'',
+      loading: false,
+      list: [],
+      total: 0,
+      currentRow: {
+        name: '',
       },
-      currentEdit:false,
+      currentEdit: false,
+      rules: {
+        name: [
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
+        ]
+      }
     }
   },
-  created(){
+  created() {
     this.fetchData()
   },
-  methods:{
+  methods: {
     fetchData() {
       this.loading = true;
-      http.get('/api/admin/role').then(res=>{
-        this.loading = false
-        const {data} = res;
+      http.get('/api/admin/role').then(res => {
+        const { data } = res;
         this.list = data
-      }).catch(err=>{
+      }).catch(error => {
+        ElMessage.error(error.message || '获取数据失败')
+      }).finally(() => {
         this.loading = false
       })
     },
@@ -92,51 +111,92 @@ export default {
       this.listQuery.page = val
       this.fetchData()
     },
-    handleCreate(){
+    handleCreate() {
       this.currentEdit = true;
-      this.currentRow = {}
+      this.currentRow = { name: '' }
     },
-    handleEdit(){
+    handleEdit() {
       this.currentEdit = false;
       this.fetchData()
     },
-    itemEdit(row){
-      this.currentRow = row;
+    itemEdit(row) {
+      this.currentRow = { ...row };
       this.currentEdit = true;
     },
-    itemDelete(row){
-      http.delete(`/api/admin/role/${row.id}`).then(res=>{
-        ElMessage.success('删除成功')
+    async itemDelete(row) {
+      try {
+        await ElMessageBox.confirm('确认要删除该角色吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        
+        await http.delete(`/api/admin/role/${row.id}`)
+        ElMessage({
+          type: 'success',
+          message: '删除成功',
+          duration: 2000
+        })
         this.fetchData()
-      })
-    },
-    cancel(){
-      this.currentEdit = false
-    },
-    submit() {
-      if (this.currentRow && this.currentRow.id) {
-        http.put(`/api/admin/role`, this.currentRow).then(res => {
-          this.$message({
-            message: '操作成功',
-            type: 'success'
-          })
-          this.currentEdit=false
-          this.fetchData()
-        }).catch(err =>{
-        })
-      } else {
-        http.post('/api/admin/role', this.currentRow).then(res => {
-          ElMessage.success('删除成功')
-          this.currentEdit=false
-          this.fetchData()
-        }).catch(res => {
-        })
+      } catch (error) {
+        if (error !== 'cancel') {
+          ElMessage.error('删除失败')
+        }
       }
     },
+    cancel() {
+      this.currentEdit = false
+    },
+    async submit() {
+      try {
+        await this.$refs.dataForm.validate()
+        
+        if (this.currentRow.id) {
+          await http.put(`/api/admin/role`, this.currentRow)
+          ElMessage({
+            type: 'success',
+            message: '修改成功',
+            duration: 2000
+          })
+        } else {
+          await http.post('/api/admin/role', this.currentRow)
+          ElMessage({
+            type: 'success',
+            message: '添加成功',
+            duration: 2000
+          })
+        }
+        this.currentEdit = false
+        this.fetchData()
+      } catch (error) {
+        if (error !== 'cancel') {
+          ElMessage.error(error.message || '操作失败')
+        }
+      }
+    }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.fnt-12 {
+  font-size: 12px;
+}
 
+.search-form {
+  :deep(.el-form-item) {
+    margin-bottom: 12px;
+  }
+}
+
+.page-r {
+  margin-top: 20px;
+  padding: 10px;
+  text-align: right;
+}
+
+.dialog-footer {
+  padding-top: 20px;
+  text-align: right;
+}
 </style>

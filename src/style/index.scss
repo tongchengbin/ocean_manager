@@ -1,12 +1,29 @@
-@import "./transition";
-@import "./element-plus";
-@import "./sidebar";
-@import "./dark";
+@use "theme";
+@use "transition";
+@use "element-plus";
+@use "sidebar";
+@use "dark";
 
 /* 自定义全局 CssVar */
 :root {
   /* 左侧菜单展开、收起动画时长 */
   --pure-transition-duration: 0.3s;
+
+  /* 常用border-color 需要时可取用 */
+  --pure-border-color: rgb(5 5 5 / 6%);
+
+  /* switch关闭状态下的color 需要时可取用 */
+  --pure-switch-off-color: #a6a6a6;
+
+  /** 主题色 */
+  --pure-theme-sub-menu-active-text: initial;
+  --pure-theme-menu-bg: none;
+  --pure-theme-menu-hover: none;
+  --pure-theme-sub-menu-bg: transparent;
+  --pure-theme-menu-text: initial;
+  --pure-theme-sidebar-logo: none;
+  --pure-theme-menu-title-hover: initial;
+  --pure-theme-menu-active-before: transparent;
 }
 
 /* 灰色模式 */
@@ -18,67 +35,3 @@
 .html-weakness {
   filter: invert(80%);
 }
-
-
-// basic
-.page-r {
-  padding: 0 10px;
-  margin: 16px 0;
-  display: flex;
-  justify-content: flex-end; /* 将内容靠右对齐 */
-  align-items: center; /* 垂直居中对齐，如果需要的话 */
-  /* 添加其他样式以适应你的页面布局 */
-}
-
-// iconfont
-.icon {
-  width: 1em; height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
-
-// widget
-.page-container {
-  .widget{
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-    background-color: #fff;
-    border-radius: 2px;
-    border: 1px solid #e9e9e9;
-  }
-
-  .widget-border{
-    border: 1px solid #e9e9e9;
-  }
-  .tool-bar{
-    color: #767676;
-    padding: 10px;
-    background-color: #f6f6f6;
-    overflow: auto;
-  }
-  .tool-bar .title{
-
-  }
-  .action-bar {
-    padding: 10px;
-    display: flex;
-
-  }
-  .action-bar .btn-group{
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .search-group{
-    padding: 10px 10px 0 10px;
-    .el-form-item{
-      margin-bottom: 12px;
-    }
-  }
-  .widget-body{
-    padding: 10px 10px 20px 10px;
-  }
-}
-
-// end widget

@@ -85,6 +85,8 @@ declare global {
     /** 路由重定向 `可选` */
     redirect?: string;
     meta?: {
+      // 角色权限
+      roles?: Array<string>;
       /** 菜单名称（兼容国际化、非国际化，如何用国际化的写法就必须在根目录的`locales`文件夹下对应添加）`必填` */
       title: string;
       /** 菜单图标 `可选` */

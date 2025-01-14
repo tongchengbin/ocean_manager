@@ -3,22 +3,29 @@ import { store } from "@/store";
 import { userType } from "./types";
 import { routerArrays } from "@/layout/types";
 import { router, resetRouter } from "@/router";
-import { storageSession } from "@pureadmin/utils";
+import { storageLocal } from "@pureadmin/utils";
 import { getLogin, refreshTokenApi } from "@/api/user";
 import { UserResult, RefreshTokenResult } from "@/api/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
-import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
-
+import { type DataInfo, setToken, removeToken ,userKey} from "@/utils/auth";
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({
     // 用户名
     username:
-      storageSession().getItem<DataInfo<number>>(sessionKey)?.username ?? "",
+      storageLocal().getItem<DataInfo<number>>(userKey)?.username ?? "",
     // 页面级别权限
-    roles: storageSession().getItem<DataInfo<number>>(sessionKey)?.roles ?? []
+    roles: storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [],
+    // 是否勾选了登录页的免登录
+    isRemembered: false,
+    // 登录页的免登录存储几天，默认7天
+    loginDay: 7
   }),
   actions: {
+    /** 存储头像 */
+    SET_AVATAR(avatar: string) {
+      this.avatar = avatar;
+    },
     /** 存储用户名 */
     SET_USERNAME(username: string) {
       this.username = username;
@@ -26,6 +33,10 @@ export const useUserStore = defineStore({
     /** 存储角色 */
     SET_ROLES(roles: Array<string>) {
       this.roles = roles;
+    },
+    /** 存储按钮级别权限 */
+    SET_PERMS(permissions: Array<string>) {
+      this.permissions = permissions;
     },
     /** 登入 */
     async loginByUsername(data) {

@@ -17,14 +17,12 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>
+        <el-button type="success" @click="handleCreate">添加</el-button>
       </el-form-item>
     </el-form>
     <div class="w-[99/100] mt-2 px-2 pb-2 bg-bg_color">
       <div class="flex justify-between w-full h-[60px] p-4">
         <p class="font-bold truncate">题目列表</p>
-        <div class="flex items-center justify-around">
-          <el-button type="primary" @click="handleCreate">添加</el-button>
-        </div>
       </div>
       <div>
         <el-table fit highlight-current-row stripe v-loading="loading" :data="listData">
@@ -227,8 +225,6 @@ export default {
     margin-bottom: 12px;
   }
 }
-
-
 .search-form {
   :deep(.el-form-item) {
     margin-bottom: 12px;

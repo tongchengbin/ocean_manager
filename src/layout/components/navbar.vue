@@ -65,6 +65,10 @@ const {
               />
               退出系统
             </el-dropdown-item>
+            <el-dropdown-item @click="router.push({name:'profile'})">
+              <IconifyIconOffline :icon="Setting" style="margin: 5px" />
+              个人中心
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

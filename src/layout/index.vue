@@ -4,10 +4,8 @@ import "animate.css";
 import "@/components/ReIcon/src/offlineIcon";
 import { setType } from "./types";
 import { useLayout } from "./hooks/useLayout";
-import { useResizeObserver } from "@vueuse/core";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useSettingStoreHook } from "@/store/modules/settings";
-import { deviceDetection, useDark, useGlobal } from "@pureadmin/utils";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 import {
   h,
@@ -18,14 +16,20 @@ import {
   onBeforeMount,
   defineComponent
 } from "vue";
+import {
+  useDark,
+  useGlobal,
+  deviceDetection,
+  useResizeObserver
+} from "@pureadmin/utils";
 
-import navbar from "./components/navbar.vue";
-import tag from "./components/tag/index.vue";
-import appMain from "./components/appMain.vue";
-import setting from "./components/setting/index.vue";
-import Vertical from "./components/sidebar/vertical.vue";
-import Horizontal from "./components/sidebar/horizontal.vue";
-import backTop from "@/assets/svg/back_top.svg?component";
+import LayTag from "./components/lay-tag/index.vue";
+import LayNavbar from "./components/lay-navbar/index.vue";
+import LayContent from "./components/lay-content/index.vue";
+import LaySetting from "./components/lay-setting/index.vue";
+import NavVertical from "./components/lay-sidebar/NavVertical.vue";
+import NavHorizontal from "./components/lay-sidebar/NavHorizontal.vue";
+import BackTopIcon from "@/assets/svg/back_top.svg?component";
 
 const appWrapperRef = ref();
 const { isDark } = useDark();
@@ -68,7 +72,9 @@ function setTheme(layoutModel: string) {
     theme: $storage.layout?.theme,
     darkMode: $storage.layout?.darkMode,
     sidebarStatus: $storage.layout?.sidebarStatus,
-    epThemeColor: $storage.layout?.epThemeColor
+    epThemeColor: $storage.layout?.epThemeColor,
+    themeColor: $storage.layout?.themeColor,
+    overallStyle: $storage.layout?.overallStyle
   };
 }
 
@@ -83,7 +89,8 @@ let isAutoCloseSidebar = true;
 useResizeObserver(appWrapperRef, entries => {
   if (isMobile) return;
   const entry = entries[0];
-  const { width } = entry.contentRect;
+  const [{ inlineSize: width, blockSize: height }] = entry.borderBoxSize;
+  useAppStoreHook().setViewportSize({ width, height });
   width <= 760 ? setTheme("vertical") : setTheme(useAppStoreHook().layout);
   /** width app-wrapper类容器宽度
    * 0 < width <= 760 隐藏侧边栏
@@ -114,10 +121,11 @@ onMounted(() => {
 });
 
 onBeforeMount(() => {
-  useDataThemeChange().dataThemeChange();
+  useDataThemeChange().dataThemeChange($storage.layout?.overallStyle);
 });
 
-const layoutHeader = defineComponent({
+const LayHeader = defineComponent({
+  name: "LayHeader",
   render() {
     return h(
       "div",
@@ -135,12 +143,12 @@ const layoutHeader = defineComponent({
         default: () => [
           !pureSetting.hiddenSideBar &&
           (layout.value.includes("vertical") || layout.value.includes("mix"))
-            ? h(navbar)
+            ? h(LayNavbar)
             : null,
           !pureSetting.hiddenSideBar && layout.value.includes("horizontal")
-            ? h(Horizontal)
+            ? h(NavHorizontal)
             : null,
-          h(tag)
+          h(LayTag)
         ]
       }
     );
@@ -159,7 +167,7 @@ const layoutHeader = defineComponent({
       class="app-mask"
       @click="useAppStoreHook().toggleSideBar()"
     />
-    <Vertical
+    <NavVertical
       v-show="
         !pureSetting.hiddenSideBar &&
         (layout.includes('vertical') || layout.includes('mix'))
@@ -172,24 +180,24 @@ const layoutHeader = defineComponent({
       ]"
     >
       <div v-if="set.fixedHeader">
-        <layout-header />
+        <LayHeader />
         <!-- 主体内容 -->
-        <app-main :fixed-header="set.fixedHeader" />
+        <LayContent :fixed-header="set.fixedHeader" />
       </div>
       <el-scrollbar v-else>
         <el-backtop
           title="回到顶部"
           target=".main-container .el-scrollbar__wrap"
         >
-          <backTop />
+          <BackTopIcon />
         </el-backtop>
-        <layout-header />
+        <LayHeader />
         <!-- 主体内容 -->
-        <app-main :fixed-header="set.fixedHeader" />
+        <LayContent :fixed-header="set.fixedHeader" />
       </el-scrollbar>
     </div>
     <!-- 系统设置 -->
-    <setting />
+    <LaySetting />
   </div>
 </template>
 
@@ -214,7 +222,7 @@ const layoutHeader = defineComponent({
 .app-mask {
   position: absolute;
   top: 0;
-  z-index: 999;
+  z-index: 2001;
   width: 100%;
   height: 100%;
   background: #000;

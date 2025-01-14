@@ -46,14 +46,17 @@ const onLogin = async (formEl: FormInstance | undefined) => {
         .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
         .then(res => {
           // 获取后端路由
-          initRouter().then(() => {
-            router.push(getTopMenu(true).path);
-            message("登录成功", { type: "success" });
+          return initRouter().then(() => {
+            router.push('/').then(() => {
+              message("登录成功", { type: "success" });
+            });
           });
         }).catch(err=>{
+          console.log(err)
           loading.value = false;
       });
     } else {
+      console.log("eee")
       loading.value = false;
       return fields;
     }

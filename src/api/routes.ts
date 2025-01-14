@@ -5,6 +5,7 @@ type Result = {
   data: Array<any>;
 };
 
-export const getAsyncRoutes = () => {
+
+export const getUserInfo = () => {
   return http.get<any,any>("/api/admin/userinfo");
 };

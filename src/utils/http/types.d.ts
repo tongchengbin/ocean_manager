@@ -21,14 +21,19 @@ export interface PureHttpError extends AxiosError {
 export interface PureHttpResponse extends AxiosResponse {
   config: PureHttpRequestConfig;
 }
-export interface ApiResponse extends AxiosRequestConfig {
+export interface ApiResponse<T> extends AxiosRequestConfig {
+  data: T;
+  results: T[];
+  total: number;
   code: number;
+  msg: string;
 }
 
 export interface PureHttpRequestConfig extends AxiosRequestConfig {
   beforeRequestCallback?: (request: PureHttpRequestConfig) => void;
   beforeResponseCallback?: (response: PureHttpResponse) => void;
 }
+
 
 export default class PureHttp {
   request<T>(

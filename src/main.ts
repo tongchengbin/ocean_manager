@@ -20,6 +20,8 @@ import "./style/tailwind.css";
 import "element-plus/dist/index.css";
 // 导入字体图标
 import "./assets/iconfont/iconfont.js";
+// 引入自定义全局样式
+import "./style/page.scss";
 
 const app = createApp(App);
 

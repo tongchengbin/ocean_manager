@@ -165,12 +165,12 @@ class PureHttp {
   }
 
   /** 单独抽离的get工具函数 */
-  public get<T, P>(
+  public get<T>(
     url: string,
     params?: Object,
     config?: PureHttpRequestConfig
-  ): Promise<P> {
-    return this.request<P>("get", url, params, config);
+  ): Promise<T> {
+    return this.request<T>("get", url, params, config);
   }
 
     /** 单独抽离的delete工具函数 */

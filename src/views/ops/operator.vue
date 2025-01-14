@@ -1,45 +1,122 @@
 <template>
-  <div class="page-container">
-    <div class="widget">
-      <div class="tool-bar">审计日志</div>
-      <!--搜索-->
-      <div class="search-group">
-        <el-form  inline>
-          <el-form-item>
-            <el-input  v-model="listQuery.search" clearable placeholder="操作内容、操作内容"></el-input>
-          </el-form-item>
-          <el-form-item label="结果">
-            <el-select v-model="listQuery.code" class="select" clearable>
-              <el-option value="1" label="成功"></el-option>
-              <el-option value="0" label="失败"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button  type="primary" @click="fetchData">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
+  <div class="main">
+    <el-form class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]" :inline="true" :model="listQuery">
+      <el-form-item>
+        <el-input
+          v-model="listQuery.search"
+          placeholder="请输入操作内容"
+          class="w-[200px]"
+          clearable
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-select
+          v-model="listQuery.action"
+          placeholder="操作类型"
+          clearable
+          style="width: 120px"
+        >
+          <el-option 
+            v-for="item in typeOptions" 
+            :key="item.value" 
+            :label="item.label" 
+            :value="item.value" 
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select
+          v-model="listQuery.status"
+          placeholder="操作状态"
+          clearable
+          style="width: 120px"
+        >
+          <el-option label="成功" value="success" />
+          <el-option label="失败" value="error" />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="handleFilter">查询</el-button>
+      </el-form-item>
+    </el-form>
 
-      <div class="widget-body">
-        <el-table  :data="list" v-loading="loading" highlight-current-row>
-          <el-table-column label="操作记录ID" prop="id"></el-table-column>
-          <el-table-column label="用户名" prop="username"></el-table-column>
-          <el-table-column label="角色" prop="role"></el-table-column>
-          <el-table-column label="操作内容" prop="content"></el-table-column>
-          <el-table-column label="时间" prop="create_time"></el-table-column>
-          <el-table-column label="ip" prop="ip"></el-table-column>
-          <el-table-column label="状态" prop="code">
+    <div class="w-[99/100] mt-2 px-2 pb-2 bg-bg_color">
+      <div class="flex justify-between w-full page-title">
+        <p class="font-bold truncate">审计日志</p>
+      </div>
+      <div>
+        <el-table
+          v-loading="loading"
+          :data="list"
+          fit
+          highlight-current-row
+          stripe
+        >
+          <el-table-column
+            align="center"
+            label="操作用户"
+            prop="operator"
+            width="120"
+          />
+          <el-table-column
+            align="center"
+            label="角色"
+            prop="role"
+            width="120"
+          />
+          <el-table-column
+            align="center"
+            label="操作类型"
+            width="120"
+          >
             <template #default="scope">
-              <span v-if="scope.row.code === true">成功<el-icon style="color: #67C23A;vertical-align: middle;"><SuccessFilled /></el-icon></span>
-              <span v-else>失败<el-icon style="color: #F56C6C;vertical-align: middle;"><CircleCloseFilled /></el-icon></span>
+              <el-tag
+                :type="getTypeTagType(scope.row.action)"
+                size="small"
+              >
+                {{ getTypeLabel(scope.row.action) }}
+              </el-tag>
             </template>
           </el-table-column>
+          <el-table-column
+            align="center"
+            label="操作内容"
+            prop="description"
+            show-overflow-tooltip
+            min-width="300"
+          />
+          <el-table-column
+            align="center"
+            label="IP地址"
+            prop="ip"
+            width="120"
+          />
+          <el-table-column
+            align="center"
+            label="状态"
+            width="100"
+          >
+            <template #default="scope">
+              <el-tag
+                :type="scope.row.status === 'success' ? 'success' : 'danger'"
+                size="small"
+              >
+                {{ scope.row.status === 'success' ? '成功' : '失败' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="操作时间"
+            prop="datetime"
+            width="180"
+          />
         </el-table>
         <div class="page-r">
           <el-pagination
             :current-page="listQuery.page"
             :page-size="listQuery.page_size"
-            :page-sizes="[10,20,30, 50]"
+            :page-sizes="[10,20,30,50]"
             :total="total"
             background
             layout="total, sizes, prev, pager, next, jumper"
@@ -48,78 +125,103 @@
           />
         </div>
       </div>
-
     </div>
-<!--    <edit-role v-if="isEdit" :form="editForm" @handleEdit="handleEdit"></edit-role>-->
   </div>
 </template>
 
 <script>
-import {http} from "@/utils/http";
-import { CircleCloseFilled, SuccessFilled } from "@element-plus/icons-vue";
+import { http } from "@/utils/http";
+import { ElMessage } from "element-plus";
+
 export default {
-  name: "role",
-  components:{
-    CircleCloseFilled,SuccessFilled
-  },
-  data(){
+  name: "operator",
+  data() {
     return {
-      listQuery:{
-        search:null,
-        code:null,
-        page:1,
-        page_size:10,
+      listQuery: {
+        page: 1,
+        page_size: 10,
+        search: null,
+        action: null,
+        status: null
       },
-      loading:false,
-      list:[],
-      total:0,
-      editForm:{},
-      isEdit:false,
+      loading: false,
+      total: 0,
+      list: [],
+      typeOptions: [
+        { value: 'login', label: '登录' },
+        { value: 'logout', label: '登出' },
+        { value: 'create', label: '创建' },
+        { value: 'update', label: '更新' },
+        { value: 'delete', label: '删除' },
+        { value: 'build', label: '构建' },
+        { value: 'run', label: '运行' },
+        { value: 'destroy', label: '销毁' },
+        { value: 'other', label: '其他' }
+      ]
     }
   },
-  created(){
-    this.fetchData()
+  created() {
+    this.getList()
   },
-  methods:{
-    fetchData() {
-      this.loading = true;
-      http.get('/api/admin/operator',this.listQuery).then(res=>{
-        this.loading = false
-        const {data,total} = res;
-        this.list = data
-        this.total = total
-      }).catch(err=>{
-        this.loading = false
-      })
+  methods: {
+    getList() {
+      this.loading = true
+      http.get('/api/admin/operator', { params: this.listQuery })
+        .then(res => {
+          this.list = res.results
+          this.total = res.total
+        })
+        .catch(error => {
+          ElMessage.error(error.message || '获取数据失败')
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
     },
     handleSizeChange(val) {
       this.listQuery.page_size = val
-      this.fetchData()
+      this.getList()
     },
     handleCurrentChange(val) {
       this.listQuery.page = val
-      this.fetchData()
+      this.getList()
     },
-    handleCreate(){
-      this.isEdit = true;
+    getTypeLabel(type) {
+      const option = this.typeOptions.find(item => item.value === type)
+      return option ? option.label : type
     },
-    handleEdit(){
-      this.isEdit = false;
-      this.fetchData()
-    },
-    itemEdit(row){
-      this.isEdit = true;
-      this.editForm = row;
-    },
-    itemDelete(row){
-      http.delete(`/api/admin/role/${row.id}`).then(res=>{
-        this.fetchData()
-      })
+    getTypeTagType(type) {
+      const typeMap = {
+        login: 'success',
+        logout: 'info',
+        create: 'primary',
+        update: 'warning',
+        delete: 'danger',
+        build: 'primary',
+        run: 'success',
+        destroy: 'danger',
+        other: ''
+      }
+      return typeMap[type] || ''
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.search-form {
+  .el-form-item {
+    margin-bottom: 10px;
+  }
+}
 
+.page-r {
+  margin-top: 20px;
+  padding: 10px;
+  text-align: right;
+}
 </style>

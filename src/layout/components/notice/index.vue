@@ -1,98 +1,72 @@
-<script setup lang="ts">
-import { ref} from "vue";
-import {noticesData, TabItem} from "./data";
-import NoticeList from "./noticeList.vue";
-import Bell from "@iconify-icons/ep/bell";
-import {http} from "@/utils/http";
-
-const noticesNum = ref(0);
-const notices = ref(noticesData);
-const activeKey = ref(noticesData[0].key);
-// 从远程加载数据
-const getList =()=>{
-  http.get('/api/admin/message').then(res=>{
-    notices.value = res.data as TabItem[]
-    activeKey.value =`${res.data[0].key}`
-    notices.value.map(v => (noticesNum.value += v.list.length));
-    console.log(noticesNum)
-  })
-}
-getList()
-
-</script>
-
 <template>
-  <el-dropdown trigger="click" placement="bottom-end">
-    <span class="dropdown-badge navbar-bg-hover select-none">
-      <el-badge :value="noticesNum" :max="99">
-        <span class="header-notice-icon">
-          <IconifyIconOffline :icon="Bell" />
-        </span>
-      </el-badge>
-    </span>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-tabs
-          :stretch="true"
-          v-model="activeKey"
-          class="dropdown-tabs"
-          :style="{ width: notices.length === 0 ? '200px' : '330px' }"
-        >
-          <el-empty
-            v-if="notices.length === 0"
-            description="暂无消息"
-            :image-size="60"
-          />
-          <span v-else>
-            <template v-for="item in notices" :key="item.key">
-              <el-tab-pane
-                :label="`${item.name}(${item.list.length})`"
-                :name="`${item.key}`"
-              >
-                <el-scrollbar max-height="330px">
-                  <div class="noticeList-container">
-                    <NoticeList :list="item.list" />
-                  </div>
-                </el-scrollbar>
-              </el-tab-pane>
-            </template>
-          </span>
-        </el-tabs>
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
+  <div class="notice-container">
+    <el-badge :value="unreadCount" :hidden="unreadCount === 0" class="notice-badge">
+      <el-icon 
+        class="notice-icon"
+        @click="handleClick"
+      >
+        <Bell />
+      </el-icon>
+    </el-badge>
+  </div>
 </template>
 
-<style lang="scss" scoped>
-.dropdown-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 48px;
-  margin-right: 10px;
-  cursor: pointer;
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { Bell } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { http } from '@/utils/http'
 
-  .header-notice-icon {
-    font-size: 18px;
+const router = useRouter()
+const unreadCount = ref(0)
+let timer: any = null
+
+const getUnreadCount = async () => {
+  try {
+    const res = await http.get('/api/admin/notifications/unread/count')
+    unreadCount.value = res.data
+  } catch (error) {
+    console.error('获取未读通知数量失败:', error)
   }
 }
 
-.dropdown-tabs {
-  .noticeList-container {
-    padding: 15px 24px 0;
-  }
+const handleClick = () => {
+  router.push('/system/notifications')
+}
 
-  :deep(.el-tabs__header) {
-    margin: 0;
-  }
+onMounted(() => {
+  getUnreadCount()
+  // 每分钟更新一次未读数量
+  timer = setInterval(getUnreadCount, 60000)
+})
 
-  :deep(.el-tabs__nav-wrap)::after {
-    height: 1px;
+onBeforeUnmount(() => {
+  if (timer) {
+    clearInterval(timer)
+    timer = null
   }
+})
+</script>
 
-  :deep(.el-tabs__nav-wrap) {
-    padding: 0 36px;
+<style lang="scss" scoped>
+.notice-container {
+  height: 100%;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  
+  .notice-badge {
+    line-height: 1;
+  }
+  
+  .notice-icon {
+    font-size: 20px;
+    color: var(--el-text-color-primary);
+    
+    &:hover {
+      color: var(--el-color-primary);
+    }
   }
 }
 </style>

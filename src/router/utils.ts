@@ -1,39 +1,32 @@
 import {
-  RouterHistory,
-  RouteRecordRaw,
-  RouteComponent,
+  createWebHashHistory,
   createWebHistory,
-  createWebHashHistory
+  type RouteComponent,
+  type RouteRecordRaw,
+  type RouterHistory
 } from "vue-router";
-import { asyncRouterMap, router } from "./index";
-import { isProxy, toRaw } from "vue";
-import { useTimeoutFn } from "@vueuse/core";
-import {
-  isString,
-  cloneDeep,
-  isAllEmpty,
-  intersection,
-  storageSession,
-  isIncludeAllChildren
-} from "@pureadmin/utils";
-import { getConfig } from "@/config";
-import { menuType } from "@/layout/types";
-import { buildHierarchyTree } from "@/utils/tree";
-import { sessionKey, type DataInfo, setDataInfo } from "@/utils/auth";
-import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
-import { usePermissionStoreHook } from "@/store/modules/permission";
-const IFrame = () => import("@/layout/frameView.vue");
+import {router} from "./index";
+import {isProxy, toRaw} from "vue";
+import {useTimeoutFn} from "@vueuse/core";
+import {cloneDeep, intersection, isAllEmpty, isIncludeAllChildren, isString, storageLocal} from "@pureadmin/utils";
+import {getConfig} from "@/config";
+import {buildHierarchyTree} from "@/utils/tree";
+import {type DataInfo, userKey} from "@/utils/auth";
+import {type menuType, routerArrays} from "@/layout/types";
+import {useMultiTagsStoreHook} from "@/store/modules/multiTags";
+import {usePermissionStoreHook} from "@/store/modules/permission";
+// 动态路由
+import {getUserInfo} from "@/api/routes";
+
+const IFrame = () => import("@/layout/frame.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
-// 动态路由
-import { getAsyncRoutes } from "@/api/routes";
-
 function handRank(routeInfo: any) {
-  const { name, path, parentId, meta } = routeInfo;
+  const {name, path, parentId, meta} = routeInfo;
   return isAllEmpty(parentId)
     ? isAllEmpty(meta?.rank) ||
-      (meta?.rank === 0 && name !== "Home" && path !== "/")
+    (meta?.rank === 0 && name !== "Home" && path !== "/")
       ? true
       : false
     : false;
@@ -74,14 +67,19 @@ function filterChildrenTree(data: RouteComponent[]) {
 
 /** 判断两个数组彼此是否存在相同值 */
 function isOneOfArray(a: Array<string>, b: Array<string>) {
-  return Array.isArray(a) && Array.isArray(b)? intersection(a, b).length > 0 ? true : false : true;
+  return Array.isArray(a) && Array.isArray(b)
+    ? intersection(a, b).length > 0
+      ? true
+      : false
+    : true;
 }
 
-/** 从sessionStorage里取出当前登陆用户的角色roles，过滤无权限的菜单 */
-function filterNoPermissionTree(data: RouteComponent[]){
+/** 从localStorage里取出当前登录用户的角色roles，过滤无权限的菜单 */
+function filterNoPermissionTree(data: RouteComponent[]) {
   const currentRoles =
-    storageSession().getItem<DataInfo<number>>(sessionKey)?.roles ?? [];
-  const newTree = cloneDeep(data).filter((v: any) =>isOneOfArray(v.meta?.roles, currentRoles)
+    storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [];
+  const newTree = cloneDeep(data).filter((v: any) =>
+    isOneOfArray(v.meta?.roles, currentRoles)
   );
   newTree.forEach(
     (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
@@ -145,49 +143,79 @@ function addPathMatch() {
 }
 
 /** 处理动态路由（后端返回的路由） */
-function handleAsyncRoutes(routeList:any[],roles:string[]) {
-  // 添加路由
+function handleAsyncRoutes(routeList: Array<RouteRecordRaw>) {
   if (routeList.length === 0) {
     usePermissionStoreHook().handleWholeMenus(routeList);
   } else {
     formatFlatteningRoutes(addAsyncRoutes(routeList)).map(
       (v: RouteRecordRaw) => {
         // 防止重复添加路由
-        if (
-          router.options.routes[0].children.findIndex(
-            value => value.path === v.path
-          ) !== -1
-        ) {
+        if (router.options.routes[0].children.findIndex(value => value.path === v.path) !== -1) {
+          console.log("重复",v)
           return;
         } else {
           // 切记将路由push到routes后还需要使用addRoute，这样路由才能正常跳转
           router.options.routes[0].children.push(v);
           // 最终路由进行升序
           ascending(router.options.routes[0].children);
-          if (!router.hasRoute(v?.name)) router.addRoute(v);
-          const flattenRouters: any = router
-            .getRoutes()
-            .find(n => n.path === "/");
+          console.log("chil",router.options.routes[0].children)
+          if (!router.hasRoute(v?.name)) {
+            router.addRoute(v)
+            console.log("add router", v)
+          }
+          const flattenRouters: any = router.getRoutes().find(n => n.path === "/");
           router.addRoute(flattenRouters);
         }
       }
     );
-    // 生成菜单
-    usePermissionStoreHook().handleWholeMenus(routeList)
+    usePermissionStoreHook().handleWholeMenus(routeList);
+  }
+  if (!useMultiTagsStoreHook().getMultiTagsCache) {
+    useMultiTagsStoreHook().handleTags("equal", [
+      ...routerArrays,
+      ...usePermissionStoreHook().flatteningRoutes.filter(
+        v => v?.meta?.fixedTag
+      )
+    ]);
   }
   addPathMatch();
 }
 
 /** 初始化路由（`new Promise` 写法防止在异步请求中造成无限循环）*/
 function initRouter() {
-  return new Promise(resolve => {
-    getAsyncRoutes().then(( data ) => {
-      setDataInfo(data)
-      handleAsyncRoutes([],[data.role_name]);
-      resolve(router);
+  if (getConfig()?.CachingAsyncRoutes) {
+    // 开启动态路由缓存本地localStorage
+    const key = "async-routes";
+    const asyncRouteList = storageLocal().getItem(key) as any;
+    if (asyncRouteList && asyncRouteList?.length > 0) {
+      return new Promise(resolve => {
+        handleAsyncRoutes([]);
+        console.log("router3", router)
+        resolve(router);
+      });
+    } else {
+      return new Promise(resolve => {
+        getUserInfo().then(({data}) => {
+          handleAsyncRoutes(cloneDeep([]));
+          storageLocal().setItem(key, data.routes);
+          console.log("router2", router)
+          resolve(router);
+        });
+      });
+    }
+  } else {
+    return new Promise(resolve => {
+      getUserInfo().then(({data}) => {
+        storageLocal().setItem(userKey, {
+          id: data.id,
+          roles: [data.role_name],
+        });
+        handleAsyncRoutes(cloneDeep([]));
+        console.log("router1", router.getRoutes())
+        resolve(router);
+      });
     });
-  });
-
+  }
 }
 
 /**
@@ -228,14 +256,14 @@ function formatTwoStageRoutes(routesList: RouteRecordRaw[]) {
         children: []
       });
     } else {
-      newRoutesList[0]?.children.push({ ...v });
+      newRoutesList[0]?.children.push({...v});
     }
   });
   return newRoutesList;
 }
 
 /** 处理缓存路由（添加、删除、刷新） */
-function handleAliveRoute({ name }: ToRouteType, mode?: string) {
+function handleAliveRoute({name}: ToRouteType, mode?: string) {
   switch (mode) {
     case "add":
       usePermissionStoreHook().cacheOperate({
@@ -326,7 +354,7 @@ function getAuths(): Array<string> {
   return router.currentRoute.value.meta.auths as Array<string>;
 }
 
-/** 是否有按钮级别的权限 */
+/** 是否有按钮级别的权限（根据路由`meta`中的`auths`字段进行判断）*/
 function hasAuth(value: string | Array<string>): boolean {
   if (!value) return false;
   /** 从当前路由的`meta`字段里获取按钮级别的所有自定义`code`值 */
@@ -338,9 +366,23 @@ function hasAuth(value: string | Array<string>): boolean {
   return isAuths ? true : false;
 }
 
+function handleTopMenu(route) {
+  if (route?.children && route.children.length > 1) {
+    if (route.redirect) {
+      return route.children.filter(cur => cur.path === route.redirect)[0];
+    } else {
+      return route.children[0];
+    }
+  } else {
+    return route;
+  }
+}
+
 /** 获取所有菜单中的第一个菜单（顶级菜单）*/
 function getTopMenu(tag = false): menuType {
-  const topMenu = usePermissionStoreHook().wholeMenus[0]?.children[0];
+  const topMenu = handleTopMenu(
+    usePermissionStoreHook().wholeMenus[0]?.children[0]
+  );
   tag && useMultiTagsStoreHook().handleTags("push", topMenu);
   return topMenu;
 }
