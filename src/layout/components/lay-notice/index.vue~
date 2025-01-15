@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
-import {ListItem, noticesData} from "./data";
+import {ref, Ref} from 'vue';
+import {ListItem} from "./data";
 import BellIcon from "@iconify-icons/ep/bell";
 import {http} from "@/utils/http";
 import NoticeItem from "@/layout/components/lay-notice/components/NoticeItem.vue";
-import { ApiResponse} from "@/utils/http/types";
+import {ApiResponse} from "@/utils/http/types";
 
 const notices: Ref<ListItem[]> = ref([]);
 const noticesNum: Ref<number> = ref(0);

@@ -9,7 +9,7 @@ import {ApiResponse} from "@/utils/http/types";
 const notices: Ref<ListItem[]> = ref([]);
 const noticesNum: Ref<number> = ref(0);
 const getList = () => {
-  http.get<ApiResponse<ListItem>>('/api/admin/message').then(res => {
+  http.get<ApiResponse<ListItem>>('/api/admin/message?read=0').then(res => {
     notices.value = res.results
     noticesNum.value = res.total
   })
