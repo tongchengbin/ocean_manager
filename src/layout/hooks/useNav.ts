@@ -1,17 +1,17 @@
-import { storeToRefs } from "pinia";
-import { getConfig } from "@/config";
-import { emitter } from "@/utils/mitt";
+import {storeToRefs} from "pinia";
+import {getConfig} from "@/config";
+import {emitter} from "@/utils/mitt";
 import Avatar from "@/assets/user.jpg";
-import { getTopMenu } from "@/router/utils";
-import { useFullscreen } from "@vueuse/core";
-import type { routeMetaType } from "../types";
-import { useRouter, useRoute } from "vue-router";
-import { router, remainingPaths } from "@/router";
-import { computed, type CSSProperties } from "vue";
-import { useAppStoreHook } from "@/store/modules/app";
-import { useUserStoreHook } from "@/store/modules/user";
-import { useGlobal, isAllEmpty } from "@pureadmin/utils";
-import { usePermissionStoreHook } from "@/store/modules/permission";
+import {getTopMenu} from "@/router/utils";
+import {useFullscreen} from "@vueuse/core";
+import type {routeMetaType} from "../types";
+import {useRoute, useRouter} from "vue-router";
+import {remainingPaths} from "@/router";
+import {computed, type CSSProperties} from "vue";
+import {useAppStoreHook} from "@/store/modules/app";
+import {useUserStoreHook} from "@/store/modules/user";
+import {isAllEmpty, useGlobal} from "@pureadmin/utils";
+import {usePermissionStoreHook} from "@/store/modules/permission";
 import ExitFullscreen from "@iconify-icons/ri/fullscreen-exit-fill";
 import Fullscreen from "@iconify-icons/ri/fullscreen-fill";
 
@@ -19,12 +19,13 @@ const errorInfo =
   "The current routing configuration is incorrect, please check the configuration";
 
 const router = useRouter();
+
 export function useNav() {
   const route = useRoute();
   const pureApp = useAppStoreHook();
   const routers = useRouter().options.routes;
-  const { isFullscreen, toggle } = useFullscreen();
-  const { wholeMenus } = storeToRefs(usePermissionStoreHook());
+  const {isFullscreen, toggle} = useFullscreen();
+  const {wholeMenus} = storeToRefs(usePermissionStoreHook());
   /** 平台`layout`中所有`el-tooltip`的`effect`配置，默认`light` */
   const tooltipEffect = getConfig()?.TooltipEffect ?? "light";
 
@@ -47,13 +48,11 @@ export function useNav() {
 
   /** 昵称（如果昵称为空则显示用户名） */
   const username = computed(() => {
-    return isAllEmpty(useUserStoreHook()?.nickname)
-      ? useUserStoreHook()?.username
-      : useUserStoreHook()?.nickname;
+    return isAllEmpty(useUserStoreHook()?.username)
   });
 
   const avatarsStyle = computed(() => {
-    return username.value ? { marginRight: "10px" } : "";
+    return username.value ? {marginRight: "10px"} : "";
   });
 
   const isCollapse = computed(() => {
@@ -64,7 +63,7 @@ export function useNav() {
     return pureApp.getDevice;
   });
 
-  const { $storage, $config } = useGlobal<GlobalPropertiesApi>();
+  const {$storage, $config} = useGlobal<GlobalPropertiesApi>();
   const layout = computed(() => {
     return $storage?.layout?.layout;
   });

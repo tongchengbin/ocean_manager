@@ -1,4 +1,4 @@
-import { RouteRecordName } from "vue-router";
+import {RouteRecordName} from "vue-router";
 
 export type cacheType = {
   mode: string;
@@ -36,6 +36,7 @@ export type setType = {
 };
 
 export type userType = {
+  avatar?: string;
   username?: string;
   roles?: Array<string>;
   isRemembered?: boolean;
