@@ -337,7 +337,7 @@ function getHistoryMode(routerHistory): RouterHistory {
     if (leftMode === "hash") {
       return createWebHashHistory("");
     } else if (leftMode === "h5") {
-      return createWebHistory("");
+      return createWebHistory(import.meta.env.VITE_PUBLIC_PATH);
     }
   } //has param
   else if (historyMode.length === 2) {
