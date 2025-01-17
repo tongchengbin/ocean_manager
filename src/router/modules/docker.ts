@@ -29,7 +29,7 @@ export default {
     {
       path: '/docker/container',
       component: () => import('@/views/docker/container.vue'),
-      name: 'docker.container',
+      name: 'docker_container',
       meta: {'title': '实例容器', icon: 'container', showLink:false,          roles: ["超级管理员","运维管理员"],},
     },
     {

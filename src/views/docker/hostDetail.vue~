@@ -54,7 +54,7 @@
             </div>
           </el-col>
           <el-col :md="12" :xs="24">
-            <div class="box" @click="$router.push({name:'docker_image',query:{id:pk}})">
+            <div class="box" @click="$router.push({name:'docker.image',query:{id:pk}})">
               <div
                 style="height: 65px;width: 65px;background-color: #2361ae!important;vertical-align: middle;text-align: center;border-radius: 32px">
                 <i class="iconfont icon-jingxiang" style="color: #f0f0f0;font-size: 35px;line-height: 65px"></i></div>
