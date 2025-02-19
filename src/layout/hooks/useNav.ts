@@ -18,12 +18,11 @@ import Fullscreen from "@iconify-icons/ri/fullscreen-fill";
 const errorInfo =
   "The current routing configuration is incorrect, please check the configuration";
 
-const router = useRouter();
-
 export function useNav() {
   const route = useRoute();
+  const router = useRouter();
   const pureApp = useAppStoreHook();
-  const routers = useRouter().options.routes;
+  const routers = router.options.routes;
   const {isFullscreen, toggle} = useFullscreen();
   const {wholeMenus} = storeToRefs(usePermissionStoreHook());
   /** 平台`layout`中所有`el-tooltip`的`effect`配置，默认`light` */
@@ -49,6 +48,8 @@ export function useNav() {
   /** 昵称（如果昵称为空则显示用户名） */
   const username = computed(() => {
     return isAllEmpty(useUserStoreHook()?.username)
+      ? useUserStoreHook()?.username
+      : useUserStoreHook()?.nickname;
   });
 
   const avatarsStyle = computed(() => {

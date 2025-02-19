@@ -7,7 +7,6 @@ import { createApp, Directive } from "vue";
 import { MotionPlugin } from "@vueuse/motion";
 // import { useEcharts } from "@/plugins/echarts";
 import { injectResponsiveStorage } from "@/utils/responsive";
-
 // import Table from "@pureadmin/table";
 // import PureDescriptions from "@pureadmin/descriptions";
 
@@ -46,10 +45,10 @@ import { Auth } from "@/components/ReAuth";
 app.component("Auth", Auth);
 
 getServerConfig(app).then(async config => {
+  setupStore(app);
   app.use(router);
   await router.isReady();
   injectResponsiveStorage(app, config);
-  setupStore(app);
   app.use(MotionPlugin).use(ElementPlus);
   // .use(useEcharts);
   // .use(Table);

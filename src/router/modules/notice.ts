@@ -7,7 +7,7 @@ export default  {
   children: [{
     path: '/notice/index',
     component: () => import('@/views/notice/index.vue'),
-    name: 'notice_index',
+    name: 'noticeIndex',
     meta: {title: '公告提醒', icon: 'zondicons:announcement'}
   }]
 } satisfies RouteConfigsTable;

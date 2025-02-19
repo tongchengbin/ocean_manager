@@ -79,7 +79,7 @@ function filterNoPermissionTree(data: RouteComponent[]) {
   const currentRoles =
     storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [];
   const newTree = cloneDeep(data).filter((v: any) =>
-    isOneOfArray(v.meta?.roles, currentRoles)
+    isOneOfArray(v.meta?.roles, currentRoles) || v.meta?.roles?.length === 0 || !v.meta?.roles
   );
   newTree.forEach(
     (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
@@ -183,6 +183,7 @@ function handleAsyncRoutes(routeList: Array<RouteRecordRaw>) {
 
 /** 初始化路由（`new Promise` 写法防止在异步请求中造成无限循环）*/
 function initRouter() {
+  console.log("caching async routes:",getConfig()?.CachingAsyncRoutes)
   if (getConfig()?.CachingAsyncRoutes) {
     // 开启动态路由缓存本地localStorage
     const key = "async-routes";
@@ -196,6 +197,7 @@ function initRouter() {
     } else {
       return new Promise(resolve => {
         getUserInfo().then(({data}) => {
+          console.log("user info",data)
           handleAsyncRoutes(cloneDeep([]));
           storageLocal().setItem(key, data.routes);
           console.log("router2", router)
@@ -208,6 +210,7 @@ function initRouter() {
       getUserInfo().then(({data}) => {
         storageLocal().setItem(userKey, {
           id: data.id,
+          username: data.username,
           roles: [data.role_name],
         });
         handleAsyncRoutes(cloneDeep([]));

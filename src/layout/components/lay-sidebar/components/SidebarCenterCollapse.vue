@@ -32,22 +32,23 @@ const toggleClick = () => {
 </script>
 
 <template>
-  <div
-    v-tippy="{
-      content: isActive ? '点击折叠' : '点击展开',
-      theme: tooltipEffect,
-      hideOnClick: 'toggle',
-      placement: 'right'
-    }"
-    class="center-collapse"
-    @click="toggleClick"
+  <el-tooltip
+    :content="isActive ? '点击折叠' : '点击展开'"
+    :effect="tooltipEffect"
+    :hide-after="0"
+    placement="right"
   >
-    <IconifyIconOffline
-      :icon="ArrowLeft"
-      :class="[iconClass, themeColor === 'light' ? '' : 'text-primary']"
-      :style="{ transform: isActive ? 'none' : 'rotateY(180deg)' }"
-    />
-  </div>
+    <div
+      class="center-collapse"
+      @click="toggleClick"
+    >
+      <IconifyIconOffline
+        :icon="ArrowLeft"
+        :class="[iconClass, themeColor === 'light' ? '' : 'text-primary']"
+        :style="{ transform: isActive ? 'none' : 'rotateY(180deg)' }"
+      />
+    </div>
+  </el-tooltip>
 </template>
 
 <style lang="scss" scoped>

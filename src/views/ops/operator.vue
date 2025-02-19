@@ -11,21 +11,6 @@
       </el-form-item>
       <el-form-item>
         <el-select
-          v-model="listQuery.action"
-          placeholder="操作类型"
-          clearable
-          style="width: 120px"
-        >
-          <el-option 
-            v-for="item in typeOptions" 
-            :key="item.value" 
-            :label="item.label" 
-            :value="item.value" 
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-select
           v-model="listQuery.status"
           placeholder="操作状态"
           clearable
@@ -55,7 +40,7 @@
           <el-table-column
             align="center"
             label="操作用户"
-            prop="operator"
+            prop="username"
             width="120"
           />
           <el-table-column
@@ -64,24 +49,11 @@
             prop="role"
             width="120"
           />
-          <el-table-column
-            align="center"
-            label="操作类型"
-            width="120"
-          >
-            <template #default="scope">
-              <el-tag
-                :type="getTypeTagType(scope.row.action)"
-                size="small"
-              >
-                {{ getTypeLabel(scope.row.action) }}
-              </el-tag>
-            </template>
-          </el-table-column>
+
           <el-table-column
             align="center"
             label="操作内容"
-            prop="description"
+            prop="content"
             show-overflow-tooltip
             min-width="300"
           />
@@ -108,7 +80,7 @@
           <el-table-column
             align="center"
             label="操作时间"
-            prop="datetime"
+            prop="create_time"
             width="180"
           />
         </el-table>
@@ -166,9 +138,9 @@ export default {
   methods: {
     getList() {
       this.loading = true
-      http.get('/api/admin/operator', { params: this.listQuery })
+      http.get('/api/admin/operator', this.listQuery)
         .then(res => {
-          this.list = res.results
+          this.list = res.data
           this.total = res.total
         })
         .catch(error => {

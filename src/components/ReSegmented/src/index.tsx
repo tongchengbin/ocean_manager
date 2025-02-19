@@ -160,30 +160,57 @@ export default defineComponent({
             <input type="radio" name="segmented" />
             <div
               class="pure-segmented-item-label"
-              v-tippy={{
-                content: option?.tip,
-                zIndex: 41000
-              }}
             >
-              {option.icon && !isFunction(option.label) ? (
-                <span
-                  class="pure-segmented-item-icon"
-                  style={{ marginRight: option.label ? "6px" : 0 }}
+              {option?.tip ? (
+                <el-tooltip
+                  content={option.tip}
+                  zIndex={41000}
                 >
-                  {h(
-                    useRenderIcon(option.icon, {
-                      ...option?.iconAttrs
-                    })
-                  )}
-                </span>
-              ) : null}
-              {option.label ? (
-                isFunction(option.label) ? (
-                  h(option.label)
-                ) : (
-                  <span>{option.label}</span>
-                )
-              ) : null}
+                  <div>
+                    {option.icon && !isFunction(option.label) ? (
+                      <span
+                        class="pure-segmented-item-icon"
+                        style={{ marginRight: option.label ? "6px" : 0 }}
+                      >
+                        {h(
+                          useRenderIcon(option.icon, {
+                            ...option?.iconAttrs
+                          })
+                        )}
+                      </span>
+                    ) : null}
+                    {option.label ? (
+                      isFunction(option.label) ? (
+                        h(option.label)
+                      ) : (
+                        <span>{option.label}</span>
+                      )
+                    ) : null}
+                  </div>
+                </el-tooltip>
+              ) : (
+                <>
+                  {option.icon && !isFunction(option.label) ? (
+                    <span
+                      class="pure-segmented-item-icon"
+                      style={{ marginRight: option.label ? "6px" : 0 }}
+                    >
+                      {h(
+                        useRenderIcon(option.icon, {
+                          ...option?.iconAttrs
+                        })
+                      )}
+                    </span>
+                  ) : null}
+                  {option.label ? (
+                    isFunction(option.label) ? (
+                      h(option.label)
+                    ) : (
+                      <span>{option.label}</span>
+                    )
+                  ) : null}
+                </>
+              )}
             </div>
           </label>
         );

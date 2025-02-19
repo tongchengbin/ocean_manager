@@ -2,7 +2,6 @@ const Layout = () => import("@/layout/index.vue");
 export default {
   path: '/system',
   component: Layout,
-  redirect: '/system/admin',
   meta: {title: "系统设置",icon: 'dashicons:admin-generic'},
   children: [
     {
@@ -14,7 +13,7 @@ export default {
     {
       path: '/system/notifications',
       component: () => import('@/views/system/notifications.vue'),
-      name: 'system_notifications',
+      name: 'systemNotifications',
       meta: {title: '通知管理', icon: 'ri:notification-4-line'}
     },
     {

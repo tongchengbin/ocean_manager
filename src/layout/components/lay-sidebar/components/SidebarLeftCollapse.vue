@@ -42,18 +42,17 @@ const toggleClick = () => {
 
 <template>
   <div class="left-collapse">
-    <IconifyIconOffline
-      v-tippy="{
-        content: isActive ? '点击折叠' : '点击展开',
-        theme: tooltipEffect,
-        hideOnClick: 'toggle',
-        placement: 'right'
-      }"
-      :icon="MenuFold"
-      :class="[iconClass, themeColor === 'light' ? '' : 'text-primary']"
-      :style="{ transform: isActive ? 'none' : 'rotateY(180deg)' }"
-      @click="toggleClick"
-    />
+    <el-tooltip
+      :content="isActive ? '点击折叠' : '点击展开'"
+      :z-index="41000"
+    >
+      <IconifyIconOffline
+        :icon="MenuFold"
+        :class="[iconClass, themeColor === 'light' ? '' : 'text-primary']"
+        :style="{ transform: isActive ? 'none' : 'rotateY(180deg)' }"
+        @click="toggleClick"
+      />
+    </el-tooltip>
   </div>
 </template>
 

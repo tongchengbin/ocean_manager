@@ -20,3 +20,4 @@ tests/**/coverage/
 *.sln
 tsconfig.tsbuildinfo
 pnpm-lock.yaml
+*.*~

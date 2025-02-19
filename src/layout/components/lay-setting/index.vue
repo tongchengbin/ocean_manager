@@ -356,40 +356,43 @@ onUnmounted(() => removeMatchMedia);
       <ul class="pure-theme">
         <li
           ref="verticalRef"
-          v-tippy="{
-            content: '左侧菜单，亲切熟悉',
-            zIndex: 41000
-          }"
           :class="layoutTheme.layout === 'vertical' ? 'is-select' : ''"
           @click="setLayoutModel('vertical')"
         >
-          <div />
+          <el-tooltip
+            content="左侧菜单，亲切熟悉"
+            :z-index="41000"
+          >
+            <div />
+          </el-tooltip>
           <div />
         </li>
         <li
           v-if="device !== 'mobile'"
           ref="horizontalRef"
-          v-tippy="{
-            content: '顶部菜单，简洁概览',
-            zIndex: 41000
-          }"
           :class="layoutTheme.layout === 'horizontal' ? 'is-select' : ''"
           @click="setLayoutModel('horizontal')"
         >
-          <div />
+          <el-tooltip
+            content="顶部菜单，简洁概览"
+            :z-index="41000"
+          >
+            <div />
+          </el-tooltip>
           <div />
         </li>
         <li
           v-if="device !== 'mobile'"
           ref="mixRef"
-          v-tippy="{
-            content: '混合菜单，灵活多变',
-            zIndex: 41000
-          }"
           :class="layoutTheme.layout === 'mix' ? 'is-select' : ''"
           @click="setLayoutModel('mix')"
         >
-          <div />
+          <el-tooltip
+            content="混合菜单，灵活多变"
+            :z-index="41000"
+          >
+            <div />
+          </el-tooltip>
           <div />
         </li>
       </ul>

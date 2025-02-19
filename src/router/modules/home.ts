@@ -10,7 +10,6 @@ export default {
     icon: "ep:home-filled",
     title: "首页",
     rank: 0,
-    roles: ["超级管理员"]
   },
   children: [
     {
@@ -18,7 +17,6 @@ export default {
       name: "Dashboard",
       component: () => import("@/views/dashboard/index.vue"),
       meta: {
-        roles: ["超级管理员"],
         title: "首页",
         showLink: VITE_HIDE_HOME !== "true"
       }

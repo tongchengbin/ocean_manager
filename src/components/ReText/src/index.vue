@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { h, onMounted, ref, useSlots } from "vue";
-import { type TippyOptions, useTippy } from "vue-tippy";
 
 defineOptions({
   name: "ReText"
@@ -10,17 +9,12 @@ const props = defineProps({
   // 行数
   lineClamp: {
     type: [String, Number]
-  },
-  tippyProps: {
-    type: Object as PropType<TippyOptions>,
-    default: () => ({})
   }
 });
 
 const $slots = useSlots();
-
 const textRef = ref();
-const tippyFunc = ref();
+const showTooltip = ref(false);
 
 const isTextEllipsis = (el: HTMLElement) => {
   if (!props.lineClamp) {
@@ -32,35 +26,34 @@ const isTextEllipsis = (el: HTMLElement) => {
   }
 };
 
-const getTippyProps = () => ({
-  content: h($slots.content || $slots.default),
-  ...props.tippyProps
-});
-
-function handleHover(event: MouseEvent) {
+function handleMouseEnter(event: MouseEvent) {
   if (isTextEllipsis(event.target as HTMLElement)) {
-    tippyFunc.value.setProps(getTippyProps());
-    tippyFunc.value.enable();
-  } else {
-    tippyFunc.value.disable();
+    showTooltip.value = true;
   }
 }
 
-onMounted(() => {
-  tippyFunc.value = useTippy(textRef.value?.$el, getTippyProps());
-});
+function handleMouseLeave() {
+  showTooltip.value = false;
+}
 </script>
 
 <template>
-  <el-text
-    v-bind="{
-      truncated: !lineClamp,
-      lineClamp,
-      ...$attrs
-    }"
-    ref="textRef"
-    @mouseover.self="handleHover"
+  <el-tooltip
+    :disabled="!showTooltip"
+    :content="$slots.default?.()?.[0]?.children"
+    :show-after="100"
   >
-    <slot />
-  </el-text>
+    <el-text
+      v-bind="{
+        truncated: !lineClamp,
+        lineClamp,
+        ...$attrs
+      }"
+      ref="textRef"
+      @mouseenter="handleMouseEnter"
+      @mouseleave="handleMouseLeave"
+    >
+      <slot />
+    </el-text>
+  </el-tooltip>
 </template>
