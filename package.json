@@ -156,7 +156,8 @@
     "vite-plugin-router-warn": "^1.0.0",
     "vite-svg-loader": "^5.1.0",
     "vue-eslint-parser": "^9.4.3",
-    "vue-tsc": "^2.1.10"
+    "vue-tsc": "^2.1.10",
+    "win-node-env": "^0.6.1"
   },
   "engines": {
     "node": "^18.18.0 || ^20.9.0 || >=22.0.0",
