@@ -87,7 +87,7 @@
           <el-table-column
             align="center"
             label="发布日期"
-            prop="date_created"
+            prop="updated_at"
           />
           <el-table-column
             label="操作"
