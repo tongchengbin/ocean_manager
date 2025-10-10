@@ -32,7 +32,7 @@
           <el-table-column align="center" label="操作" width="200">
             <template #default="scope">
               <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button link :loading="loading_build" type="primary" @click="handleBuild(scope.row.id)">
+              <el-button link :loading="loadingBuildMap[scope.row.id]" type="primary" @click="handleBuild(scope.row.id)">
                 {{ scope.row.status === 0 ? '编译' : "重新编译" }}
               </el-button>
               <el-button link type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
@@ -99,7 +99,7 @@ export default {
   },
   data() {
     return {
-      loading_build: false,
+      loadingBuildMap: {},
       syncDialog: false,
       docker_type_list: [
         { label: "远程镜像", id: 1 },
@@ -151,7 +151,9 @@ export default {
       this.centerDialogVisible = true
     },
     handleBuild(id) {
-      this.loading_build = true
+      // Vue 3 直接修改对象属性即可响应
+      this.loadingBuildMap[id] = true;
+      
       http.post(`/api/admin/docker/resource/${id}/build`).then(() => {
         ElMessage({
           type: 'success',
@@ -160,7 +162,8 @@ export default {
         })
         this.getList()
       }).finally(() => {
-        this.loading_build = false
+        // 只重置当前按钮的状态
+        this.loadingBuildMap[id] = false;
       })
     },
     async handleDelete(id) {
