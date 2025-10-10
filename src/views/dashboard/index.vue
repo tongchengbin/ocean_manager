@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="dashboard-container">
     <panel-group :state="data" @handleSetLineChartData="handleSetLineChartData"></panel-group>
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <el-row class="chart-container">
       <line-chart v-if="lineChartData" :data="lineChartData" />
     </el-row>
   </div>
@@ -49,3 +49,41 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.dashboard-container {
+  padding: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  
+  .chart-container {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+    
+    .chart-container {
+      padding: 10px 10px 0;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dashboard-container {
+    padding: 5px;
+    
+    .chart-container {
+      padding: 8px 8px 0;
+      margin-bottom: 16px;
+    }
+  }
+}
+</style>

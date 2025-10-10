@@ -1,20 +1,20 @@
 <template>
-  <el-row class="panel-group" :gutter="40">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel"  @click="handleSetLineChartData('newVisitis')">
+  <el-row class="panel-group" :gutter="responsive.gutter">
+    <el-col :xs="12" :sm="12" :md="12" :lg="6" class="card-panel-col">
+      <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
         <div class="card-panel-icon-wrapper icon-people">
-          <img src="../../../assets/images/home/visits.png"  alt=""/>
+          <img src="../../../assets/images/home/visits.png" alt=""/>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">今日用户</div>
-          <CountTo ref="myCount"  :start-val="0"  :end-val="state.ip_cnt"  :duration="2600" class="card-panel-num"/>
+          <CountTo ref="myCount" :start-val="0" :end-val="state.ip_cnt" :duration="2600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :md="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper">
-          <img src="../../../assets/images/home/registered.png"  alt=""/>
+          <img src="../../../assets/images/home/registered.png" alt=""/>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">今日注册</div>
@@ -22,10 +22,10 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :md="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper">
-          <img src="../../../assets/images/home/question.png"  alt=""/>
+          <img src="../../../assets/images/home/question.png" alt=""/>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">题库</div>
@@ -33,10 +33,10 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :md="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper">
-          <img src="../../../assets/images/home/qa.png"  alt=""/>
+          <img src="../../../assets/images/home/qa.png" alt=""/>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">今日挑战</div>
@@ -68,7 +68,18 @@ export default {
   },
   data() {
     return {
+      responsive: {
+        gutter: 40,
+        screenWidth: window.innerWidth
+      }
     }
+  },
+  mounted() {
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   },
   created() {
   },
@@ -80,8 +91,18 @@ export default {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     },
-
-
+    handleResize() {
+      this.responsive.screenWidth = window.innerWidth;
+      
+      // 根据屏幕宽度调整间距
+      if (this.responsive.screenWidth < 480) {
+        this.responsive.gutter = 10;
+      } else if (this.responsive.screenWidth < 768) {
+        this.responsive.gutter = 20;
+      } else {
+        this.responsive.gutter = 40;
+      }
+    }
   }
 }
 </script>
@@ -160,21 +181,77 @@ export default {
   }
 }
 
-@media (max-width:550px) {
+@media (max-width: 768px) {
+  .panel-group {
+    margin-top: 12px;
+    
+    .card-panel-col {
+      margin-bottom: 20px;
+    }
+    
+    .card-panel {
+      height: 110px;
+      
+      .card-panel-icon-wrapper {
+        margin: 10px 0 0 10px;
+        padding: 12px;
+        
+        img {
+          width: 50px;
+          height: 50px;
+        }
+      }
+      
+      .card-panel-description {
+        margin: 20px;
+        
+        .card-panel-text {
+          font-size: 14px;
+        }
+        
+        .card-panel-num {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 550px) {
   .card-panel-description {
-    display: none;
+    display: block;
+    float: none;
+    margin: 0 auto;
+    padding-top: 10px;
+    text-align: center;
   }
 
   .card-panel-icon-wrapper {
     float: none !important;
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
-
-    svg {
+    margin: 0 auto !important;
+    padding: 10px;
+    text-align: center;
+    
+    img {
       display: block;
-      margin: 14px auto !important;
-      float: none !important;
+      margin: 0 auto !important;
+      width: 40px;
+      height: 40px;
+    }
+  }
+  
+  .card-panel {
+    height: auto !important;
+    padding: 10px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .panel-group {
+    margin-top: 8px;
+    
+    .card-panel-col {
+      margin-bottom: 10px;
     }
   }
 }

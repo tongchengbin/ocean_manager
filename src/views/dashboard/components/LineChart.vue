@@ -36,19 +36,26 @@ export default {
     this.initChart()
     // 监听侧边栏的变化
     const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
+    if (sidebarElm) {
+      sidebarElm.addEventListener('transitionend', this.__resizeHandler)
+    }
+    
+    // 添加窗口大小变化监听
+    if (this.autoResize && window) {
+      window.addEventListener('resize', this.__resizeHandler)
+    }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (!this.chart) {
       return
     }
-    if (this.autoResize&&window) {
-      window.removeEventListener('resize', this.__resizeHanlder)
+    if (this.autoResize && window) {
+      window.removeEventListener('resize', this.__resizeHandler)
     }
 
     const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    if(sidebarElm!==undefined){
-      sidebarElm.removeEventListener('transitionend', this.__resizeHanlder)
+    if (sidebarElm !== undefined) {
+      sidebarElm.removeEventListener('transitionend', this.__resizeHandler)
     }
 
     this.chart.dispose()
@@ -65,21 +72,35 @@ export default {
     }
   },
   methods: {
+    __resizeHandler() {
+      if (this.chart) {
+        this.chart.resize()
+      }
+    },
     setOptions(charData) {
       let xData = charData.x_data
+      // 根据屏幕宽度调整配置
+      const isSmallScreen = window.innerWidth < 768;
+      const isMobileScreen = window.innerWidth < 480;
+      
       let options = {
         xAxis: {
           data: xData,
           boundaryGap: false,
           axisTick: {
             show: false
+          },
+          axisLabel: {
+            interval: isMobileScreen ? 'auto' : 0,
+            rotate: isMobileScreen ? 30 : 0,
+            fontSize: isMobileScreen ? 10 : 12
           }
         },
         grid: {
-          left: 10,
-          right: 20,
-          bottom: 30,
-          top: 30,
+          left: isMobileScreen ? 5 : (isSmallScreen ? 8 : 10),
+          right: isMobileScreen ? 10 : (isSmallScreen ? 15 : 20),
+          bottom: isMobileScreen ? 20 : (isSmallScreen ? 25 : 30),
+          top: isMobileScreen ? 20 : (isSmallScreen ? 25 : 30),
           containLabel: true
         },
         tooltip: {
@@ -95,7 +116,14 @@ export default {
           }
         },
         legend: {
-          data: []
+          data: [],
+          textStyle: {
+            fontSize: isMobileScreen ? 10 : 12
+          },
+          itemWidth: isMobileScreen ? 10 : 14,
+          itemHeight: isMobileScreen ? 10 : 14,
+          itemGap: isMobileScreen ? 5 : 10,
+          padding: isMobileScreen ? 5 : 10
         },
         series: []
       }
@@ -131,3 +159,22 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.chart {
+  width: 100%;
+  height: 350px;
+}
+
+@media screen and (max-width: 768px) {
+  .chart {
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .chart {
+    height: 250px;
+  }
+}
+</style>
