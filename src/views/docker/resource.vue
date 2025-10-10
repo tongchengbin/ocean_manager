@@ -32,7 +32,7 @@
           <el-table-column align="center" label="操作" width="200">
             <template #default="scope">
               <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button link :loading="loading_build" type="primary" @click="handleBuild(scope.row.id)">
+              <el-button link :loading="loadingBuildMap[scope.row.id]" type="primary" @click="handleBuild(scope.row.id)">
                 {{ scope.row.status === 0 ? '编译' : "重新编译" }}
               </el-button>
               <el-button link type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
@@ -75,32 +75,46 @@
         <el-form-item label="描述">
           <el-input v-model="form.description" type="textarea" placeholder="请输入描述"/>
         </el-form-item>
-      </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="handleSubmit">确 定</el-button>
         </span>
       </template>
+      </el-form>
     </el-dialog>
-    <docker_resource_sync @close="handleSyncClose" :open="syncDialog"/>
+    <docker_resource_sync v-if="syncDialog" @close="syncDialog = false"></docker_resource_sync>
+
+    <!-- 使用日志查看组件 -->
+    <build-log-viewer
+      v-model="showLogDialog"
+      :resource-id="currentBuildId"
+      title="编译日志"
+      loading-text="正在编译中，请稍候..."
+      api-path="/api/admin/docker/resource/{id}/logs"
+      @closed="handleLogDialogClosed"
+    />
   </div>
 </template>
 
 <script>
 import { http } from "@/utils/http";
-import docker_resource_sync from './docker_resource_sync.vue'
+import docker_resource_sync from './docker_resource_sync.vue';
+import BuildLogViewer from "@/components/BuildLogViewer/index.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
   name: "compose_db",
   components: {
-    docker_resource_sync
+    docker_resource_sync,
+    BuildLogViewer
   },
   data() {
     return {
-      loading_build: false,
+      loadingBuildMap: {},
       syncDialog: false,
+      showLogDialog: false,
+      currentBuildId: null,
       docker_type_list: [
         { label: "远程镜像", id: 1 },
         { label: "本地镜像", id: 2 }
@@ -151,16 +165,25 @@ export default {
       this.centerDialogVisible = true
     },
     handleBuild(id) {
-      this.loading_build = true
+      // 设置当前构建 ID
+      this.currentBuildId = id;
+      // 设置按钮 loading 状态
+      this.loadingBuildMap[id] = true;
+
       http.post(`/api/admin/docker/resource/${id}/build`).then(() => {
         ElMessage({
           type: 'success',
           message: '任务提交成功',
           duration: 2000
         })
+
+        // 显示日志对话框
+        this.showLogDialog = true;
+
         this.getList()
       }).finally(() => {
-        this.loading_build = false
+        // 只重置当前按钮的状态
+        this.loadingBuildMap[id] = false;
       })
     },
     async handleDelete(id) {
@@ -170,7 +193,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
-        
+
         await http.delete(`/api/admin/docker/resource/${id}`)
         ElMessage({
           type: 'success',
@@ -222,6 +245,11 @@ export default {
     handleSyncClose() {
       this.syncDialog = false
       this.getList()
+    },
+
+    // 日志对话框关闭时的处理
+    handleLogDialogClosed() {
+      this.currentBuildId = null;
     }
   }
 }
