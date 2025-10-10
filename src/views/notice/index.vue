@@ -106,12 +106,13 @@
           </el-table-column>
         </el-table>
 
-        <div class="flex justify-end mt-4">
+        <div class="page-r">
           <el-pagination
             v-model:current-page="listQuery.page"
             v-model:page-size="listQuery.page_size"
             :page-sizes="[10, 20, 30, 50]"
             :total="total"
+            background
             layout="total, sizes, prev, pager, next, jumper"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"

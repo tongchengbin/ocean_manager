@@ -187,3 +187,128 @@
     background: rgb(199 201 203); /* 滑块hover颜色 */
   }
 }
+
+/* 全局分页组件样式 */
+.page-r,
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding: 10px 0;
+  
+  .el-pagination {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+    margin: 0;
+    
+    /* 美化分页组件 */
+    .el-pagination__total,
+    .el-pagination__sizes,
+    .el-pagination__jump {
+      margin-right: 10px;
+    }
+    
+    .el-pagination__sizes .el-select .el-input {
+      margin: 0 5px;
+    }
+    
+    /* 美化按钮样式 */
+    button {
+      min-width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      margin: 0 3px;
+      padding: 0;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: normal;
+      transition: all 0.3s;
+      
+      &:hover {
+        background-color: var(--el-color-primary-light-9);
+        color: var(--el-color-primary);
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+      }
+    }
+    
+    /* 美化页码按钮 */
+    .el-pager li {
+      min-width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      margin: 0 3px;
+      font-weight: normal;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s;
+      
+      &:hover {
+        background-color: var(--el-color-primary-light-9);
+      }
+      
+      &.is-active {
+        background-color: var(--el-color-primary);
+        color: #fff;
+        font-weight: bold;
+      }
+    }
+    
+    /* 添加阴影效果 */
+    &.is-background {
+      .el-pager li:not(.is-disabled) {
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+        
+        &:hover {
+          background-color: var(--el-color-primary-light-9);
+        }
+        
+        &.is-active {
+          background-color: var(--el-color-primary);
+          color: #fff;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+      }
+      
+      .btn-prev, .btn-next {
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+        
+        &:hover {
+          background-color: var(--el-color-primary-light-9);
+        }
+      }
+    }
+  }
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  .page-r,
+  .pagination-container {
+    .el-pagination {
+      flex-wrap: wrap;
+      justify-content: center;
+      
+      .el-pagination__total,
+      .el-pagination__sizes,
+      .el-pagination__jump {
+        margin-bottom: 10px;
+      }
+      
+      .el-pagination__sizes {
+        margin-right: 0;
+      }
+      
+      .el-pager {
+        margin: 0 0 10px 0;
+      }
+    }
+  }
+}
