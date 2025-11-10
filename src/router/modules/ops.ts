@@ -7,7 +7,7 @@ export default {
   children: [
     {
       path: '/ops/sys',
-      component: () => import('@/views/ops/sysinfo.vue'),
+      component: () => import('@/views/ops/sysInfo.vue'),
       name: 'SysConfig',
       meta: {title: '系统设置',roles: ["超级管理员","运维管理员","访客"],}
     },
