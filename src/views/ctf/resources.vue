@@ -29,23 +29,28 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="添加日期" prop="date_created" width="150" class-name="fnt-12"/>
-          <el-table-column align="center" label="操作" width="240">
+          <el-table-column align="center" label="添加日期" prop="created_at" width="150" class-name="fnt-12"/>
+          <el-table-column align="center" label="操作" width="280">
             <template #default="scope">
-              <el-button 
-                v-if="scope.row.status === 0" 
+              <el-button
                 link
-                type="primary" 
+                type="primary"
+                :loading="buildLoadingMap[scope.row.id]"
                 @click="buildHandle(scope.row)"
               >编译</el-button>
-              <el-button 
+              <el-button
                 link
-                type="primary" 
+                type="primary"
+                @click="viewLogHandle(scope.row)"
+              >日志</el-button>
+              <el-button
+                link
+                type="primary"
                 @click="editHandle(scope.row)"
               >编辑</el-button>
-              <el-button 
+              <el-button
                 link
-                type="danger" 
+                type="danger"
                 @click="deleteHandle(scope.row)"
               >删除</el-button>
             </template>
@@ -65,19 +70,29 @@
         </div>
       </div>
     </div>
+
+    <build-log-viewer
+      v-model="showLogDialog"
+      :resource-id="currentBuildId"
+      title="编译日志"
+      loading-text="正在编译中，请稍候..."
+      api-path="/api/admin/docker/resource/{id}/logs"
+      @closed="handleLogDialogClosed"
+    />
   </div>
 </template>
-
 <script>
 import { ref, reactive, onMounted } from "vue";
 import { http } from "@/utils/http";
 import resourceForm from "@/views/ctf/components/resourceForm.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
+import BuildLogViewer from "@/components/BuildLogViewer/index.vue";
 
 export default {
   name: "resources",
   components: {
     resourceForm,
+    BuildLogViewer,
   },
   setup(_, { emit }) {
     const qType = ref([]);
@@ -86,6 +101,11 @@ export default {
     const showResourceForm = ref(false);
     const total = ref(0);
     const listData = ref([]);
+    
+    // 编译日志相关状态
+    const showLogDialog = ref(false);
+    const currentBuildId = ref(null);
+    const buildLoadingMap = ref({});
 
     const listQuery = reactive({
       type: "CTF",
@@ -141,15 +161,29 @@ export default {
 
     const buildHandle = async (row) => {
       try {
+        // 设置当前构建ID并显示loading状态
+        currentBuildId.value = row.id;
+        buildLoadingMap.value[row.id] = true;
+        
+        // 提交构建请求
         await http.post(`/api/admin/docker/resource/${row.id}/build`);
+        
         ElMessage({
           type: 'success',
           message: '任务已提交',
           duration: 2000
         });
+        
+        // 显示日志对话框
+        showLogDialog.value = true;
+        
+        // 刷新列表
         await getList();
       } catch (error) {
         ElMessage.error('编译失败');
+      } finally {
+        // 无论成功失败，都清除loading状态
+        buildLoadingMap.value[row.id] = false;
       }
     };
 
@@ -184,6 +218,17 @@ export default {
       showResourceForm.value = false;
       if (isUpdated) getList();
     };
+    
+    // 日志对话框关闭时的处理
+    const handleLogDialogClosed = () => {
+      currentBuildId.value = null;
+    };
+
+    // 查看日志处理函数
+    const viewLogHandle = (row) => {
+      currentBuildId.value = row.id;
+      showLogDialog.value = true;
+    };
 
     onMounted(() => {
       getList();
@@ -198,6 +243,12 @@ export default {
       showResourceForm,
       total,
       listData,
+      // 日志相关
+      showLogDialog,
+      currentBuildId,
+      buildLoadingMap,
+      handleLogDialogClosed,
+      // 方法
       getList,
       handleSyncRemoteCtfRepo,
       handleSizeChange,
@@ -207,6 +258,7 @@ export default {
       editHandle,
       deleteHandle,
       handleAdd,
+      viewLogHandle,
     };
   },
 };
