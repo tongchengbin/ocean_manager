@@ -22,7 +22,7 @@ jobs:
           cache: 'yarn'
       
       - name: 安装依赖
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-platform
       
       - name: 构建项目
         run: yarn build
