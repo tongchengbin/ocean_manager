@@ -116,12 +116,45 @@ class PureHttp {
         $error.isCancelRequest = Axios.isCancel($error);
         // 关闭进度条动画
         NProgress.done();
-        if(error.response && error.response.status === 401){
-          useUserStoreHook().logOut()
+        
+        // 处理不同的 HTTP 状态码
+        if (error.response) {
+          const status = error.response.status;
+          const data = error.response.data as any;
+          
+          switch (status) {
+            case 401:
+              // 未授权,退出登录
+              useUserStoreHook().logOut();
+              break;
+            case 400:
+              // 请求参数错误
+              ElMessage.error(data?.message || "请求参数错误");
+              break;
+            case 403:
+              // 权限不足
+              ElMessage.error(data?.message || "权限不足");
+              break;
+            case 404:
+              // 资源不存在
+              ElMessage.error(data?.message || "请求的资源不存在");
+              break;
+            case 500:
+              // 服务器错误
+              ElMessage.error(data?.message || "服务器内部错误");
+              break;
+            default:
+              // 其他错误
+              ElMessage.error(data?.message || `请求失败 (${status})`);
+          }
+        } else if (error.request) {
+          // 请求已发出,但没有收到响应
+          ElMessage.error("网络连接失败,请检查网络");
+        } else {
+          // 其他错误
+          ElMessage.error(error.message || "请求失败");
         }
-        if(error.response && error.response.status ==500){
-          ElMessage.error("服务器异常")
-        }
+        
         return Promise.reject($error);
       }
     );

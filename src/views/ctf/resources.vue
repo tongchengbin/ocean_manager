@@ -74,6 +74,7 @@
     <build-log-viewer
       v-model="showLogDialog"
       :resource-id="currentBuildId"
+      :task-id="currentTaskId"
       title="编译日志"
       loading-text="正在编译中，请稍候..."
       api-path="/api/admin/docker/resource/{id}/logs"
@@ -105,6 +106,7 @@ export default {
     // 编译日志相关状态
     const showLogDialog = ref(false);
     const currentBuildId = ref(null);
+    const currentTaskId = ref(null);
     const buildLoadingMap = ref({});
 
     const listQuery = reactive({
@@ -165,8 +167,14 @@ export default {
         currentBuildId.value = row.id;
         buildLoadingMap.value[row.id] = true;
         
-        // 提交构建请求
-        await http.post(`/api/admin/docker/resource/${row.id}/build`);
+        // 提交构建请求,获取任务ID
+        const response = await http.post(`/api/admin/docker/resource/${row.id}/build`);
+        const taskId = response.data?.task_id;
+        
+        // 保存任务ID用于日志查询
+        if (taskId) {
+          currentTaskId.value = taskId;
+        }
         
         ElMessage({
           type: 'success',
